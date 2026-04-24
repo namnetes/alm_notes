@@ -3,12 +3,12 @@
 > Expression de besoin v1.0 — Transfert de données depuis IBM z/OS vers Apache Kafka.
 
 !!! note "Origine de ce document — Résultats du PoC"
-Ce document est le résultat d'un **Proof of Concept (PoC)** mené sur l'utilisation d'Apache Kafka depuis des batchs COBOL via le **SDK IBM Kafka for z/OS**. L'objectif était de valider la faisabilité technique et d'identifier les contraintes propres à l'environnement Mainframe avant toute mise en production.
+    Ce document est le résultat d'un **Proof of Concept (PoC)** mené sur l'utilisation d'Apache Kafka depuis des batchs COBOL via le **SDK IBM Kafka for z/OS**. L'objectif était de valider la faisabilité technique et d'identifier les contraintes propres à l'environnement Mainframe avant toute mise en production.
 
     Les résultats de ce PoC ont été présentés à un **comité inter-entités du groupe**, rassemblant plusieurs équipes partageant les mêmes enjeux d'intégration Mainframe ↔ Kafka. Cette présentation a permis de confronter les retours d'expérience et de consolider les orientations techniques décrites dans ce document.
 
 !!! bug "Problèmes identifiés lors du PoC — À prendre en compte"
-Deux problèmes significatifs ont été mis en évidence. Ils doivent être adressés dans toute mise en production. Des pistes de solution sont proposées dans les sections suivantes.
+    Deux problèmes significatifs ont été mis en évidence. Ils doivent être adressés dans toute mise en production. Des pistes de solution sont proposées dans les sections suivantes.
 
     **1. Impossibilité de rollback en cas d'abend du batch COBOL**
 
@@ -19,10 +19,10 @@ Deux problèmes significatifs ont été mis en évidence. Ils doivent être adre
     Kafka garantit l'ordre des messages **au sein d'une même partition**, mais pas entre plusieurs partitions. Si plusieurs consommateurs lisent le même topic en parallèle — ou si le topic comporte plusieurs partitions — **l'ordre global de traitement des messages n'est pas garanti**. Cela peut entraîner des incohérences dans les traitements qui dépendent d'un ordre strict.
 
 !!! warning "Contexte et contrainte imposée"
-Cette étude répond à un besoin spécifique : **le consommateur côté AWS exige l'utilisation d'Apache Kafka** comme protocole d'échange. L'intégration Kafka est donc une contrainte dictée par le consommateur, à laquelle le Mainframe doit se conformer. Les approches présentées dans ce document ont pour objectif de répondre à cette obligation tout en respectant les contraintes techniques et opérationnelles propres à z/OS.
+    Cette étude répond à un besoin spécifique : **le consommateur côté AWS exige l'utilisation d'Apache Kafka** comme protocole d'échange. L'intégration Kafka est donc une contrainte dictée par le consommateur, à laquelle le Mainframe doit se conformer. Les approches présentées dans ce document ont pour objectif de répondre à cette obligation tout en respectant les contraintes techniques et opérationnelles propres à z/OS.
 
 !!! abstract "À qui s'adresse ce document ?"
-Ce guide s'adresse à toute personne impliquée dans un projet faisant communiquer un Mainframe IBM (z/OS) avec une plateforme de streaming moderne comme Apache Kafka. Aucune connaissance préalable du Mainframe n'est requise.
+    Ce guide s'adresse à toute personne impliquée dans un projet faisant communiquer un Mainframe IBM (z/OS) avec une plateforme de streaming moderne comme Apache Kafka. Aucune connaissance préalable du Mainframe n'est requise.
 
     | Profil | Ce que vous trouverez ici |
     |--------|--------------------------|
@@ -40,7 +40,7 @@ Ce guide s'adresse à toute personne impliquée dans un projet faisant communiqu
 Un Mainframe est un type de serveur conçu pour traiter des volumes de données astronomiques de manière fiable, sécurisée et continue.
 
 !!! tip "Analogie"
-Si un serveur web classique est une voiture rapide et maniable, le Mainframe est un train de marchandises — moins agile, mais capable de transporter des millions de tonnes sans jamais s'arrêter.
+    Si un serveur web classique est une voiture rapide et maniable, le Mainframe est un train de marchandises — moins agile, mais capable de transporter des millions de tonnes sans jamais s'arrêter.
 
 Le Mainframe de ce projet tourne sous z/OS 2.5, le système d'exploitation d'IBM. Il contient un fichier de 21 Go regroupant des millions de CRO (Compte Rendu d'Opération).
 
@@ -49,7 +49,7 @@ Le Mainframe de ce projet tourne sous z/OS 2.5, le système d'exploitation d'IBM
 Apache Kafka est une plateforme qui permet de faire circuler des messages (données) entre applications de manière très rapide et à très grande échelle. Elle est souvent utilisée pour alimenter des tableaux de bord en temps réel, des applications mobiles ou des moteurs d'analyse.
 
 !!! tip "Analogie"
-Kafka est comme une autoroute à plusieurs voies. Les producteurs (émetteurs) déposent des données à une entrée, les consommateurs (récepteurs) les récupèrent à une sortie, et l'autoroute gère le flux de manière ordonnée.
+    Kafka est comme une autoroute à plusieurs voies. Les producteurs (émetteurs) déposent des données à une entrée, les consommateurs (récepteurs) les récupèrent à une sortie, et l'autoroute gère le flux de manière ordonnée.
 
 ### 1.3 L'objectif du projet
 
@@ -80,7 +80,7 @@ La version 6.4 minimum est requise pour utiliser le Kafka SDK for z/OS.
 Le Kafka SDK for z/OS est une bibliothèque (fournie par IBM ou Confluent) qui permet à un programme COBOL ou Java tournant sur z/OS d'envoyer des messages directement à un cluster Kafka.
 
 !!! tip "Analogie Open"
-C'est l'équivalent du client Kafka Java/Python que vous utilisez habituellement, mais compilé et optimisé pour le Mainframe.
+    C'est l'équivalent du client Kafka Java/Python que vous utilisez habituellement, mais compilé et optimisé pour le Mainframe.
 
 ### 2.4 TWS/OPC : le chef d'orchestre des traitements
 
@@ -148,7 +148,7 @@ flowchart LR
 Une transaction est un ensemble d'opérations qui doivent réussir toutes ensemble ou pas du tout. C'est le principe du "tout ou rien".
 
 !!! example "Exemple bancaire"
-Un virement de 100 € implique de débiter le compte A ET créditer le compte B. Si l'une des deux opérations échoue, l'autre doit être annulée — sinon l'argent disparaît.
+    Un virement de 100 € implique de débiter le compte A ET créditer le compte B. Si l'une des deux opérations échoue, l'autre doit être annulée — sinon l'argent disparaît.
 
 ### 4.2 Le problème du "bouton Annuler" (Rollback)
 
@@ -167,7 +167,7 @@ Imaginez ce scénario :
 5. **Résultat :** les données dans Kafka sont incomplètes, et le monde Open travaille sur une vue partielle de la réalité.
 
 !!! danger "Risque métier"
-Dans le secteur bancaire, des données tronquées peuvent conduire à des calculs erronés, des rapports incorrects ou des décisions basées sur une vue partielle de la réalité.
+    Dans le secteur bancaire, des données tronquées peuvent conduire à des calculs erronés, des rapports incorrects ou des décisions basées sur une vue partielle de la réalité.
 
 ---
 
@@ -185,9 +185,14 @@ Le programme COBOL note régulièrement sa progression dans un fichier ou une ta
 2. Après chaque bloc envoyé avec succès à Kafka, il écrit le numéro du dernier bloc traité dans un fichier de point de reprise.
 3. En cas de redémarrage, il lit ce fichier et reprend à partir du bloc suivant.
 
-!!! success "Avantages" - Gain de temps massif : si on plante à 90 %, on repart de 90 %, pas de 0 %. - Économie de ressources : moins de données re-transmises inutilement. - Bien adapté aux très gros volumes comme les 21 Go de ce projet.
+!!! success "Avantages"
+    - Gain de temps massif : si on plante à 90 %, on repart de 90 %, pas de 0 %.
+    - Économie de ressources : moins de données re-transmises inutilement.
+    - Bien adapté aux très gros volumes comme les 21 Go de ce projet.
 
-!!! warning "Inconvénients" - Développement COBOL plus complexe : il faut gérer la logique de reprise. - Risque de doublons si le checkpoint est écrit avant la confirmation Kafka.
+!!! warning "Inconvénients"
+    - Développement COBOL plus complexe : il faut gérer la logique de reprise.
+    - Risque de doublons si le checkpoint est écrit avant la confirmation Kafka.
 
 ---
 
@@ -204,12 +209,17 @@ Avant d'envoyer quoi que ce soit à Kafka, on copie d'abord toutes les données 
 3. Un second programme lit la table DB2 et envoie les données vers Kafka.
 4. Une fois chaque enregistrement envoyé avec succès, il est marqué "traité" dans DB2.
 
-!!! success "Avantages" - Sécurité maximale : on exploite le mécanisme transactionnel natif de DB2. - Zéro risque de données partielles dans Kafka : soit tout est en DB2, soit rien.
+!!! success "Avantages"
+    - Sécurité maximale : on exploite le mécanisme transactionnel natif de DB2.
+    - Zéro risque de données partielles dans Kafka : soit tout est en DB2, soit rien.
 
-!!! warning "Inconvénients" - Très coûteux : il faut stocker 21 Go supplémentaires dans DB2 (espace disque + licences IBM). - Très lent : l'écriture en base de données est bien plus lente que la lecture séquentielle d'un fichier. - Deux étapes de traitement, deux fois plus de jobs à surveiller.
+!!! warning "Inconvénients"
+    - Très coûteux : il faut stocker 21 Go supplémentaires dans DB2 (espace disque + licences IBM).
+    - Très lent : l'écriture en base de données est bien plus lente que la lecture séquentielle d'un fichier.
+    - Deux étapes de traitement, deux fois plus de jobs à surveiller.
 
 !!! info "Quand l'utiliser ?"
-Pour des volumes plus faibles (quelques Mo à quelques Go) ou lorsque la garantie transactionnelle absolue est non négociable.
+    Pour des volumes plus faibles (quelques Mo à quelques Go) ou lorsque la garantie transactionnelle absolue est non négociable.
 
 ---
 
@@ -225,12 +235,17 @@ On configure le producteur Kafka pour qu'il attribue un identifiant unique à ch
 - Kafka attribue un numéro de séquence à chaque message par producteur.
 - Si le même message arrive deux fois (même numéro de séquence), Kafka l'ignore silencieusement.
 
-!!! success "Avantages" - Très simple à mettre en place : un seul paramètre de configuration. - Élimine les doublons en cas de reprise. - Aucun coût de stockage supplémentaire.
+!!! success "Avantages"
+    - Très simple à mettre en place : un seul paramètre de configuration.
+    - Élimine les doublons en cas de reprise.
+    - Aucun coût de stockage supplémentaire.
 
-!!! warning "Inconvénients" - Ne résout pas le problème de partialité : si le programme plante à mi-chemin, il faut tout renvoyer depuis le début. Les messages déjà envoyés seront bien dédoublonnés, mais on retraite inutilement la première moitié. - Pour 21 Go, recommencer depuis le début peut représenter plusieurs heures de traitement.
+!!! warning "Inconvénients"
+    - Ne résout pas le problème de partialité : si le programme plante à mi-chemin, il faut tout renvoyer depuis le début. Les messages déjà envoyés seront bien dédoublonnés, mais on retraite inutilement la première moitié.
+    - Pour 21 Go, recommencer depuis le début peut représenter plusieurs heures de traitement.
 
 !!! tip "Conseil"
-L'idempotence ne remplace pas le check-pointing — elle le complète. Utilisez les deux ensemble pour une protection optimale.
+    L'idempotence ne remplace pas le check-pointing — elle le complète. Utilisez les deux ensemble pour une protection optimale.
 
 ---
 
@@ -259,16 +274,16 @@ Le pilotage TWS/OPC du Job A (Publication Kafka) utilise une **exit propriétair
 4.  **Scénario d'Erreur ($RC > 7$) :** Le mécanisme de recovery prend la main et lance un step de notification d'alerte. Un traitement batch informe l'application Open via **z/OS Connect** que les messages sont incomplets et doivent être **abandonnés**.
 
 !!! danger "En cas d'échec du Job A ($RC > 7$)"
-L'exit propriétaire arrête le job et TWS bloque le pipeline. L'équipe de supervision est alertée. Grâce au step de notification d'erreur, le monde Open est activement prévenu de l'invalidité des données et la suite des traitements n'est jamais déclenché.
+    L'exit propriétaire arrête le job et TWS bloque le pipeline. L'équipe de supervision est alertée. Grâce au step de notification d'erreur, le monde Open est activement prévenu de l'invalidité des données et la suite des traitements n'est jamais déclenché.
 
 !!! success "Avantages"
-_ **Sécurité de bout en bout :** L'application Open ne traite jamais de données partielles grâce à la notification explicite d'abandon.
-_ **Automatisme de reprise :** Le mécanisme de recovery TWS permet une gestion propre des erreurs sans intervention manuelle systématique pour informer l'aval.
-_ **Lisibilité opérationnelle :** Les équipes de supervision voient immédiatement si le traitement est en succès ou en phase de "Recovery/Notification".
-_ **Intégration moderne :** L'utilisation de **z/OS Connect** permet une communication fluide et synchrone entre le Mainframe et les API du monde Open.
+    - **Sécurité de bout en bout :** L'application Open ne traite jamais de données partielles grâce à la notification explicite d'abandon.
+    - **Automatisme de reprise :** Le mécanisme de recovery TWS permet une gestion propre des erreurs sans intervention manuelle systématique pour informer l'aval.
+    - **Lisibilité opérationnelle :** Les équipes de supervision voient immédiatement si le traitement est en succès ou en phase de "Recovery/Notification".
+    - **Intégration moderne :** L'utilisation de **z/OS Connect** permet une communication fluide et synchrone entre le Mainframe et les API du monde Open.
 
 !!! warning "Inconvénient"
-Les applications consommatrices doivent être conçues pour attendre le signal avant de traiter (légère complexité côté Open).
+    Les applications consommatrices doivent être conçues pour attendre le signal avant de traiter (légère complexité côté Open).
 
 ---
 
@@ -279,7 +294,7 @@ Les applications consommatrices doivent être conçues pour attendre le signal a
 Plutôt que d'attendre la fin d'un traitement batch pour envoyer les données en bloc, ce pattern adopte une approche **au fil de l'eau** (streaming). Chaque enregistrement est écrit dans une file d'attente IBM MQ au fur et à mesure de sa production. Un connecteur Kafka Connect surveille cette file en continu et publie chaque message vers Kafka avec une latence minimale.
 
 !!! tip "Analogie"
-Si les patterns batch sont des camions déchargeant des palettes une fois par jour, ce pattern est un **tapis roulant industriel** : chaque colis est acheminé individuellement et immédiatement, sans attente.
+    Si les patterns batch sont des camions déchargeant des palettes une fois par jour, ce pattern est un **tapis roulant industriel** : chaque colis est acheminé individuellement et immédiatement, sans attente.
 
 ---
 
@@ -381,7 +396,7 @@ flowchart LR
 | **File MQ + Kafka Connect (recommandé flux continu)** |            **★★★★☆** |   **★★★★☆** |                 **★★☆☆☆** |           **Moyen** | **Streaming** |
 
 !!! info ""
-Plus il y a d'étoiles (★), mieux c'est pour le critère concerné. La combinaison TWS + Check-pointing offre le meilleur équilibre global.
+    Plus il y a d'étoiles (★), mieux c'est pour le critère concerné. La combinaison TWS + Check-pointing offre le meilleur équilibre global.
 
 ---
 
