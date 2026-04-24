@@ -1,0 +1,135 @@
+site_name: Wikinotes
+site_description: Documentation technique personnelle d'Alan Marchand
+site_author: Alan Marchand
+docs_dir: docs
+site_dir: site
+theme:
+  name: material
+  language: fr
+  palette:
+  - scheme: default
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/brightness-7
+      name: Passer en mode sombre
+  - scheme: slate
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/brightness-4
+      name: Passer en mode clair
+  features:
+  - navigation.tabs
+  - navigation.sections
+  - navigation.indexes
+  - navigation.top
+  - toc.integrate
+  - search.highlight
+  - search.suggest
+  - content.code.copy
+  - content.code.annotate
+plugins:
+- search:
+    lang: fr
+markdown_extensions:
+- admonition
+- pymdownx.details
+- pymdownx.highlight:
+    anchor_linenums: true
+    line_spans: __span
+    pygments_lang_class: true
+- pymdownx.inlinehilite
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format ''
+- pymdownx.tabbed:
+    alternate_style: true
+- pymdownx.arithmatex:
+    generic: true
+- attr_list
+- md_in_html
+- tables
+- footnotes
+- toc:
+    permalink: true
+    title: Sur cette page
+extra_css:
+- stylesheets/extra.css
+extra_javascript:
+- javascripts/nav-dropdown.js
+- javascripts/mathjax.js
+- https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+nav:
+- Accueil: index.md
+- Ubuntu:
+  - systeme/ubuntu/index.md
+  - Post-Installation: systeme/ubuntu/post-installation.md
+  - Déploiement après installation fraîche: systeme/ubuntu/deploiement-post-installation.md
+  - alm-dotfiles:
+    - systeme/ubuntu/alm-dotfiles/index.md
+    - Présentation: systeme/ubuntu/alm-dotfiles/presentation.md
+    - Installation: systeme/ubuntu/alm-dotfiles/installation.md
+    - Environnement shell: systeme/ubuntu/alm-dotfiles/environnement-shell.md
+    - Outils et applications: systeme/ubuntu/alm-dotfiles/outils-et-applications.md
+    - Scripts et utilitaires: systeme/ubuntu/alm-dotfiles/scripts-et-utilitaires.md
+  - alm-tools:
+    - systeme/ubuntu/alm-tools/index.md
+    - Présentation: systeme/ubuntu/alm-tools/presentation.md
+    - Post-installation: systeme/ubuntu/alm-tools/post-installation.md
+    - Packages et dépôts: systeme/ubuntu/alm-tools/packages-et-depots.md
+    - Outils spécialisés: systeme/ubuntu/alm-tools/outils-specialises.md
+    - Utilitaires Python et sandbox: systeme/ubuntu/alm-tools/utilitaires-python.md
+- Alpine Linux:
+  - systeme/alpine/index.md
+  - Post-Installation: systeme/alpine/post-installation.md
+  - Changer le nom d’hôte: systeme/alpine/changer-le-nom-dhote.md
+  - VM avec Cloud-Init: systeme/alpine/vm-cloud-init.md
+  - Création d’un partage de répertoire(s): systeme/alpine/creation-dun-partage-de-repertoires.md
+  - Docker sur Alpine: systeme/alpine/docker.md
+  - Lazydocker: systeme/alpine/lazydocker.md
+  - Compatibilité des terminaux: systeme/alpine/compatibilite-terminal.md
+- Outils:
+  - outils/index.md
+  - GitHub CLI: outils/github-cli.md
+  - ExifTool: outils/exiftool.md
+  - yt-dlp: outils/yt-dlp.md
+- Développement:
+  - developpement/index.md
+  - Python:
+    - developpement/python/index.md
+    - uv — Gestionnaire de projets:
+      - developpement/python/uv/index.md
+      - Workflow projet: developpement/python/uv/projet.md
+      - Outils CLI: developpement/python/uv/outils.md
+      - Référence: developpement/python/uv/reference.md
+- LCL:
+  - lcl/index.md
+  - zDevOps:
+    - lcl/zdevops/index.md
+    - PCA & Gouvernance Git: lcl/zdevops/pca-gouvernance-git.md
+  - CI/CD:
+    - lcl/cicd/index.md
+    - Conception pipeline GitLab → z/OS: lcl/cicd/conception-pipeline.md
+  - Kafka:
+    - lcl/kafka/index.md
+    - Architecture z/OS → Kafka: lcl/kafka/architecture-zos-kafka.md
+- Sécurité:
+  - securite/index.md
+  - Certificats: securite/certificats.md
+  - OpenSSL: securite/openssl.md
+  - ecryptfs: securite/ecryptfs.md
+  - Proton: securite/proton.md
+  - TLS / SSL:
+    - securite/tls/index.md
+    - Fondamentaux: securite/tls/fondamentaux.md
+    - Handshake: securite/tls/handshake.md
+    - Débogage CLI: securite/tls/debug.md
+    - Exercices: securite/tls/exercices.md
+  - AppArmor:
+    - securite/apparmor/index.md
+    - Syntaxe des profils: securite/apparmor/syntaxe.md
+    - Outils et gestion: securite/apparmor/outils.md
+    - Exemples et exercices: securite/apparmor/exemples.md
