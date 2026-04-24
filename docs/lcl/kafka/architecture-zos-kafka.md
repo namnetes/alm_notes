@@ -481,7 +481,6 @@ Pour 21 Go de données, quelques règles pratiques :
 | Chiffrement en transit | Activer TLS/SSL entre le Kafka SDK z/OS et le cluster Kafka                                              |
 | Authentification       | Utiliser SASL/SCRAM ou des certificats mTLS pour le producteur COBOL                                     |
 | Autorisation           | Le topic Kafka cible doit être en écriture uniquement pour le producteur Mainframe                       |
-| Données personnelles   | Si le fichier contient des données personnelles (RGPD), envisager une pseudonymisation avant publication |
 | Audit                  | Les logs TWS et z/OS fournissent une traçabilité complète et horodatée de chaque traitement              |
 
 ### 7.3 Surveillance et alertes
