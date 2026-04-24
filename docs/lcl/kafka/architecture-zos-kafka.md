@@ -461,39 +461,11 @@ flowchart TD
     end
 ```
 
-### 7.1 Description pas à pas du flux
-
-| Étape | Acteur       | Action                                                                 |
-| ----: | ------------ | ---------------------------------------------------------------------- |
-|     1 | TWS          | Déclenche le Job A (programme COBOL) à l'heure planifiée               |
-|     2 | COBOL        | Lit le fichier de checkpoint pour savoir si une reprise est nécessaire |
-|     3 | COBOL        | Lit un bloc de données (ex. : 100 000 lignes) dans le fichier de 21 Go |
-|     4 | COBOL        | Envoie le bloc vers Kafka via le SDK                                   |
-|     5 | Kafka        | Confirme la bonne réception du bloc                                    |
-|     6 | COBOL        | Écrit le numéro du bloc dans le fichier de checkpoint                  |
-|     7 | COBOL        | Répète les étapes 3 à 6 jusqu'au dernier bloc                          |
-|     8 | TWS          | Détecte que Job A s'est terminé avec succès (code retour = 0)          |
-|     9 | TWS          | Lance le Job B (programme de clôture)                                  |
-|    10 | Job B        | Appelle z/OS Connect avec le bilan du traitement                       |
-|    11 | z/OS Connect | Envoie un message REST au topic Kafka de contrôle                      |
-|    12 | Kafka        | Publie le signal de fin dans le topic de contrôle                      |
-|    13 | Applications | Reçoivent le signal et commencent à consommer les données              |
-
-### 7.2 Gestion des pannes et reprises
-
-| Scénario de panne              | Conséquence                                                    | Reprise                                                                 |
-| ------------------------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Coupure réseau pendant l'envoi | COBOL reçoit une erreur, TWS marque Job A en ERREUR            | Relancer Job A : reprend depuis le dernier checkpoint                   |
-| Crash du programme COBOL       | Le checkpoint du dernier bloc réussi est sauvegardé            | Relancer Job A : reprend depuis le bloc suivant                         |
-| Kafka indisponible             | Le SDK renvoie une erreur, COBOL échoue proprement             | Relancer Job A après rétablissement de Kafka                            |
-| Job B échoue                   | Le signal de fin n'est pas envoyé, les consommateurs attendent | Relancer Job B seul — les données sont déjà complètes dans Kafka        |
-| Arrêt total du Mainframe       | Checkpoint persisté sur disque (VSAM ou DB2)                   | Relancer Job A après redémarrage — reprend depuis le dernier checkpoint |
-
 ---
 
-## 8. Considérations complémentaires
+## 7. Considérations complémentaires
 
-### 8.1 Performance et volumétrie
+### 7.1 Performance et volumétrie
 
 Pour 21 Go de données, quelques règles pratiques :
 
@@ -502,7 +474,7 @@ Pour 21 Go de données, quelques règles pratiques :
 - **Parallélisme :** si le fichier peut être découpé en partitions logiques (par région, par type de transaction…), plusieurs jobs COBOL peuvent tourner en parallèle, chacun écrivant dans sa propre partition Kafka.
 - **Fenêtre de tir :** vérifier que la fenêtre batch disponible (typiquement la nuit) est suffisante pour transmettre le volume complet, en tenant compte de la compression et du débit réseau disponible.
 
-### 8.2 Sécurité
+### 7.2 Sécurité
 
 | Aspect                 | Recommandation                                                                                           |
 | ---------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -512,7 +484,7 @@ Pour 21 Go de données, quelques règles pratiques :
 | Données personnelles   | Si le fichier contient des données personnelles (RGPD), envisager une pseudonymisation avant publication |
 | Audit                  | Les logs TWS et z/OS fournissent une traçabilité complète et horodatée de chaque traitement              |
 
-### 8.3 Surveillance et alertes
+### 7.3 Surveillance et alertes
 
 - TWS génère automatiquement des alertes si Job A dépasse sa durée maximale autorisée ou se termine en erreur.
 - Kafka : surveiller le lag des consommateurs et le nombre de messages dans le topic après réception du signal de fin.
@@ -520,7 +492,7 @@ Pour 21 Go de données, quelques règles pratiques :
 
 ---
 
-## 9. Glossaire
+## 8. Glossaire
 
 | Terme                   | Définition simplifiée                                                                                                                                                                    |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
