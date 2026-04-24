@@ -291,58 +291,72 @@ Le pilotage TWS/OPC du Job A (Publication Kafka) utilise une **exit propriétair
 
 #### Principe
 
-Plutôt que d'attendre la fin d'un traitement batch pour envoyer les données en bloc, ce pattern adopte une approche **au fil de l'eau** (streaming). Chaque enregistrement est écrit dans une file d'attente IBM MQ au fur et à mesure de sa production. Un connecteur Kafka Connect surveille cette file en continu et publie chaque message vers Kafka avec une latence minimale.
+Ce pattern utilise IBM MQ comme tampon transactionnel entre le Mainframe et Kafka. Le programme COBOL écrit chaque enregistrement dans une file MQ sous contrôle de syncpoint. Un connecteur Kafka Connect, déployé côté Open, surveille cette file en continu et publie chaque message vers Kafka dès qu'il est validé.
 
 !!! tip "Analogie"
-    Si les patterns batch sont des camions déchargeant des palettes une fois par jour, ce pattern est un **tapis roulant industriel** : chaque colis est acheminé individuellement et immédiatement, sans attente.
+    Si les patterns batch sont des camions déchargeant des palettes une fois par jour, ce pattern est un **tapis roulant industriel** : chaque colis est acheminé dès qu'il est prêt, sans attendre la fin de la production.
 
----
+#### Mécanisme transactionnel : le syncpoint MQ
 
-#### Le Cœur du Réacteur : La Gestion du Rollback et de la Complétude
+Le point central de cette architecture est la **garantie d'intégrité** assurée par le mécanisme de **Syncpoint (Unité de Travail)** d'IBM MQ. IBM MQ est par définition une file d'attente persistante — il n'y a pas de zone de staging supplémentaire. Tout se joue sur le statut logique des messages dans cette file.
 
-Le point central de cette architecture n'est pas seulement le transport, mais la **garantie d'intégrité**. IBM MQ assure qu'aucune donnée partielle ou corrompue n'atteigne Kafka grâce au mécanisme de **Syncpoint (Unité de Travail)**.
+**L'état "Uncommitted"**
 
-##### 1. Pas de file temporaire, mais une "visibilité différée"
+Quand le programme COBOL écrit (`MQPUT`) sous syncpoint, le message est physiquement enregistré dans la file et dans les logs de récupération de MQ, mais il est marqué comme **invisible** pour les lecteurs externes.
 
-Contrairement à une idée reçue, MQ n'utilise pas de file intermédiaire. Tout se joue sur le statut logique du message :
+- Le connecteur Kafka Connect ne peut lire (`MQGET`) que les messages **"Committed"**.
+- Tant que le COBOL travaille, le connecteur ne voit rien.
 
-- **L'état "Uncommitted" :** Quand le programme COBOL écrit (`MQPUT`) sous syncpoint, le message est physiquement écrit dans la file et dans les logs de récupération de MQ, mais il est marqué comme **invisible**.
-- **Côté Kafka Connect :** Le connecteur ne peut lire (`MQGET`) que les messages dont le statut est **"Committed"**. Tant que le programme COBOL travaille, le connecteur ne "voit" rien.
+**Rollback**
 
-##### 2. Le scénario de plantage (Rollback)
+Si le programme subit un Abend (arrêt brutal) ou rencontre une erreur avant la fin de l'unité de travail :
 
-Si le programme COBOL subit un **Abend** (arrêt brutal) ou rencontre une erreur logique avant la fin :
+- MQ détecte la rupture et annule les `MQPUT` en cours via ses logs de récupération.
+- Les messages invisibles sont supprimés de la file.
+- Kafka reste vierge : aucune donnée partielle ne parvient aux consommateurs.
 
-- Le gestionnaire de files MQ détecte la rupture de l'unité de travail.
-- Il annule les opérations en cours en consultant ses logs : les messages invisibles sont supprimés.
-- **Résultat :** Kafka reste vierge de toute donnée. L'application consommatrice sur AWS ne reçoit rien, évitant ainsi de traiter un lot incomplet ou incohérent.
+**Commit et transfert**
 
-##### 3. La validation (Commit) et le transfert
+Quand le COBOL déclenche un `MQCMIT` :
 
-Une fois que le programme COBOL termine avec succès, il déclenche un `MQCMIT`.
+- Les messages basculent en **"Committed"** et deviennent visibles.
+- Le connecteur les aspire immédiatement et les publie dans Kafka.
+- Le connecteur ne confirme la lecture à MQ qu'après réception de l'ACK Kafka, garantissant une livraison **"at-least-once"** sans perte.
 
-- MQ change instantanément le statut des messages en **"Committed"**.
-- Ils deviennent **visibles** pour le connecteur Kafka Connect qui les aspire immédiatement.
-- Le connecteur ne confirme la lecture à MQ qu'après avoir reçu l'accusé de réception (ACK) de Kafka, garantissant une livraison **"at-least-once"** sans perte.
+#### Le choix de design clé : fréquence des commits
 
----
+C'est la décision architecturale centrale de ce pattern. Elle détermine le compromis entre atomicité et latence.
 
-#### Fonctionnement Technique Global
+| Mode | Fréquence du `MQCMIT` | Garantie d'atomicité | Latence côté consommateur |
+|---|---|---|---|
+| **Atomique** | Une seule fois, à la fin des 21 Go | Totale — Kafka reste vierge jusqu'au succès complet | Identique au batch (plusieurs heures) |
+| **Streaming** | Fréquent (ex. tous les 100 000 enregistrements) | Partielle — les blocs déjà commités sont dans Kafka en cas d'abend | Faible (quelques secondes par bloc) |
 
-1.  **Production (Mainframe) :** Un programme (CICS, IMS ou Batch) écrit dans une file MQ locale sous contrôle transactionnel.
-2.  **Ingestion (Kafka Connect) :** Le **IBM MQ Source Connector** (déployé sur un cluster Kafka Connect) maintient une connexion persistante avec MQ.
-3.  **Transformation (SMT & Converters) :** Le connecteur traduit le format binaire propriétaire (EBCDIC, COMP-3 via Copybook) en formats standards du Cloud (**JSON ou Avro**) grâce à un Schema Registry.
-4.  **Consommation (AWS) :** Les applications (MSK, Lambda, EKS) consomment les données en temps réel, avec l'assurance que chaque message reçu appartient à une transaction Mainframe validée.
+!!! warning "Conséquence directe sur l'architecture"
+    Il n'existe pas de mode offrant simultanément l'atomicité totale et une faible latence. Si le consommateur AWS doit traiter les données en temps réel, il faut concevoir un mécanisme de compensation côté consommateur pour gérer les lots incomplets — par exemple le signal d'abandon via TWS décrit en 5.4.
+
+#### Fonctionnement technique global
+
+1. **Production (Mainframe) :** Le programme COBOL batch écrit dans une file MQ locale sous contrôle transactionnel (syncpoint).
+2. **Ingestion (Kafka Connect) :** Le **IBM MQ Source Connector** — déployé sur l'infrastructure Open — maintient une connexion persistante avec le queue manager MQ z/OS.
+3. **Transformation (SMT & Converters) :** Le connecteur traduit le format binaire propriétaire (EBCDIC, COMP-3 via Copybook) en formats standards du Cloud (**JSON ou Avro**) grâce à un Schema Registry.
+4. **Consommation (AWS) :** Les applications (MSK, Lambda, EKS) consomment les données avec l'assurance que chaque message reçu appartient à une unité de travail MQ validée.
+
+!!! info "Dead Letter Queue (DLQ)"
+    En production, configurer une DLQ sur le connecteur Kafka Connect est indispensable. Tout message non publiable dans Kafka (schéma invalide, topic inexistant, erreur de transformation) y est redirigé au lieu de bloquer le connecteur.
 
 #### Pourquoi choisir ce pattern ?
 
-- **Fiabilité absolue :** La transactionnalité native de MQ empêche la pollution de Kafka par des données fragmentées.
-- **Réactivité :** La latence passe de plusieurs heures (batch) à quelques millisecondes.
-- **Découplage :** Le Mainframe "pousse" ses mises à jour sans que les applications AWS n'aient besoin d'accéder directement aux bases de données z/OS (DB2, VSAM).
+- **Haute fiabilité :** La transactionnalité native de MQ empêche la pollution de Kafka par des données fragmentées.
+- **Découplage fort :** Le Mainframe publie sans que les applications AWS n'aient besoin d'accéder directement aux bases z/OS (DB2, VSAM).
+- **Réactivité possible :** En mode commits fréquents, la latence peut descendre à quelques secondes par bloc — incomparable avec un envoi batch unique.
+
+!!! warning "Coût infrastructure"
+    L'**IBM MQ Source Connector** (version Confluent) est sous licence commerciale. Il existe une version communautaire open-source (`kafka-connect-mq-source` sur GitHub) mais avec des fonctionnalités réduites. Ce coût doit être intégré dès l'étude de faisabilité.
 
 ```mermaid
 ---
-title: Pattern File MQ + Kafka Connect — Flux au fil de l'eau
+title: Pattern File MQ + Kafka Connect — Flux transactionnel au fil de l'eau
 ---
 %%{init: {"theme": "base", "themeVariables": {"background": "#ffffff"}}}%%
 flowchart LR
@@ -353,23 +367,20 @@ flowchart LR
 
     subgraph MF["Mainframe z/OS"]
         direction TB
-        APP[Programme COBOL / Applicatif]:::logic
-        MQ[/File IBM MQ\nqueue/]:::data
-    end
-
-    subgraph BRIDGE["Zone de transit"]
-        direction TB
-        KC[[Kafka Connect\nIBM MQ Source Connector]]:::external
+        APP[Programme COBOL batch]:::logic
+        MQ[/File IBM MQ\n— queue persistante —/]:::data
     end
 
     subgraph OPEN["Monde Open — AWS"]
         direction TB
+        KC[[Kafka Connect\nIBM MQ Source Connector]]:::external
         KK[[Apache Kafka Cluster]]:::external
         CONS([Applications consommatrices]):::startStop
     end
 
-    APP -->|écrit chaque enregistrement| MQ
-    MQ -->|lecture continue| KC
+    APP -->|MQPUT sous syncpoint| MQ
+    APP -->|MQCMIT — rend les messages visibles| MQ
+    MQ -->|MQGET — messages committed uniquement| KC
     KC -->|publie dans le topic| KK
     KK -->|consomme au fil de l'eau| CONS
 
