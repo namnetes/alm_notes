@@ -403,11 +403,10 @@ flowchart LR
 | Pattern Outbox                                        |                ★★★★★ |       ★☆☆☆☆ |                     ★★★☆☆ |               Élevé |         Batch |
 | Idempotence Kafka                                     |                ★★★☆☆ |       ★★★☆☆ |                     ★★★★★ |              Faible |         Batch |
 | Post-Step TWS                                         |                ★★★★★ |       ★★★★☆ |                     ★★★★☆ |              Faible |         Batch |
-| **TWS + Check-pointing (recommandé batch)**           |            **★★★★★** |   **★★★★★** |                 **★★★☆☆** |          **Faible** |     **Batch** |
-| **File MQ + Kafka Connect (recommandé flux continu)** |            **★★★★☆** |   **★★★★☆** |                 **★★☆☆☆** |           **Moyen** | **Streaming** |
+| File MQ + Kafka Connect                               |                ★★★★☆ |       ★★★★☆ |                     ★★☆☆☆ |               Moyen |     Streaming |
 
 !!! info ""
-    Plus il y a d'étoiles (★), mieux c'est pour le critère concerné. La combinaison TWS + Check-pointing offre le meilleur équilibre global.
+    Plus il y a d'étoiles (★), mieux c'est pour le critère concerné. La combinaison recommandée TWS + Check-pointing est détaillée au chapitre 7.
 
 ---
 
