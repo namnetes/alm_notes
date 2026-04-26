@@ -96,6 +96,7 @@ nav:
   - GitHub CLI: outils/github-cli.md
   - ExifTool: outils/exiftool.md
   - yt-dlp: outils/yt-dlp.md
+  - Documentation Zed: outils/zed-docs.md
 - Développement:
   - developpement/index.md
   - Python:
