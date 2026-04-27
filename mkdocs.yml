@@ -117,6 +117,10 @@ nav:
   - Kafka:
     - lcl/kafka/index.md
     - Architecture z/OS → Kafka: lcl/kafka/architecture-zos-kafka.md
+  - VS Code Docker:
+    - lcl/vscode-docker/index.md
+    - Expression de besoin: lcl/vscode-docker/bundle_z_vscode.md
+    - Dockerfile macOS ARM64: lcl/vscode-docker/dockerfile-macos.md
 - Sécurité:
   - securite/index.md
   - Certificats: securite/certificats.md
