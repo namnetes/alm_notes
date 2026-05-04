@@ -66,6 +66,7 @@ nav:
 - Accueil: index.md
 - Ubuntu:
   - systeme/ubuntu/index.md
+  - Réinstallation WebFAI: systeme/ubuntu/webfai.md
   - Post-Installation: systeme/ubuntu/post-installation.md
   - Déploiement après installation fraîche: systeme/ubuntu/deploiement-post-installation.md
   - alm-dotfiles:
