@@ -15,3 +15,4 @@
 | [Environnement shell](environnement-shell.md) | `.bash_env`, alias, fonctions, FZF, zoxide, eza |
 | [Outils et applications](outils-et-applications.md) | Starship, Kitty, Yazi, Zed, Git |
 | [Scripts et utilitaires](scripts-et-utilitaires.md) | Scripts `bin/` et outils Python |
+| [Service MkDocs](service-mkdocs.md) | Service systemd qui démarre le wiki automatiquement au login |

@@ -29,13 +29,15 @@ cat ~/.ssh/id_ed25519.pub
 ```bash
 cd ~
 git clone git@github.com:namnetes/alm-tools.git
-git clone git@github.com:namnetes/alm-dotfiles.git
+git clone git@github.com:namnetes/alm_dots.git
+git clone git@github.com:namnetes/alm_notes.git
 ```
 
-| Dépôt | Rôle | Documentation |
-|-------|------|---------------|
-| [namnetes/alm-tools](https://github.com/namnetes/alm-tools) | Post-installation + outils système | [alm-tools](alm-tools/index.md) |
-| [namnetes/alm-dotfiles](https://github.com/namnetes/alm-dotfiles) | Fichiers de configuration | [alm-dotfiles](alm-dotfiles/index.md) |
+| Dépôt | Emplacement local | Rôle | Documentation |
+|-------|-------------------|------|---------------|
+| [namnetes/alm-tools](https://github.com/namnetes/alm-tools) | `~/alm-tools` | Post-installation + outils système | [alm-tools](alm-tools/index.md) |
+| [namnetes/alm_dots](https://github.com/namnetes/alm_dots) | `~/alm_dots` | Fichiers de configuration (dotfiles) | [alm-dotfiles](alm-dotfiles/index.md) |
+| [namnetes/alm_notes](https://github.com/namnetes/alm_notes) | `~/alm_notes` | Wiki personnel MkDocs | — |
 
 ---
 
@@ -68,8 +70,8 @@ newgrp libvirt
 ## Étape 6 — Déployer les dotfiles
 
 ```bash
-cd ~/alm-dotfiles
-stow .
+cd ~/alm_dots
+stow --target="$HOME" .
 source ~/.bashrc
 ```
 
@@ -77,7 +79,23 @@ Voir [alm-dotfiles — Installation](alm-dotfiles/installation.md) pour la véri
 
 ---
 
-## Étape 7 — Configurer Git
+## Étape 7 — Activer le service MkDocs
+
+Le fichier `.service` est déjà en place grâce à Stow (étape 6). Il reste à l'activer :
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable mkdocs.service
+systemctl --user start mkdocs.service
+```
+
+Le wiki est accessible sur **<http://127.0.0.1:8000/>** et démarre automatiquement à chaque ouverture de session.
+
+Voir [alm-dotfiles — Service MkDocs](alm-dotfiles/service-mkdocs.md) pour les commandes de gestion et le détail du service.
+
+---
+
+## Étape 8 — Configurer Git
 
 ```bash
 git config --global user.name "Votre Nom"
@@ -86,7 +104,7 @@ git config --global user.email "votre@email.com"
 
 ---
 
-## Étape 8 — Vérifier les polices
+## Étape 9 — Vérifier les polices
 
 L'étape 12 de la post-installation installe FiraCode Nerd Font, Jetbrains Mono et Cascadia Code.
 
@@ -96,7 +114,7 @@ fc-list | grep -i firacode
 
 ---
 
-## Étape 9 — Configurer le terminal Kitty
+## Étape 10 — Configurer le terminal Kitty
 
 La configuration est déjà déployée par `alm-dotfiles`. Pour définir Kitty comme terminal par défaut :
 
@@ -106,7 +124,7 @@ sudo update-alternatives --config x-terminal-emulator
 
 ---
 
-## Étape 10 — Fonds d'écran (optionnel)
+## Étape 11 — Fonds d'écran (optionnel)
 
 ```bash
 mkdir -p ~/.config/my_ubuntu/wallpapers
@@ -122,5 +140,5 @@ mkdir -p ~/.config/my_ubuntu/wallpapers
 |--------|--------------|
 | 1 à 3 | ~5 min |
 | 4 (post-installation) | 20 à 40 min |
-| 5 à 10 | ~10 min |
+| 5 à 11 | ~10 min |
 | **Total** | **~1 heure** |

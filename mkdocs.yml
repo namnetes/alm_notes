@@ -75,6 +75,7 @@ nav:
     - Environnement shell: systeme/ubuntu/alm-dotfiles/environnement-shell.md
     - Outils et applications: systeme/ubuntu/alm-dotfiles/outils-et-applications.md
     - Scripts et utilitaires: systeme/ubuntu/alm-dotfiles/scripts-et-utilitaires.md
+    - Service MkDocs: systeme/ubuntu/alm-dotfiles/service-mkdocs.md
   - alm-tools:
     - systeme/ubuntu/alm-tools/index.md
     - Présentation: systeme/ubuntu/alm-tools/presentation.md
