@@ -1,0 +1,116 @@
+# syntax=docker/dockerfile:1
+
+# 1. Base image: Debian slim (ARM64 — macOS Apple Silicon)
+FROM debian:bookworm-slim AS base
+
+ARG NODE_VERSION=24.15.0
+ARG CODESERVER_VERSION=4.117.0
+ARG PROXY_HOST=http://??????
+ARG NO_PROXY=localhost,127.0.0.1,10.0.0.0/8
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    HTTP_PROXY=$PROXY_HOST \
+    HTTPS_PROXY=$PROXY_HOST \
+    http_proxy=$PROXY_HOST \
+    https_proxy=$PROXY_HOST \
+    NO_PROXY=$NO_PROXY \
+    no_proxy=$NO_PROXY
+
+# 2. System packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl git zsh python3 python3-pip python3-venv ca-certificates unzip \
+    libcairo2 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0 fonts-dejavu-core \
+    && rm -rf /var/lib/apt/lists/*
+
+# 3. Java JDK 21 LTS (Eclipse Temurin — aarch64)
+RUN mkdir -p /opt/java && \
+    curl -L -o /tmp/jdk.tar.gz https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_aarch64_linux_hotspot_21.0.10_7.tar.gz && \
+    tar -xzf /tmp/jdk.tar.gz -C /opt/java --strip-components=1 && \
+    rm /tmp/jdk.tar.gz
+ENV JAVA_HOME=/opt/java
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
+# 4. Node.js LTS
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get update && apt-get install -y nodejs && \
+    npm config set proxy $HTTP_PROXY && \
+    npm config set https-proxy $HTTPS_PROXY && \
+    npm install -g npm@latest && \
+    npm cache clean --force && \
+    rm -rf /var/lib/apt/lists/*
+
+# 5. Zowe CLI + plugins
+RUN npm install -g @zowe/cli@zowe-v3-lts && \
+    zowe plugins install @zowe/cics-for-zowe-cli@zowe-v3-lts && \
+    zowe plugins install @zowe/mq-for-zowe-cli@zowe-v3-lts && \
+    zowe plugins install @zowe/zos-ftp-for-zowe-cli@zowe-v3-lts
+
+# 6. code-server (ARM64)
+RUN curl -fsSL -o /tmp/code-server.tar.gz https://github.com/coder/code-server/releases/download/v${CODESERVER_VERSION}/code-server-${CODESERVER_VERSION}-linux-arm64.tar.gz && \
+    tar -xzf /tmp/code-server.tar.gz -C /opt && \
+    mv /opt/code-server-* /opt/code-server && \
+    ln -s /opt/code-server/bin/code-server /usr/local/bin/code-server && \
+    rm /tmp/code-server.tar.gz
+
+# 7. Create user zdev
+RUN useradd -m -s /usr/bin/zsh zdev && \
+    mkdir -p /home/zdev/workspace && \
+    mkdir -p /home/zdev/.local/share/code-server/coder-logs && \
+    chown -R zdev:zdev /home/zdev
+
+WORKDIR /home/zdev
+USER zdev
+
+# 8. uv — gestionnaire de paquets Python (installé avant les COPY pour préserver le cache)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/home/zdev/.local/bin:$PATH"
+
+# 9. MkDocs Material — générateur de documentation statique
+# mkdocs-material[imaging] : social cards (requiert libcairo2 + libgdk-pixbuf-2.0-0, couche 2)
+# mkdocs-minify-plugin       : minification HTML/CSS/JS en production
+# mkdocs-redirects           : redirections d'URLs lors des renommages de pages
+# mkdocs-git-revision-date-localized-plugin : date de dernière modification par page (requiert git)
+RUN uv tool install --no-cache mkdocs \
+      --with "mkdocs-material[imaging]" \
+      --with mkdocs-minify-plugin \
+      --with mkdocs-redirects \
+      --with mkdocs-git-revision-date-localized-plugin
+
+# 10. Python: ruff config + VS Code user settings + Copilot instructions
+COPY --chown=zdev:zdev ruff.toml /home/zdev/ruff.toml
+RUN mkdir -p /home/zdev/.local/share/code-server/User \
+ && mkdir -p /home/zdev/.config/copilot/instructions
+COPY --chown=zdev:zdev vscode-settings.json /home/zdev/.local/share/code-server/User/settings.json
+COPY --chown=zdev:zdev copilot/ /home/zdev/.config/copilot/
+
+# 11. VS Code extensions (.vsix pré-téléchargés — voir download_extensions.sh)
+COPY --chown=zdev:zdev extensions/ /tmp/extensions/
+RUN set -e; \
+    echo ""; \
+    echo "┌────────────────────────────────────────────────────────────────────┐"; \
+    echo "│              Installation des extensions VS Code                   │"; \
+    echo "├────────────────────────────────────────────────────────┬───────────┤"; \
+    printf "│ %-54s │ %-9s │\n" "Extension" "Version"; \
+    echo "├────────────────────────────────────────────────────────┼───────────┤"; \
+    count=0; \
+    for vsix in /tmp/extensions/*.vsix; do \
+      base="$(basename "$vsix" .vsix)"; \
+      ver="${base##*-}"; \
+      id="${base%-"$ver"}"; \
+      printf "│ %-54s │ %-9s │\n" "$id" "$ver"; \
+      code-server --install-extension "$vsix" > /dev/null 2>&1; \
+      count=$((count + 1)); \
+    done; \
+    echo "├────────────────────────────────────────────────────────┴───────────┤"; \
+    printf "│  Total : %-59s│\n" "${count} extension(s) installée(s)"; \
+    echo "└────────────────────────────────────────────────────────────────────┘"; \
+    echo ""; \
+    rm -rf /tmp/extensions
+
+# 12. Entrypoint
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+EXPOSE 8443

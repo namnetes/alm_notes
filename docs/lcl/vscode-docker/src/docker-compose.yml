@@ -1,0 +1,30 @@
+services:
+  zdev-vscode:
+    build:
+      context: .
+      dockerfile: Dockerfile.linux
+    image: zdev-vscode:latest
+    container_name: zdev
+    restart: unless-stopped
+    environment:
+      - PASSWORD=zdev
+      - TZ=Europe/Paris           # Fuseau horaire du conteneur
+      - LANG=C.UTF-8              # Pour éviter les soucis d'encodage
+    ports:
+      - "8443:8443"
+    volumes:
+      - ~/zdev/projets:/home/zdev/workspace                                 # Persistance des projets
+      - ~/zdev/vscode-settings:/home/zdev/.local/share/code-server/User     # Paramètres utilisateur VS Code
+      - ~/zdev/vscode-extensions:/home/zdev/.local/share/code-server/extensions # Extensions VS Code
+      - ~/zdev/.zshrc:/home/zdev/.zshrc                                     # Config shell
+      - ~/zdev/.gitconfig:/home/zdev/.gitconfig                             # Config git
+      - ~/zdev/vscode-npm-cache:/home/zdev/.npm                             # Cache npm (accélère npm install)
+      - ~/zdev/vscode-pip-cache:/home/zdev/.cache/pip                       # Cache pip (accélère pip install)
+      - ~/.ssh:/home/zdev/.ssh:ro                                           # Clés SSH (lecture seule)
+      # - /etc/hosts:/etc/hosts:ro                                          # (Optionnel) Fichier hosts personnalisé
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8443/healthz"] # Vérifie que code-server répond
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    # Ajoute d'autres variables d'environnement ou options si besoin

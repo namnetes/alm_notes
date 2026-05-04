@@ -1,0 +1,128 @@
+{
+  // ==========================================
+  // INTERFACE & APPARENCE
+  // ==========================================
+  "window.autoDetectColorScheme": true,
+  "workbench.preferredDarkColorTheme": "Catppuccin Frappé",
+  "workbench.preferredLightColorTheme": "Default Light Modern",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.productIconTheme": "material-product-icons",
+  "window.menuBarVisibility": "compact",
+
+  // ==========================================
+  // EDITEUR & COMPORTEMENT DE SAISIE
+  // ==========================================
+  "editor.fontFamily": "FiraCode Nerd Font, 'Courier New', monospace",
+  "editor.fontSize": 15,
+  "editor.fontWeight": "450",
+  "editor.fontLigatures": true,
+  "editor.cursorBlinking": "blink",
+  "editor.autoClosingBrackets": "always",
+  "editor.stickyScroll.enabled": true,
+  "editor.minimap.enabled": true,
+  "editor.minimap.renderCharacters": false,
+  "editor.inlayHints.enabled": "on",
+  "editor.guides.indentation": true,
+  "editor.rulers": [],
+  "editor.renderWhitespace": "boundary",
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+
+  // ==========================================
+  // AUTOMATISATION, HYGIENE & DIAGNOSTICS
+  // ==========================================
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  // ==========================================
+  // TERMINAL
+  // ==========================================
+  "terminal.integrated.fontFamily": "FiraCode Nerd Font, monospace",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.copyOnSelection": true,
+
+  // ==========================================
+  // CONFIGURATION PAR LANGAGE
+  // ==========================================
+  "[python]": {
+    "editor.rulers": [88],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[shellscript]": {
+    "editor.rulers": [80],
+    "editor.tabSize": 2,
+    "editor.wordWrap": "off",
+    "editor.formatOnSave": false
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 120,
+    "files.trimTrailingWhitespace": false
+  },
+  "[csv (semicolon)]": {
+    "editor.formatOnSave": false,
+    "files.trimTrailingWhitespace": false
+  },
+  "[json]": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  },
+  "[toml]": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "[yaml]": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+
+  // ==========================================
+  // PYTHON (Pylance / ms-python)
+  // ==========================================
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticMode": "workspace",
+
+  // ==========================================
+  // RUFF
+  // ==========================================
+  "ruff.configuration": "/home/zdev/ruff.toml",
+
+  // ==========================================
+  // GITHUB COPILOT — INSTRUCTIONS
+  // ==========================================
+  "github.copilot.chat.codeGeneration.instructions": [
+    { "file": "/home/zdev/.config/copilot/copilot-instructions.md" }
+  ],
+  "chat.instructionsFilesLocations": [
+    ".github/instructions",
+    "/home/zdev/.config/copilot/instructions"
+  ],
+
+  // ==========================================
+  // YAML
+  // ==========================================
+  "yaml.schemaStore.enable": true,
+  "yaml.format.enable": true,
+  "yaml.customTags": [
+    "!!python/name:pymdownx.superfences.fence_code_format scalar",
+    "!!python/name:pymdownx.superfences.fence_div_format scalar",
+    "!!python/name:material.extensions.emoji.twemoji scalar",
+    "!!python/name:material.extensions.emoji.to_svg scalar"
+  ]
+}

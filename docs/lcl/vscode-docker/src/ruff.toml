@@ -1,0 +1,65 @@
+# Configuration Ruff — linter et formateur Python.
+# Ce fichier est copié dans /home/zdev/ à l'intérieur du conteneur et référencé
+# par l'extension Ruff dans VS Code (paramètre "ruff.configuration").
+# Il s'applique à tout le code Python développé dans l'environnement zdev-vscode.
+# Référence des règles : https://docs.astral.sh/ruff/rules/
+
+line-length = 88
+target-version = "py311"
+
+[lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "N",     # pep8-naming
+    "UP",    # pyupgrade
+    "B",     # flake8-bugbear
+    "C90",   # mccabe complexity
+    "SIM",   # flake8-simplify
+    "RUF",   # ruff-specific rules
+    "PTH",   # flake8-use-pathlib
+    "PERF",  # perflint
+    "TRY",   # tryceratops
+    "LOG",   # flake8-logging
+    "G",     # flake8-logging-format
+    "ERA",   # eradicate (commented-out code)
+    "FBT",   # flake8-boolean-trap
+    "PL",    # pylint
+    "D",     # pydocstyle
+]
+ignore = [
+    "E501",    # line too long — handled by formatter
+    "B008",    # function call in default arg (Typer/FastAPI pattern)
+    "D100",    # missing docstring in public module
+    "D104",    # missing docstring in public package
+    "D203",    # 1 blank line before class docstring — conflicts with D211
+    "D213",    # summary line on second line — conflicts with D212
+    "TRY003",  # long messages outside exception class — too restrictive
+]
+fixable = ["ALL"]
+
+[lint.isort]
+known-first-party = ["devinit"]
+force-sort-within-sections = true
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pylint]
+max-args = 8
+
+[lint.per-file-ignores]
+# Typer CLI: bool args are part of the API contract, high arg count is unavoidable
+"src/devinit/cli.py" = ["FBT001", "FBT002", "FBT003", "PLR0913", "C901"]
+# Templates: render_*() names are self-documenting, no docstrings needed
+"src/devinit/templates/*" = ["D103"]
+# Tests: function-name is self-documenting, magic values are expected in fixtures
+"tests/*" = ["D101", "D102", "D103", "PLR2004"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
