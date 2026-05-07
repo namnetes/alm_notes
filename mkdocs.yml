@@ -99,6 +99,7 @@ nav:
       - ExifTool: outils/exiftool.md
       - yt-dlp: outils/yt-dlp.md
       - Documentation Zed: outils/zed-docs.md
+      - Claude Code & Zed: outils/claude-code.md
   - Développement:
       - developpement/index.md
       - Python:
