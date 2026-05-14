@@ -1,27 +1,48 @@
-/* Affichage pleine largeur — supprime le max-width du grid (défaut : 61rem) */
+/* Largeur 100% + suppression des marges extérieures */
 .md-grid {
-  max-width: initial;
+  max-width: 100%;
+  margin: 0;
 }
 
-/* Sidebar de navigation deux fois plus large (défaut : 12.1rem → 24.2rem) */
-/* S'applique uniquement en desktop (la sidebar mobile est gérée séparément) */
-@media screen and (min-width: 76.25em) {
-  .md-sidebar--primary {
-    width: 24.2rem;
-  }
+.md-content {
+  max-width: 100%;
 }
 
-/* Correction du padding interne de la sidebar.
-   Material calcule : padding-right: calc(100% - 11.5rem) pour réserver
-   l'espace de la scrollbar. Avec 24.2rem de sidebar, ça devient 12.7rem
-   et écrase le contenu à 11.5rem. On fixe à 0.6rem (valeur d'origine). */
+/* Supprime le padding horizontal du conteneur principal */
+.md-main__inner {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Material impose un max-width sur le contenu de l'article */
+.md-content__inner {
+  max-width: 100%;
+}
+
+/* Sidebar gauche : 13.068rem (base Material 12.1rem, ajustée) */
+:root {
+  --md-sidebar-width: 13.068rem;
+}
+
+.md-sidebar {
+  width: 13.068rem !important;
+}
+
+/* Sidebar droite (TOC) : 20.7537rem */
+.md-sidebar--secondary {
+  width: 20.7537rem !important;
+}
+
+/* Material fixe le contenu de la sidebar à 11.5rem via calc(100% - 11.5rem)
+   en padding-right — on écrase ce calc pour utiliser toute la largeur. */
 @supports selector(::-webkit-scrollbar) {
-  [dir=ltr] .md-sidebar--primary .md-sidebar__inner {
-    padding-right: 0.6rem;
+  [dir=ltr] .md-sidebar__inner {
+    padding-right: 0.4rem !important;
   }
-  [dir=rtl] .md-sidebar--primary .md-sidebar__inner {
-    padding-left: 0.6rem;
-  }
+}
+
+.md-sidebar__inner {
+  padding-right: 0.4rem !important;
 }
 
 /* ── Sidebar : titres sur une seule ligne ─────────────────────────────────── */

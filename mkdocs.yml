@@ -23,8 +23,8 @@ theme:
     - navigation.tabs
     - navigation.sections
     - navigation.indexes
+    - navigation.expand
     - navigation.top
-    - toc.integrate
     - search.highlight
     - search.suggest
     - content.code.copy
@@ -32,6 +32,13 @@ theme:
 plugins:
   - search:
       lang: fr
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - awesome-pages
+  - include-markdown
+  - macros
 markdown_extensions:
   - admonition
   - pymdownx.details
@@ -40,6 +47,7 @@ markdown_extensions:
       line_spans: __span
       pygments_lang_class: true
   - pymdownx.inlinehilite
+  - pymdownx.snippets
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -109,11 +117,28 @@ nav:
               - Workflow projet: developpement/python/uv/projet.md
               - Outils CLI: developpement/python/uv/outils.md
               - Référence: developpement/python/uv/reference.md
+          - FastAPI:
+              - developpement/python/fastapi/index.md
+              - Installation et configuration: developpement/python/fastapi/setup.md
+              - Architecture et code: developpement/python/fastapi/code.md
+              - Débogage et exercices: developpement/python/fastapi/debug.md
+          - Design Patterns:
+              - developpement/python/patterns/index.md
+              - Policy Pattern: developpement/python/patterns/policy-pattern.md
+              - Ports & Adapters: developpement/python/patterns/ports-and-adapters.md
   - LCL:
       - lcl/index.md
       - Kafka:
           - lcl/kafka/index.md
           - Architecture z/OS → Kafka: lcl/kafka/architecture-zos-kafka.md
+      - zDevOps IDz:
+          - lcl/zdevops/index.md
+          - Gestion des évolutions: lcl/zdevops/fonctions-evolutions.md
+          - Gestion du manifest: lcl/zdevops/fonctions-manifest.md
+          - Pipelines CI/CD: lcl/zdevops/fonctions-cicd.md
+          - Déploiement unitaire: lcl/zdevops/fonctions-unitaire.md
+          - Configuration: lcl/zdevops/configuration.md
+          - Infrastructure Jenkins: lcl/zdevops/infrastructure-jenkins.md
   - Sécurité:
       - securite/index.md
       - Certificats: securite/certificats.md
