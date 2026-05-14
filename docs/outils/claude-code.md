@@ -416,7 +416,7 @@ un canal `latest` à côté du canal `stable`) :
 
 ---
 
-## 6. Tableau récapitulatif des fichiers et variables
+## 6. Tableau récapitulatif des fichiers et variables (authentification)
 
 | Élément | Emplacement / nom |
 | --- | --- |
@@ -432,7 +432,88 @@ un canal `latest` à côté du canal `stable`) :
 
 ---
 
-## 7. Bonnes pratiques
+## 7. Fichiers de configuration et instructions (CLAUDE.md)
+
+Claude Code charge des **instructions contextuelles** depuis des fichiers
+`CLAUDE.md` selon une hiérarchie précise, et gère les **permissions**
+par projet via `settings.local.json`.
+
+### 7.1 Hiérarchie des CLAUDE.md
+
+```
+~/CLAUDE.md                        ← global (tous projets)
+~/alm_dots/CLAUDE.md               ← même fichier (stow symlink)
+~/alm_dots/.claude/CLAUDE.md       ← instructions projet alm_dots
+```
+
+| Fichier | Portée | Chargement |
+| --- | --- | --- |
+| `~/CLAUDE.md` | **Tous les projets** | Toujours — c'est le fichier global |
+| `<projet>/CLAUDE.md` | Ce projet uniquement | Quand Claude travaille dans ce répertoire |
+| `<projet>/.claude/CLAUDE.md` | Ce projet uniquement | Idem — alternative dans le sous-dossier `.claude/` |
+
+!!! info "Le cas alm_dots"
+    `~/CLAUDE.md` est un **symlink stow** vers `~/alm_dots/CLAUDE.md`.
+    Quand Claude travaille dans `alm_dots/`, les deux fichiers ont un
+    contenu identique ; c'est intentionnel : les règles du projet (langue,
+    standards Python/Bash, MkDocs…) servent aussi de règles globales.
+
+    Le fichier `~/alm_dots/.claude/CLAUDE.md` est une copie du même
+    contenu, dédiée au contexte projet (chargée en plus du global).
+
+**Ce que contiennent ces fichiers :**
+
+- Langue de communication (français obligatoire)
+- Standards de code (Python 3.12+, `uv`, ruff 88 chars, Bash 80 chars)
+- Conventions de nommage et de documentation (Google Style)
+- Structure du dépôt et patterns clés
+- Configuration MkDocs obligatoire (Material, plugins, CSS 100 %)
+- Palette Mermaid
+
+### 7.2 Permissions locales — `settings.local.json`
+
+Emplacement : `~/alm_dots/.claude/settings.local.json`
+
+Ce fichier **pré-autorise** des outils et commandes spécifiques au projet,
+évitant les prompts de confirmation répétitifs.
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(rsync *)",
+      "Read(//home/galan/**)",
+      "WebSearch",
+      "WebFetch(domain:zed.dev)"
+    ]
+  }
+}
+```
+
+**Règles importantes :**
+
+- Portée **locale uniquement** — ce fichier ne s'applique qu'au répertoire
+  `alm_dots/` (et non aux autres projets).
+- Généré/enrichi via le skill `/fewer-permission-prompts` ou manuellement.
+- **Ne pas stower** ce fichier : il contient des données spécifiques à la
+  machine et à la session.
+- Il complète (sans remplacer) le fichier global `~/.claude/settings.json`.
+
+### 7.3 Résumé de la hiérarchie de configuration
+
+```
+~/.claude/settings.json            ← permissions globales (tous projets)
+~/CLAUDE.md                        ← instructions globales (tous projets)
+    ↓ surchargées/complétées par
+<projet>/.claude/settings.local.json  ← permissions projet
+<projet>/.claude/CLAUDE.md            ← instructions projet
+<projet>/CLAUDE.md                    ← instructions projet (racine)
+```
+
+---
+
+## 8. Bonnes pratiques
 
 - **Ne jamais committer** la clé API dans un dépôt Git, même privé.
   Le fichier `~/.config/claude/api.env` doit rester en mode `0600`.
