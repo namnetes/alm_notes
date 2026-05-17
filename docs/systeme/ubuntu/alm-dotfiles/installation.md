@@ -28,7 +28,7 @@
 
 ```bash
 cd ~
-git clone git@github.com:namnetes/alm-dotfiles.git
+git clone git@github.com:namnetes/alm_dots.git
 ```
 
 ---
@@ -36,20 +36,20 @@ git clone git@github.com:namnetes/alm-dotfiles.git
 ## Étape 2 — Déployer avec Stow
 
 ```bash
-cd ~/alm-dotfiles
-stow .
+cd ~/alm_dots
+stow --target="$HOME" .
 ```
 
 ??? tip "Simulation à sec"
     Prévisualisez sans créer de liens :
     ```bash
-    stow --simulate .
+    stow --target="$HOME" --simulate .
     ```
 
 ??? tip "Supprimer tous les liens"
     Pour nettoyer un déploiement existant :
     ```bash
-    stow -D .
+    stow --target="$HOME" -D .
     ```
 
 ---
@@ -72,7 +72,7 @@ ls -la ~/.config/starship.toml ~/.config/kitty ~/.config/zed
 ls -la ~/.functions/bin ~/.functions/tools
 ```
 
-Chaque entrée doit pointer vers le dépôt (`→ /home/<user>/alm-dotfiles/...`).
+Chaque entrée doit pointer vers le dépôt (`→ /home/<user>/alm_dots/...`).
 
 ---
 

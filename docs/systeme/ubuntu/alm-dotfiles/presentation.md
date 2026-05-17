@@ -1,6 +1,6 @@
 # Présentation
 
-`alm-dotfiles` est un dépôt personnel qui centralise tous les fichiers de configuration (dotfiles) de l'environnement de travail. Grâce à [GNU Stow](https://www.gnu.org/software/stow/), chaque fichier est déployé via un lien symbolique dans le répertoire personnel (`~`). La structure du dépôt reflète exactement celle de `~`.
+`alm_dots` est un dépôt personnel qui centralise tous les fichiers de configuration (dotfiles) de l'environnement de travail. Grâce à [GNU Stow](https://www.gnu.org/software/stow/), chaque fichier est déployé via un lien symbolique dans le répertoire personnel (`~`). La structure du dépôt reflète exactement celle de `~`.
 
 ---
 

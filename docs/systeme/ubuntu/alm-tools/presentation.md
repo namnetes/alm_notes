@@ -1,6 +1,6 @@
 # Présentation
 
-`alm-tools` automatise la mise en place d'un environnement de développement complet sur Ubuntu 24.04. Il regroupe un système de post-installation en 20 étapes et plusieurs outils complémentaires.
+`alm-tools` automatise la mise en place d'un environnement de développement complet sur Ubuntu 26.04. Il regroupe un système de post-installation en 22 étapes et plusieurs outils complémentaires.
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Composant | Emplacement | Description |
 |-----------|-------------|-------------|
-| Post-installation | `postinstall/` | 20 étapes séquentielles et idempotentes |
+| Post-installation | `postinstall/` | 22 étapes séquentielles et idempotentes |
 | Lanceur arrière-plan | `jobs/runbg.sh` | Lance un script en tâche de fond avec journalisation |
 | Sauvegarde Google Drive | `jobs/backup_googledrive.sh` | Synchronisation et archivage déterministe |
 | Sandbox Python | `python/sandbox.sh` | Environnement JupyterLab isolé |
@@ -21,7 +21,7 @@
 
 ```
 postinstall/run_build.sh          ← seul point d'entrée (wrapper sécurisé)
-    └── postinstall/build.sh      ← orchestrateur des 20 étapes
+    └── postinstall/build.sh      ← orchestrateur des 22 étapes
             └── modules/*.sh      ← 22 modules mono-fonction
                     └── lib/common.sh  ← librairie partagée
 ```
@@ -30,7 +30,7 @@ postinstall/run_build.sh          ← seul point d'entrée (wrapper sécurisé)
 |--------|---------|------|
 | 1 — Librairie | `lib/common.sh` | Logs, gestion d'erreurs, mutex (`lock_guard()`) |
 | 2 — Modules | `postinstall/modules/*.sh` | Un module = un outil installé |
-| 3 — Orchestrateur | `postinstall/build.sh` | Séquence les 20 étapes |
+| 3 — Orchestrateur | `postinstall/build.sh` | Séquence les 22 étapes |
 | 4 — Point d'entrée | `postinstall/run_build.sh` | Journalisation, `sudo -E`, validation |
 
 ---

@@ -42,7 +42,7 @@
 
 ## Paquets supprimés — `postinstall/config/packages_to_remove.list`
 
-Les paquets indésirables présents après une installation fraîche d'Ubuntu 24.04 sont supprimés à l'étape 3. Consultez le fichier dans le dépôt pour la liste complète.
+Les paquets indésirables présents après une installation fraîche d'Ubuntu 26.04 sont supprimés à l'étape 3. Consultez le fichier dans le dépôt pour la liste complète.
 
 ---
 
@@ -63,3 +63,4 @@ Les paquets indésirables présents après une installation fraîche d'Ubuntu 24
 | Zed | Script officiel | 16 |
 | `devinit` | `uv tool install ./devinit` | 18 |
 | `vmforge` | `bash vmforge/install.sh` | 19 |
+| Bruno | Dépôt officiel (GPG keyserver) | 22 |

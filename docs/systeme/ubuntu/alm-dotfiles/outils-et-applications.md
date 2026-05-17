@@ -92,7 +92,7 @@ Options clés à reproduire depuis le dépôt :
 
 ## Fond d'écran automatique
 
-Le script `change_wallpaper.sh` sélectionne aléatoirement une image dans `~/.config/my_ubuntu/wallpapers/` et l'applique via `gsettings`. Il installe automatiquement une tâche cron horaire au premier lancement.
+Le script `change_wallpaper.sh` sélectionne aléatoirement une image dans `~/.config/my_ubuntu/wallpapers/` et l'applique via `gsettings`. La planification horaire est gérée par le service systemd `change-wallpaper.timer`, déployé automatiquement via Stow.
 
 **Formats supportés :** `.jpg`, `.png`, `.webp`
 

@@ -9,7 +9,7 @@
 ### Installation manuelle
 
 ```bash
-cd ~/alm-tools/devinit
+cd ~/alm_tools/devinit
 uv tool install .
 ```
 
@@ -41,7 +41,7 @@ mon-projet/
     └── tasks.json
 ```
 
-Documentation complète : [devinit/README.md](https://github.com/namnetes/alm-tools/blob/main/devinit/README.md)
+Documentation complète : [devinit/README.md](https://github.com/namnetes/alm_tools/blob/main/devinit/README.md)
 
 ---
 
@@ -56,7 +56,7 @@ Installés automatiquement à l'étape 5 : `qemu-kvm`, `libvirt-daemon-system`, 
 ### Installation manuelle
 
 ```bash
-cd ~/alm-tools/vmforge
+cd ~/alm_tools/vmforge
 bash install.sh
 ```
 
@@ -83,8 +83,8 @@ vmforge inventory            # Générer un inventaire Ansible
 
 | Document | Sujet |
 |----------|-------|
-| [vmforge/README.md](https://github.com/namnetes/alm-tools/blob/main/vmforge/README.md) | Vue d'ensemble |
-| [vmforge/USAGE.md](https://github.com/namnetes/alm-tools/blob/main/vmforge/USAGE.md) | Guide d'utilisation |
+| [vmforge/README.md](https://github.com/namnetes/alm_tools/blob/main/vmforge/README.md) | Vue d'ensemble |
+| [vmforge/USAGE.md](https://github.com/namnetes/alm_tools/blob/main/vmforge/USAGE.md) | Guide d'utilisation |
 | `doc/01-concepts.md` | Architecture et concepts |
 | `doc/02-installation.md` | Installation détaillée |
 | `doc/03-configuration.md` | Options de configuration |

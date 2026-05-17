@@ -1,6 +1,6 @@
-# Post-Installation Ubuntu 24.04
+# Post-Installation Ubuntu 26.04
 
-Ce guide couvre les étapes à réaliser après une installation fraîche d'Ubuntu 24.04 : mise à jour du système, personnalisation de l'environnement, outils essentiels et configuration de Firefox.
+Ce guide couvre les étapes à réaliser après une installation fraîche d'Ubuntu 26.04 : mise à jour du système, personnalisation de l'environnement, outils essentiels et configuration de Firefox.
 
 ---
 
@@ -192,7 +192,7 @@ gsettings set com.github.stunkymonkey.nautilus-open-any-terminal flatpak 'system
 
 ## 5. Firefox
 
-Ubuntu 24.04 installe Firefox via Snap par défaut. Cette section explique comment le remplacer par un paquet DEB depuis les dépôts officiels de Mozilla, pour de meilleures performances et une intégration plus native.
+Ubuntu 26.04 installe Firefox via Snap par défaut. Cette section explique comment le remplacer par un paquet DEB depuis les dépôts officiels de Mozilla, pour de meilleures performances et une intégration plus native.
 
 ??? tip "Référence officielle"
     Instructions complètes disponibles sur [mozilla.org/fr/firefox/linux](https://www.mozilla.org/fr/firefox/linux/).

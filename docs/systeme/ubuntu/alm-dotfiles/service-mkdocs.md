@@ -44,7 +44,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=%h/alm_notes
-ExecStart=%h/.local/bin/uv run mkdocs serve
+ExecStart=%h/.local/bin/uv run mkdocs serve --dev-addr 0.0.0.0:8000
 Restart=on-failure
 RestartSec=5
 SuccessExitStatus=143

@@ -10,7 +10,7 @@ Tous les outils du shell sont initialisés dans `~/.bash_env`. Ce fichier est so
 |-------|-------|------|
 | 1 | **Starship** | Invite de commandes visuelle avec icônes Nerd Font |
 | 2 | **Éditeur par défaut** | Zed (avec fallback Nano) |
-| 3 | **Jupyter** | Environnement sandbox `~/Workspace/sandbox` |
+| 3 | **Jupyter** | Environnement sandbox `~/Workspaces/sandbox` |
 | 4 | **fnm** | Gestionnaire de versions Node.js avec auto-switch par répertoire |
 | 5 | **bat / batcat** | Remplacement de `cat` avec coloration syntaxique |
 | 6 | **FZF** | Recherche floue avec raccourcis clavier |

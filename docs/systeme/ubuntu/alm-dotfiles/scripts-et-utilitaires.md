@@ -22,7 +22,7 @@ Exécute `sudo apt update && apt upgrade -y`, `snap refresh`, puis `apt autoremo
 change_wallpaper.sh
 ```
 
-Sélectionne aléatoirement une image dans `~/.config/my_ubuntu/wallpapers/` et l'applique via `gsettings`. Installe automatiquement une tâche cron horaire au premier lancement.
+Sélectionne aléatoirement une image dans `~/.config/my_ubuntu/wallpapers/` et l'applique via `gsettings`. La planification horaire est gérée par le service systemd `change-wallpaper.timer`, déployé automatiquement via Stow.
 
 ---
 
@@ -81,7 +81,7 @@ csvc --strict fichier.csv   # mode strict
 
 Vérifie que toutes les lignes ont le même nombre de colonnes. Délimiteur par défaut : `;`. Signale les incohérences avec le numéro de ligne.
 
-Documentation complète : [doc/check_csv.md](https://github.com/namnetes/alm-dotfiles/blob/main/doc/check_csv.md)
+Documentation complète : [doc/check_csv.md](https://github.com/namnetes/alm_dots/blob/main/doc/check_csv.md)
 
 ---
 
@@ -93,7 +93,7 @@ renimg prefixe
 
 Renomme toutes les images du répertoire courant en `prefixe_01.ext`, `prefixe_02.ext`, etc. Préserve l'extension d'origine.
 
-Documentation complète : [doc/rename_images.md](https://github.com/namnetes/alm-dotfiles/blob/main/doc/rename_images.md)
+Documentation complète : [doc/rename_images.md](https://github.com/namnetes/alm_dots/blob/main/doc/rename_images.md)
 
 ---
 
@@ -105,7 +105,7 @@ gpgtool
 
 Interface interactive pour chiffrer ou déchiffrer des fichiers avec un mot de passe. Produit des fichiers `.gpg`.
 
-Documentation complète : [doc/encrypt_gpg.md](https://github.com/namnetes/alm-dotfiles/blob/main/doc/encrypt_gpg.md)
+Documentation complète : [doc/encrypt_gpg.md](https://github.com/namnetes/alm_dots/blob/main/doc/encrypt_gpg.md)
 
 ---
 
@@ -124,4 +124,4 @@ Interface curses (TUI) pour gérer les machines virtuelles KVM via libvirt.
 | Cloner | Duplication d'une VM existante |
 | Supprimer | Suppression propre |
 
-Documentation complète : [doc/manage_kvm.md](https://github.com/namnetes/alm-dotfiles/blob/main/doc/manage_kvm.md)
+Documentation complète : [doc/manage_kvm.md](https://github.com/namnetes/alm_dots/blob/main/doc/manage_kvm.md)

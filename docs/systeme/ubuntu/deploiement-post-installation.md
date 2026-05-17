@@ -1,6 +1,6 @@
 # Déploiement après installation fraîche
 
-Guide complet pour configurer un poste Ubuntu 24.04 après une installation fraîche, en s'appuyant sur [alm-tools](alm-tools/index.md) et [alm-dotfiles](alm-dotfiles/index.md).
+Guide complet pour configurer un poste Ubuntu 26.04 après une installation fraîche, en s'appuyant sur [alm-tools](alm-tools/index.md) et [alm-dotfiles](alm-dotfiles/index.md).
 
 ---
 
@@ -28,14 +28,14 @@ cat ~/.ssh/id_ed25519.pub
 
 ```bash
 cd ~
-git clone git@github.com:namnetes/alm-tools.git
+git clone git@github.com:namnetes/alm_tools.git
 git clone git@github.com:namnetes/alm_dots.git
 git clone git@github.com:namnetes/alm_notes.git
 ```
 
 | Dépôt | Emplacement local | Rôle | Documentation |
 |-------|-------------------|------|---------------|
-| [namnetes/alm-tools](https://github.com/namnetes/alm-tools) | `~/alm-tools` | Post-installation + outils système | [alm-tools](alm-tools/index.md) |
+| [namnetes/alm_tools](https://github.com/namnetes/alm_tools) | `~/alm_tools` | Post-installation + outils système | [alm-tools](alm-tools/index.md) |
 | [namnetes/alm_dots](https://github.com/namnetes/alm_dots) | `~/alm_dots` | Fichiers de configuration (dotfiles) | [alm-dotfiles](alm-dotfiles/index.md) |
 | [namnetes/alm_notes](https://github.com/namnetes/alm_notes) | `~/alm_notes` | Wiki personnel MkDocs | — |
 
@@ -47,13 +47,13 @@ git clone git@github.com:namnetes/alm_notes.git
     Cette étape installe 150+ paquets et tous les outils de développement. Durée : 20 à 40 min selon la connexion internet.
 
 ```bash
-cd ~/alm-tools/postinstall
+cd ~/alm_tools/postinstall
 sudo DEBUG=true ./run_build.sh
 ```
 
 Journaux disponibles dans `/var/log/debug_build_ubuntu_*.log`.
 
-Voir le détail des 20 étapes dans [alm-tools — Post-installation](alm-tools/post-installation.md).
+Voir le détail des 22 étapes dans [alm-tools — Post-installation](alm-tools/post-installation.md).
 
 ---
 
@@ -116,7 +116,7 @@ fc-list | grep -i firacode
 
 ## Étape 10 — Configurer le terminal Kitty
 
-La configuration est déjà déployée par `alm-dotfiles`. Pour définir Kitty comme terminal par défaut :
+La configuration est déjà déployée par `alm_dots`. Pour définir Kitty comme terminal par défaut :
 
 ```bash
 sudo update-alternatives --config x-terminal-emulator

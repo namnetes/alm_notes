@@ -1,8 +1,8 @@
-# alm-dotfiles
+# alm_dots
 
-`alm-dotfiles` centralise tous les fichiers de configuration personnels (dotfiles) et les déploie via [GNU Stow](https://www.gnu.org/software/stow/). Une seule commande installe l'environnement shell, le terminal, l'éditeur et les outils de développement.
+`alm_dots` centralise tous les fichiers de configuration personnels (dotfiles) et les déploie via [GNU Stow](https://www.gnu.org/software/stow/). Une seule commande installe l'environnement shell, le terminal, l'éditeur et les outils de développement.
 
-**Dépôt :** [github.com/namnetes/alm-dotfiles](https://github.com/namnetes/alm-dotfiles)
+**Dépôt :** [github.com/namnetes/alm_dots](https://github.com/namnetes/alm_dots)
 
 ---
 

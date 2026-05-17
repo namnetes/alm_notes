@@ -11,7 +11,7 @@ Ces outils sont disponibles sans installation préalable.
 Interface curses interactive pour gérer les VMs via libvirt.
 
 ```bash
-python3 ~/alm-tools/.functions/kvm_admin.py
+python3 ~/alm_tools/.functions/kvm_admin.py
 ```
 
 | Fonction | Description |
@@ -25,8 +25,8 @@ python3 ~/alm-tools/.functions/kvm_admin.py
 ### `csv_checker.py` — Validation CSV
 
 ```bash
-python3 ~/alm-tools/.functions/csv_checker.py -f fichier.csv
-python3 ~/alm-tools/.functions/csv_checker.py -f fichier.csv -d ";"
+python3 ~/alm_tools/.functions/csv_checker.py -f fichier.csv
+python3 ~/alm_tools/.functions/csv_checker.py -f fichier.csv -d ";"
 ```
 
 Vérifie la cohérence du nombre de colonnes sur toutes les lignes.
@@ -36,7 +36,7 @@ Vérifie la cohérence du nombre de colonnes sur toutes les lignes.
 ### `rename_images.py` — Renommage en lot
 
 ```bash
-python3 ~/alm-tools/.functions/rename_images.py prefixe
+python3 ~/alm_tools/.functions/rename_images.py prefixe
 ```
 
 Renomme toutes les images du répertoire courant en `prefixe_001.ext`, `prefixe_002.ext`, etc.
@@ -46,7 +46,7 @@ Renomme toutes les images du répertoire courant en `prefixe_001.ext`, `prefixe_
 ### `functions_infos.py` — Analyse de fonctions shell
 
 ```bash
-python3 ~/alm-tools/.functions/functions_infos.py script.sh
+python3 ~/alm_tools/.functions/functions_infos.py script.sh
 ```
 
 Extrait et documente les fonctions définies dans les scripts shell.
@@ -61,7 +61,7 @@ Crée un environnement de développement Python isolé avec JupyterLab.
     `uv` doit être installé — voir [post-installation](post-installation.md), étape 6.
 
 ```bash
-bash ~/alm-tools/python/sandbox.sh
+bash ~/alm_tools/python/sandbox.sh
 ```
 
 ### Ce que le script crée

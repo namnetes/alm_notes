@@ -1,4 +1,4 @@
-# Post-installation Ubuntu 24.04
+# Post-installation Ubuntu 26.04
 
 ---
 
@@ -6,7 +6,7 @@
 
 ```bash
 cd ~
-git clone git@github.com:namnetes/alm-tools.git
+git clone git@github.com:namnetes/alm_tools.git
 ```
 
 ---
@@ -17,7 +17,7 @@ git clone git@github.com:namnetes/alm-tools.git
     N'exécutez **jamais** `build.sh` directement. Le seul point d'entrée valide est `run_build.sh`.
 
 ```bash
-cd ~/alm-tools/postinstall
+cd ~/alm_tools/postinstall
 sudo DEBUG=true ./run_build.sh
 ```
 
@@ -29,7 +29,7 @@ Les journaux sont écrits automatiquement dans :
 
 ---
 
-## Les 20 étapes
+## Les 22 étapes
 
 | Étape | Module | Action |
 |-------|--------|--------|
@@ -52,7 +52,9 @@ Les journaux sont écrits automatiquement dans :
 | 17 | `update_plocate_db` | Mise à jour de la base de données `locate` |
 | 18 | `install_devinit` | Outil `devinit` *(dépend de l'étape 6)* |
 | 19 | `install_vmforge` | Outil `vmforge` *(dépend de l'étape 5)* |
-| 20 | `cleanup_system` | Nettoyage final du système |
+| 20 | `install_session_checks` | Framework de vérifications au login |
+| 21 | `install_nautilus_terminal` | Extension Nautilus → kitty |
+| 22 | `install_bruno` | Client API Bruno |
 
 ---
 
@@ -81,8 +83,8 @@ newgrp libvirt
 ### Déployer les dotfiles
 
 ```bash
-cd ~/alm-dotfiles
-stow .
+cd ~/alm_dots
+stow --target="$HOME" .
 source ~/.bashrc
 ```
 
