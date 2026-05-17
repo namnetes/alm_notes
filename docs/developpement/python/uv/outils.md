@@ -168,7 +168,7 @@ mon-hello v0.1.0
  - mon-hello
 ```
 
-### Mettre à jour un outil après modification
+### Mettre à jour un outil après modification du code local
 
 Pendant le développement, après avoir modifié le code :
 
@@ -184,6 +184,26 @@ Le `--force` réinstalle même si le numéro de version n'a pas changé.
     ```bash
     alias reinstall='uv tool install . --force'
     ```
+
+### Mettre à jour un outil installé depuis PyPI
+
+Pour récupérer une nouvelle version d'un outil installé depuis PyPI
+(ex: `ruff`, `httpie`, etc.) :
+
+```bash
+# Mettre à jour un outil spécifique
+uv tool upgrade ruff
+
+# Mettre à jour tous les outils installés d'un coup
+uv tool upgrade --all
+```
+
+`uv tool upgrade` respecte les contraintes de version déclarées lors de
+l'installation. Pour forcer une version précise, réinstallez :
+
+```bash
+uv tool install "ruff==0.9.0" --force
+```
 
 ### Désinstaller un outil
 
@@ -201,6 +221,30 @@ Vérifiez que la commande a bien disparu :
 which mon-hello   # ne doit plus rien retourner
 mon-hello         # doit afficher "command not found"
 ```
+
+### Exécuter un outil sans l'installer : `uvx`
+
+`uvx` est le raccourci officiel de `uv tool run`. Il télécharge l'outil,
+l'exécute dans un environnement temporaire, puis disparaît — rien n'est
+installé durablement sur le système.
+
+```bash
+# Équivalents exacts
+uvx ruff check .
+uv tool run ruff check .
+
+# Avec une version précise
+uvx ruff@0.9.0 check .
+
+# Outil dont le nom de commande diffère du nom de paquet
+uvx --from httpie http GET https://httpbin.org/get
+```
+
+| Situation | Commande recommandée |
+|---|---|
+| Utiliser un outil régulièrement | `uv tool install` → commande globale |
+| Tester ou utiliser ponctuellement | `uvx` |
+| Tester une version spécifique | `uvx outil@version` |
 
 ### Nettoyer le cache
 

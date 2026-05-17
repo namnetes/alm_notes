@@ -18,9 +18,65 @@ uv add --dev pytest httpx ruff pyright
 ```
 
 !!! info "Pourquoi `uvicorn[standard]` ?"
-    L'extra `[standard]` installe `uvloop` (boucle événementielle ultra-rapide) et
-    `httptools` (parseur HTTP en C). Sans ces extras, Uvicorn fonctionne mais avec
-    des performances réduites.
+
+    L'extra `[standard]` installe deux bibliothèques C qui remplacent les composants
+    Python pur d'Uvicorn par des équivalents natifs beaucoup plus rapides.
+
+    **`uvloop` — boucle événementielle haute performance**
+
+    Python asyncio s'appuie sur une boucle événementielle pour orchestrer les
+    coroutines. La boucle par défaut est écrite en Python pur. `uvloop` la remplace
+    par une implémentation en **Cython + C**, construite sur **libuv** — la même
+    bibliothèque asynchrone utilisée par Node.js.
+
+    - Gain mesuré : **2× à 4×** sur les benchmarks I/O intensifs.
+    - Activation transparente : Uvicorn détecte `uvloop` et l'active automatiquement,
+      sans aucune modification de code applicatif.
+    - Limite : Linux/macOS uniquement — ignoré sur Windows (Uvicorn bascule
+      silencieusement sur la boucle asyncio standard).
+
+    **`httptools` — parseur HTTP en C**
+
+    Par défaut, Uvicorn utilise **h11**, un parseur HTTP/1.1 écrit en Python pur.
+    `httptools` le remplace par les bindings Python de **llhttp** (successeur de
+    `http-parser`, lui aussi issu de l'écosystème Node.js).
+
+    - Parsing des requêtes HTTP significativement plus rapide, surtout sous charge.
+    - Activation transparente : Uvicorn bascule automatiquement sur `httptools` s'il
+      est présent, sans configuration.
+    - S'applique uniquement au protocole HTTP/1.1 — HTTP/2 passe par une autre pile
+      (`h2`).
+
+    **Installation**
+
+    La façon la plus simple est l'extra `[standard]`, qui installe les deux en une
+    commande :
+
+    ```bash
+    uv add "uvicorn[standard]"
+    ```
+
+    Si vous souhaitez les ajouter séparément (par exemple sur un projet existant) :
+
+    ```bash
+    uv add uvloop httptools
+    ```
+
+    Pour vérifier qu'ils sont bien pris en compte au démarrage, Uvicorn l'indique
+    dans ses logs :
+
+    ```
+    INFO:     Started server process [12346]
+    INFO:     Uvicorn running on http://127.0.0.1:8000
+    # Aucun message d'avertissement = uvloop + httptools actifs
+    ```
+
+    Sans ces extras, Uvicorn affiche :
+
+    ```
+    WARNING:  uvloop is not installed, the default asyncio event loop will be used.
+    WARNING:  httptools is not installed, the pure-Python HTTP parser will be used.
+    ```
 
 ### Structure initiale générée
 

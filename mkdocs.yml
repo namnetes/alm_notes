@@ -92,6 +92,7 @@ nav:
           - Packages et dépôts: systeme/ubuntu/alm-tools/packages-et-depots.md
           - Outils spécialisés: systeme/ubuntu/alm-tools/outils-specialises.md
           - Utilitaires Python et sandbox: systeme/ubuntu/alm-tools/utilitaires-python.md
+          - Framework session-checks: systeme/ubuntu/alm-tools/session-checks.md
   - Alpine Linux:
       - systeme/alpine/index.md
       - Post-Installation: systeme/alpine/post-installation.md
@@ -117,10 +118,17 @@ nav:
               - Workflow projet: developpement/python/uv/projet.md
               - Outils CLI: developpement/python/uv/outils.md
               - Référence: developpement/python/uv/reference.md
+          - Concurrence — Sync, Threads & Async:
+              - developpement/python/concurrence/index.md
+              - Python synchrone: developpement/python/concurrence/sync.md
+              - Python asynchrone: developpement/python/concurrence/async.md
+              - Les threads: developpement/python/concurrence/threads.md
+              - Async vs Sync vs Threads: developpement/python/concurrence/async-vs-sync.md
           - FastAPI:
               - developpement/python/fastapi/index.md
               - Installation et configuration: developpement/python/fastapi/setup.md
               - Architecture et code: developpement/python/fastapi/code.md
+              - Concepts avancés: developpement/python/fastapi/concepts-avances.md
               - Débogage et exercices: developpement/python/fastapi/debug.md
           - Design Patterns:
               - developpement/python/patterns/index.md
@@ -131,14 +139,6 @@ nav:
       - Kafka:
           - lcl/kafka/index.md
           - Architecture z/OS → Kafka: lcl/kafka/architecture-zos-kafka.md
-      - zDevOps IDz:
-          - lcl/zdevops/index.md
-          - Gestion des évolutions: lcl/zdevops/fonctions-evolutions.md
-          - Gestion du manifest: lcl/zdevops/fonctions-manifest.md
-          - Pipelines CI/CD: lcl/zdevops/fonctions-cicd.md
-          - Déploiement unitaire: lcl/zdevops/fonctions-unitaire.md
-          - Configuration: lcl/zdevops/configuration.md
-          - Infrastructure Jenkins: lcl/zdevops/infrastructure-jenkins.md
   - Sécurité:
       - securite/index.md
       - Certificats: securite/certificats.md

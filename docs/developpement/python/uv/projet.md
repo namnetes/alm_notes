@@ -124,6 +124,25 @@ uv run pytest
     il vérifie que les dépendances sont synchronisées avant d'exécuter, et il
     n'affecte pas votre shell courant.
 
+### Avec `--with` : dépendance temporaire
+
+`--with` ajoute un paquet pour une seule exécution, sans modifier
+`pyproject.toml` ni `uv.lock`. Utile pour tester un outil ou déboguer
+ponctuellement.
+
+```bash
+# Exécuter le script avec rich disponible, sans l'ajouter au projet
+uv run --with rich python src/mon_hello/main.py
+
+# Plusieurs paquets temporaires
+uv run --with rich --with httpx python script.py
+```
+
+!!! tip "Quand utiliser `--with` ?"
+    Réservez `--with` aux outils de débogage ponctuels ou aux scripts
+    jetables. Pour toute dépendance dont le projet a besoin durablement,
+    utilisez `uv add`.
+
 ### Premier test
 
 Ouvrez `src/mon_hello/main.py` et remplacez son contenu par :
@@ -177,6 +196,31 @@ Elles apparaissent dans `pyproject.toml` sous `[tool.uv]` ou
     les dépendances de production (sans `--dev`) sont incluses. `pytest` et
     `ruff` restent sur votre machine de développement.
 
+### Mettre à jour les dépendances
+
+Par défaut, `uv add` et `uv sync` respectent les contraintes de version
+définies dans `pyproject.toml` et ne mettent pas à jour automatiquement
+vers de nouvelles versions. Pour obtenir des versions plus récentes :
+
+```bash
+# Mettre à jour un paquet vers la dernière version compatible
+uv add requests --upgrade
+
+# Regénérer uv.lock avec les dernières versions de tous les paquets
+uv lock --upgrade
+
+# Cibler un seul paquet sans toucher aux autres
+uv lock --upgrade-package requests
+```
+
+!!! warning "Après `uv lock --upgrade`, relancez `uv sync`"
+    `uv lock --upgrade` met à jour le fichier de verrouillage, mais
+    n'installe pas encore les nouvelles versions dans le venv.
+    Enchaînez toujours avec `uv sync` :
+    ```bash
+    uv lock --upgrade && uv sync
+    ```
+
 ### Supprimer un paquet
 
 ```bash
@@ -189,6 +233,25 @@ uv remove requests
 uv pip list        # liste les paquets du venv
 uv tree            # arbre de dépendances
 ```
+
+### Exporter vers `requirements.txt`
+
+Certains environnements (images Docker, CI hérités) attendent un fichier
+`requirements.txt`. `uv export` génère ce fichier depuis `uv.lock` sans
+modifier le projet :
+
+```bash
+# Toutes les dépendances (prod + dev)
+uv export --format requirements-txt > requirements.txt
+
+# Production uniquement (sans --dev)
+uv export --format requirements-txt --no-dev > requirements-prod.txt
+```
+
+!!! info "Le fichier généré est figé"
+    `uv export` produit des versions épinglées (`requests==2.31.0`), pas
+    des plages. C'est intentionnel : il reflète l'état exact de `uv.lock`,
+    garantissant la même reproductibilité.
 
 ---
 

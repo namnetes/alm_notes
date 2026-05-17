@@ -59,6 +59,292 @@ flowchart TD
     n'est pas async-native, utilisez `def` — FastAPI l'exécutera dans un thread pool
     automatiquement.
 
+!!! info "Approfondir le sujet"
+    Cette section présente la règle dans le contexte d'une API FastAPI.
+    Pour une explication complète avec des exemples mesurables et un guide de
+    décision détaillé, consultez la section dédiée :
+    [Async vs Sync en Python](../concurrence/async-vs-sync.md).
+
+---
+
+## Les paramètres d'un endpoint
+
+C'est le concept le plus utilisé — et celui qui bloque le plus souvent les débutants.
+Un endpoint FastAPI peut recevoir des données depuis **quatre endroits différents**. FastAPI
+sait automatiquement où chercher chaque valeur grâce aux type hints.
+
+### Vue d'ensemble
+
+```mermaid
+flowchart LR
+    REQ["Requête HTTP\nGET /items/42?active=true\n+ body JSON\n+ header X-Token: abc"]
+
+    REQ --> PP["Path parameter\n/items/{item_id}\n→ item_id = 42"]
+    REQ --> QP["Query parameter\n?active=true\n→ active = True"]
+    REQ --> BP["Body parameter\ncorps JSON → objet Pydantic"]
+    REQ --> HP["Header parameter\nX-Token: abc\n→ token = abc"]
+
+    style PP fill:#e3f2fd,stroke:#1565c0
+    style QP fill:#e8f5e9,stroke:#2e7d32
+    style BP fill:#fff3e0,stroke:#e65100
+    style HP fill:#f3e5f5,stroke:#6a1b9a
+```
+
+### Règle de localisation automatique
+
+FastAPI déduit l'origine de chaque paramètre à partir de sa déclaration — sans annotation
+supplémentaire dans la plupart des cas :
+
+| Déclaration | Origine | Exemple de requête |
+|---|---|---|
+| Nom correspond à `{param}` dans la route | **Path** | `/items/42` |
+| Type simple (`int`, `str`, `bool`…) sans `{param}` | **Query** | `?active=true` |
+| Type Pydantic `BaseModel` | **Body (JSON)** | `{"name": "foo"}` |
+| `Header(...)` explicite | **Header HTTP** | `X-Token: abc` |
+
+---
+
+### 1. Paramètres de chemin (Path parameters)
+
+Ils font partie de l'URL et sont **toujours obligatoires**. Ils sont déclarés avec
+des accolades dans la route et comme paramètre typé dans la fonction.
+
+```python
+@router.get("/items/{item_id}")
+async def get_item(item_id: int) -> ItemResponse:
+    # item_id est automatiquement converti en int
+    # Si l'URL contient /items/abc → FastAPI retourne 422
+    ...
+
+@router.get("/apps/{app_code}/evolutions/{evolution_name}")
+async def get_evolution(
+    app_code: str,         # Premier segment dynamique
+    evolution_name: str,   # Second segment dynamique
+) -> EvolutionResponse:
+    ...
+```
+
+**Avec contraintes via `Path()` :**
+
+```python
+from fastapi import Path
+
+@router.get("/items/{item_id}")
+async def get_item(
+    item_id: int = Path(
+        ge=1,                          # item_id >= 1
+        description="Identifiant unique de l'item",
+    ),
+) -> ItemResponse:
+    ...
+```
+
+!!! warning "Ordre des routes — piège fréquent"
+    Si vous avez deux routes `/items/{item_id}` et `/items/featured`, déclarez
+    **`/items/featured` en premier**. FastAPI évalue les routes dans l'ordre de
+    déclaration — si `{item_id}` est déclaré avant, il intercepte "featured".
+
+    ```python
+    @router.get("/items/featured")   # ✅ En premier — route fixe
+    async def get_featured(): ...
+
+    @router.get("/items/{item_id}")  # Ensuite — route dynamique
+    async def get_item(item_id: int): ...
+    ```
+
+---
+
+### 2. Paramètres de requête (Query parameters)
+
+Ils apparaissent après le `?` dans l'URL. Ils sont optionnels par défaut si une
+valeur par défaut est fournie, obligatoires sinon.
+
+```python
+# GET /items?active=true&page=2&size=10
+@router.get("/items")
+async def list_items(
+    active: bool = True,          # Optionnel — valeur par défaut : True
+    page: int = 1,                # Optionnel — valeur par défaut : 1
+    size: int = 10,               # Optionnel — valeur par défaut : 10
+    search: str | None = None,    # Optionnel — absent par défaut (None)
+) -> list[ItemResponse]:
+    ...
+```
+
+Exemples d'URL et valeurs reçues :
+
+| URL | `active` | `page` | `search` |
+|---|---|---|---|
+| `/items` | `True` | `1` | `None` |
+| `/items?active=false` | `False` | `1` | `None` |
+| `/items?page=3&search=api` | `True` | `3` | `"api"` |
+| `/items?active=oui` | **422** — `oui` n'est pas un bool | — | — |
+
+**Avec contraintes via `Query()` :**
+
+```python
+from fastapi import Query
+
+@router.get("/items")
+async def list_items(
+    page: int = Query(default=1, ge=1, description="Numéro de page (commence à 1)"),
+    size: int = Query(default=10, ge=1, le=100, description="Nombre de résultats (max 100)"),
+    search: str | None = Query(default=None, min_length=2, description="Terme de recherche"),
+) -> list[ItemResponse]:
+    ...
+```
+
+!!! info "Conversion automatique des types"
+    FastAPI convertit les chaînes de l'URL vers le type déclaré :
+    `?active=false` → `False` (bool), `?page=3` → `3` (int),
+    `?active=0` → `False`, `?active=1` → `True`.
+
+---
+
+### 3. Paramètre de corps (Body parameter)
+
+Lorsque le type du paramètre est un modèle Pydantic, FastAPI lit automatiquement le
+**corps JSON** de la requête.
+
+```python
+class ItemCreate(BaseModel):
+    name: str = Field(min_length=3)
+    version: str
+    description: str | None = None
+
+# POST /items
+# Corps : {"name": "FastAPI", "version": "0.115.0"}
+@router.post("/items", status_code=201)
+async def create_item(item: ItemCreate) -> ItemResponse:
+    # item.name = "FastAPI"
+    # item.version = "0.115.0"
+    # item.description = None (absent dans le JSON)
+    ...
+```
+
+**Champs optionnels dans le body :**
+
+```python
+class ItemUpdate(BaseModel):
+    """Modèle pour la mise à jour partielle (PATCH).
+
+    Tous les champs sont optionnels : seuls les champs envoyés sont modifiés.
+    """
+    name: str | None = None       # Absent dans le JSON → None → pas modifié
+    version: str | None = None
+    description: str | None = None
+
+# PATCH /items/1
+# Corps : {"version": "0.116.0"}   ← seul ce champ est modifié
+@router.patch("/items/{item_id}")
+async def update_item(
+    item_id: int,
+    data: ItemUpdate,
+) -> ItemResponse:
+    # data.name = None (absent)
+    # data.version = "0.116.0"
+    # data.description = None (absent)
+    updates = data.model_dump(exclude_none=True)  # → {"version": "0.116.0"}
+    ...
+```
+
+!!! info "Pourquoi `exclude_none=True` ?"
+    `model_dump()` retourne tous les champs, y compris ceux à `None`. Avec
+    `exclude_none=True`, on n'obtient que les champs réellement envoyés par le client
+    — indispensable pour ne pas écraser les valeurs existantes avec `None`.
+
+---
+
+### 4. Paramètres de header
+
+Les headers HTTP sont lus via `Header()`. FastAPI convertit automatiquement les tirets
+en underscores (`X-API-Key` → `x_api_key`) :
+
+```python
+from fastapi import Header
+
+@router.get("/protected")
+async def protected_route(
+    x_api_key: str = Header(...),          # Obligatoire — lève 422 si absent
+    x_request_id: str | None = Header(None),  # Optionnel
+) -> dict:
+    return {"key": x_api_key, "request_id": x_request_id}
+```
+
+Requête correspondante :
+```bash
+curl http://localhost:8000/protected \
+  -H "X-API-Key: mon-token" \
+  -H "X-Request-Id: abc-123"
+```
+
+---
+
+### 5. Combiner plusieurs types — exemple réel
+
+Un endpoint réel combine souvent path, query et body. FastAPI disambiguë sans
+annotation supplémentaire :
+
+```python
+class CommentCreate(BaseModel):
+    content: str = Field(min_length=1, max_length=500)
+    is_pinned: bool = False
+
+# POST /articles/42/comments?notify=true
+@router.post("/articles/{article_id}/comments", status_code=201)
+async def add_comment(
+    article_id: int,                    # ← Path  (dans l'URL)
+    notify: bool = False,               # ← Query (?notify=true)
+    comment: CommentCreate,             # ← Body  (corps JSON)
+    x_author: str | None = Header(None),# ← Header
+) -> CommentResponse:
+    ...
+```
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant FA as FastAPI
+
+    C->>FA: POST /articles/42/comments?notify=true\nX-Author: alice\n{"content": "Super article !"}
+
+    Note over FA: article_id = 42 (du chemin)
+    Note over FA: notify = True (du query string)
+    Note over FA: comment.content = "Super article !" (du body)
+    Note over FA: x_author = "alice" (du header)
+
+    FA-->>C: 201 Created {commentaire créé}
+```
+
+---
+
+### 6. Récapitulatif — quand utiliser quoi ?
+
+```mermaid
+flowchart TD
+    Q1{"La valeur identifie\nune ressource dans l'URL ?"}
+    Q1 -- Oui --> PATH["Path parameter\n/items/{id}"]
+    Q1 -- Non --> Q2{"La valeur filtre ou\npagine une collection ?"}
+    Q2 -- Oui --> QUERY["Query parameter\n?page=2&active=true"]
+    Q2 -- Non --> Q3{"La valeur est\nun objet complexe ?"}
+    Q3 -- Oui --> BODY["Body parameter\ncorps JSON"]
+    Q3 -- Non --> Q4{"Metadonnee de transport ?\nex: auth, tracabilite"}
+    Q4 -- Oui --> HEADER["Header parameter\nX-API-Key: ..."]
+    Q4 -- Non --> QUERY
+
+    style PATH fill:#e3f2fd,stroke:#1565c0
+    style QUERY fill:#e8f5e9,stroke:#2e7d32
+    style BODY fill:#fff3e0,stroke:#e65100
+    style HEADER fill:#f3e5f5,stroke:#6a1b9a
+```
+
+| Type | Obligatoire par défaut | Visible dans l'URL | Usage typique |
+|---|---|---|---|
+| Path | Toujours | Oui | Identifier une ressource (`/users/42`) |
+| Query | Non (si défaut) | Oui | Filtrer, paginer, rechercher |
+| Body | Oui (si pas de défaut) | Non | Créer ou modifier une ressource |
+| Header | Non (si défaut None) | Non | Auth, traçabilité, versioning |
+
 ---
 
 ## Structure de projet (Clean Architecture)

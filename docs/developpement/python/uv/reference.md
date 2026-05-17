@@ -25,10 +25,15 @@
 | `uv sync` | Synchroniser le venv depuis `uv.lock` |
 | `uv sync --no-dev` | Synchroniser sans les dépendances de dev |
 | `uv run python script.py` | Exécuter un script |
+| `uv run --with rich python script.py` | Exécuter avec une dépendance temporaire |
 | `uv run pytest` | Lancer les tests |
 | `uv pip list` | Lister les paquets installés dans le venv |
 | `uv tree` | Afficher l'arbre de dépendances |
 | `uv lock` | Régénérer `uv.lock` sans modifier le venv |
+| `uv lock --upgrade` | Mettre à jour toutes les dépendances dans `uv.lock` |
+| `uv lock --upgrade-package requests` | Mettre à jour un seul paquet dans `uv.lock` |
+| `uv add requests --upgrade` | Mettre à jour un paquet et `uv.lock` |
+| `uv export --format requirements-txt` | Exporter vers `requirements.txt` |
 
 ### Outils globaux
 
@@ -37,9 +42,13 @@
 | `uv tool install .` | Installer le projet courant comme outil global |
 | `uv tool install . --force` | Réinstaller (après modification du code) |
 | `uv tool install ruff` | Installer un outil depuis PyPI |
+| `uv tool upgrade ruff` | Mettre à jour un outil installé |
+| `uv tool upgrade --all` | Mettre à jour tous les outils installés |
 | `uv tool list` | Lister les outils installés |
 | `uv tool uninstall mon-outil` | Désinstaller un outil |
 | `uv tool run ruff check .` | Exécuter un outil sans l'installer |
+| `uvx ruff check .` | Raccourci de `uv tool run` |
+| `uvx ruff@0.9.0 check .` | Exécuter une version précise sans l'installer |
 | `uv cache clean` | Vider le cache de téléchargement |
 
 ---
