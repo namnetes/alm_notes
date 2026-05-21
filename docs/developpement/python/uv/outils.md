@@ -170,20 +170,27 @@ mon-hello v0.1.0
 
 ### Mettre à jour un outil après modification du code local
 
-Pendant le développement, après avoir modifié le code :
+**Option recommandée — mode editable** : les modifications du code source sont
+actives immédiatement sans aucune réinstallation.
 
 ```bash
-uv tool install . --force
+cd ~/alm_tools/mon-outil
+uv tool install --editable .
 ```
 
-Le `--force` réinstalle même si le numéro de version n'a pas changé.
+**Option ponctuelle — sans cache** : réinstalle en forçant un rebuild depuis
+les sources (utile si on ne veut pas rester en mode editable) :
 
-!!! tip "Alias pratique"
-    Si vous mettez souvent à jour un outil en cours de développement,
-    ajoutez un alias dans votre `.bash_aliases` :
-    ```bash
-    alias reinstall='uv tool install . --force'
-    ```
+```bash
+uv tool uninstall mon-outil
+uv tool install --no-cache /chemin/vers/mon-outil
+```
+
+!!! warning "`--force` utilise le cache — attention"
+    `uv tool install . --force` réinstalle même si la version n'a pas changé,
+    **mais réutilise le wheel mis en cache**. Si vous avez modifié le code
+    source, les changements ne seront pas pris en compte. Préférer `--editable`
+    ou `--no-cache`.
 
 ### Mettre à jour un outil installé depuis PyPI
 
