@@ -140,6 +140,12 @@ nav:
       - Kafka:
           - lcl/kafka/index.md
           - Architecture z/OS → Kafka: lcl/kafka/architecture-zos-kafka.md
+  - Électronique:
+      - electronique/index.md
+      - PlatformIO:
+          - electronique/platformio/index.md
+          - Premier projet pas à pas: electronique/platformio/premier-projet.md
+          - Intégration Zed: electronique/platformio/zed.md
   - Sécurité:
       - securite/index.md
       - Certificats: securite/certificats.md
