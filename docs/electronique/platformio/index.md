@@ -67,19 +67,20 @@ framework = arduino
 
 ### Prérequis
 
-- Python 3.8 ou supérieur installé (`python3 --version`)
-- `pipx` disponible — si ce n'est pas le cas :
+- `uv` installé — si ce n'est pas le cas :
 
 ```bash
-sudo apt install pipx
-pipx ensurepath
+curl -LsSf https://astral.sh/uv/install.sh | sh
 # Puis redémarrer le terminal
 ```
 
 ### Installer PlatformIO Core
 
+`uv tool install` installe PlatformIO dans un environnement isolé et l'expose
+dans le `PATH`, exactement comme `pipx` — mais sans dépendance supplémentaire.
+
 ```bash
-pipx install platformio
+uv tool install platformio
 ```
 
 Vérifier que l'installation a fonctionné :
@@ -92,7 +93,7 @@ pio --version
 !!! note "Mise à jour"
     Pour mettre à jour PlatformIO plus tard :
     ```bash
-    pipx upgrade platformio
+    uv tool upgrade platformio
     ```
 
 ### Première utilisation : installer une platform

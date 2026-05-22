@@ -229,7 +229,7 @@ réinstallation du système ou sur une nouvelle machine.
 ### 1. Réinstaller PlatformIO Core
 
 ```bash
-pipx install platformio
+uv tool install platformio
 pio --version   # vérifier
 ```
 
