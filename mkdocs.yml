@@ -146,6 +146,9 @@ nav:
           - electronique/platformio/index.md
           - Premier projet pas à pas: electronique/platformio/premier-projet.md
           - Intégration Zed: electronique/platformio/zed.md
+      - pioinit:
+          - electronique/pioinit/index.md
+          - Guide d'utilisation: electronique/pioinit/utilisation.md
   - Sécurité:
       - securite/index.md
       - Certificats: securite/certificats.md
