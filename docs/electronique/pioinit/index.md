@@ -2,7 +2,7 @@
 
 **pioinit** est un générateur de projets PlatformIO embarqués.
 Une seule commande crée la structure complète d'un projet :
-code C/C++, Makefile, configuration Zed, et documentation MkDocs + Doxygen.
+code C/C++, Makefile, configuration Zed, et documentation Doxygen.
 
 !!! tip "Analogie avec devinit"
     pioinit est à l'électronique ce que `devinit` est au Python :
@@ -18,22 +18,13 @@ mon-projet/
 ├── src/main.cpp          # boilerplate C++ avec commentaires Doxygen
 ├── include/README        # répertoire pour les headers .h
 ├── lib/README            # répertoire pour les bibliothèques privées
-├── .gitignore            # exclut .pio/, compile_commands.json, site/
-├── Makefile              # build, upload, monitor, flash, compiledb,
-│                         # doxygen, docs, docs-start, docs-stop, docs-build
-├── pyproject.toml        # dépendances MkDocs uniquement (pas un projet Python)
-├── mkdocs.yml            # documentation projet (Material theme)
+├── .gitignore            # exclut .pio/, compile_commands.json, doxygen_output/
+├── Makefile              # build, upload, monitor, flash, compiledb, doxygen
 ├── Doxyfile              # documentation API C/C++ (Doxygen)
 ├── README.md             # tableau matériel + instructions d'utilisation
-├── .zed/
-│   ├── settings.json     # clangd comme LSP C/C++
-│   └── tasks.json        # 9 tâches PlatformIO + docs
-└── docs/
-    ├── index.md
-    ├── materiel.md       # composants et câblage
-    ├── configuration.md  # platformio.ini expliqué
-    └── stylesheets/
-        └── extra.css
+└── .zed/
+    ├── settings.json     # clangd comme LSP C/C++
+    └── tasks.json        # 7 tâches PlatformIO + Doxygen
 ```
 
 ---

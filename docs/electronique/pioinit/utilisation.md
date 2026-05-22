@@ -113,7 +113,7 @@ et soulignement des erreurs de syntaxe en temps réel.
 Ouvrez le projet dans Zed, puis lancez une tâche via la palette de commandes :
 
 1. ++ctrl+shift+p++ → taper `task` → **Tasks: Spawn Task**
-2. Choisissez parmi les 9 tâches disponibles :
+2. Choisissez parmi les 7 tâches disponibles :
 
 | Tâche | Équivalent make |
 |-------|----------------|
@@ -123,8 +123,6 @@ Ouvrez le projet dans Zed, puis lancez une tâche via la palette de commandes :
 | `PIO: Flash (upload + monitor)` | `make flash` |
 | `PIO: Clean` | `make clean` |
 | `PIO: Generate compile_commands.json` | `make compiledb` |
-| `Docs: serve (MkDocs)` | `make docs` |
-| `Docs: build (MkDocs)` | `make docs-build` |
 | `Docs: Doxygen` | `make doxygen` |
 
 ### Ajouter des raccourcis clavier
@@ -147,32 +145,6 @@ Ouvrez le projet dans Zed, puis lancez une tâche via la palette de commandes :
 ---
 
 ## Documentation du projet
-
-### MkDocs (documentation narrative)
-
-```bash
-# Installer les dépendances (une seule fois par projet)
-uv sync
-
-# Démarrer le serveur de prévisualisation
-make docs
-# → http://127.0.0.1:800x
-
-# En arrière-plan
-make docs-start
-make docs-stop
-
-# Build statique
-make docs-build
-```
-
-Les pages à compléter après génération :
-
-| Page | Contenu à remplir |
-|------|-------------------|
-| `docs/materiel.md` | Schéma de câblage, liste de composants |
-| `docs/configuration.md` | Options spécifiques à votre projet |
-| `docs/index.md` | Description, overview, prérequis |
 
 ### Doxygen (documentation API C/C++)
 
@@ -236,7 +208,6 @@ Le `.zed/tasks.json` est versionné — les tâches sont immédiatement disponib
 
 ```bash
 make compiledb              # génère compile_commands.json
-uv sync                     # installe les dépendances MkDocs
 ```
 
 ### 5. Vérifier les droits sur le port série
@@ -256,12 +227,9 @@ sudo usermod -aG dialout $USER
 | `src/`, `include/`, `lib/` | ✅ | Code source |
 | `Makefile` | ✅ | Cibles de workflow |
 | `.zed/tasks.json` | ✅ | Tâches partagées avec le projet |
-| `pyproject.toml`, `mkdocs.yml` | ✅ | Config documentation |
-| `docs/` | ✅ | Sources documentation |
+| `Doxyfile` | ✅ | Config documentation API |
 | `.pio/` | ❌ | Build artifacts — `pio run` les régénère |
 | `compile_commands.json` | ❌ | `make compiledb` le régénère |
-| `site/` | ❌ | `make docs-build` le régénère |
 | `doxygen_output/` | ❌ | `make doxygen` le régénère |
-| `.venv/` | ❌ | `uv sync` le régénère |
 
 `.gitignore` exclut automatiquement tous les fichiers ❌.
