@@ -75,32 +75,51 @@ stow --target="$HOME" .
 source ~/.bashrc
 ```
 
-Voir [alm-dotfiles — Installation](alm-dotfiles/installation.md) pour la vérification et la configuration Git manuelle.
+!!! info "`.gitconfig` déjà en place"
+    Stow déploie également `~/.gitconfig` (nom, email, alias, options). Aucune configuration Git manuelle n'est nécessaire.
+
+Voir [alm-dotfiles — Installation](alm-dotfiles/installation.md) pour la vérification des liens symboliques.
 
 ---
 
-## Étape 7 — Activer le service MkDocs
+## Étape 7 — Installer les plugins Yazi
 
-Le fichier `.service` est déjà en place grâce à Stow (étape 6). Il reste à l'activer :
+Les plugins Yazi ne sont pas inclus dans Stow (générés localement). À installer une seule fois :
+
+```bash
+ya pack -a yazi-rs/plugins#git
+ya pack -a yazi-rs/plugins#archive
+ya pack -a yazi-rs/plugins#miller
+ya pack -a yazi-rs/plugins#hexyl
+ya pack -a yazi-rs/plugins#nbpreview
+ya pack -a yazi-rs/plugins#full-border
+ya pack -a yazi-rs/plugins#smart-filter
+ya pack -a yazi-rs/plugins#jump-to-char
+ya pack -a yazi-rs/plugins#relative-motions
+ya pack -a yazi-rs/plugins#max-preview
+ya pack -a yazi-rs/plugins#hide-preview
+ya pack -a yazi-rs/plugins#starship
+ya pack -a yazi-rs/plugins#diff
+ya pack -a yazi-rs/plugins#chmod
+```
+
+---
+
+## Étape 8 — Activer les services systemd
+
+Les fichiers `.service` et `.timer` sont déjà en place grâce à Stow (étape 6). Il reste à les activer :
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user enable mkdocs.service
-systemctl --user start mkdocs.service
+
+# Wiki personnel (http://127.0.0.1:8000/)
+systemctl --user enable --now mkdocs.service
+
+# Fond d'écran automatique (rotation horaire)
+systemctl --user enable --now change-wallpaper.timer
 ```
 
-Le wiki est accessible sur **<http://127.0.0.1:8000/>** et démarre automatiquement à chaque ouverture de session.
-
-Voir [alm-dotfiles — Service MkDocs](alm-dotfiles/service-mkdocs.md) pour les commandes de gestion et le détail du service.
-
----
-
-## Étape 8 — Configurer Git
-
-```bash
-git config --global user.name "Votre Nom"
-git config --global user.email "votre@email.com"
-```
+Voir [alm-dotfiles — Service MkDocs](alm-dotfiles/service-mkdocs.md) pour les commandes de gestion.
 
 ---
 
@@ -140,5 +159,5 @@ mkdir -p ~/.config/my_ubuntu/wallpapers
 |--------|--------------|
 | 1 à 3 | ~5 min |
 | 4 (post-installation) | 20 à 40 min |
-| 5 à 11 | ~10 min |
+| 5 à 12 | ~15 min |
 | **Total** | **~1 heure** |

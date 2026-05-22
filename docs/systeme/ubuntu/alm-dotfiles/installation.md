@@ -76,20 +76,40 @@ Chaque entrée doit pointer vers le dépôt (`→ /home/<user>/alm_dots/...`).
 
 ---
 
-## Étape 5 — Configurer Git
+## Étape 5 — Installer les plugins Yazi
 
-`.gitconfig` est exclu de Stow. Configurez-le manuellement :
+Les plugins Yazi ne sont pas stowés (générés localement). À installer une seule fois :
 
 ```bash
-git config --global user.name "Votre Nom"
-git config --global user.email "votre@email.com"
+ya pack -a yazi-rs/plugins#git
+ya pack -a yazi-rs/plugins#archive
+ya pack -a yazi-rs/plugins#miller
+ya pack -a yazi-rs/plugins#hexyl
+ya pack -a yazi-rs/plugins#nbpreview
+ya pack -a yazi-rs/plugins#full-border
+ya pack -a yazi-rs/plugins#smart-filter
+ya pack -a yazi-rs/plugins#jump-to-char
+ya pack -a yazi-rs/plugins#relative-motions
+ya pack -a yazi-rs/plugins#max-preview
+ya pack -a yazi-rs/plugins#hide-preview
+ya pack -a yazi-rs/plugins#starship
+ya pack -a yazi-rs/plugins#diff
+ya pack -a yazi-rs/plugins#chmod
 ```
-
-Consultez le fichier `.gitconfig` du dépôt pour reproduire les alias et options recommandés.
 
 ---
 
-## Étape 6 — Fonds d'écran (optionnel)
+## Étape 6 — Activer le timer fond d'écran
+
+```bash
+systemctl --user enable --now change-wallpaper.timer
+```
+
+Le fond d'écran changera automatiquement toutes les heures et au prochain démarrage de session.
+
+---
+
+## Étape 7 — Fonds d'écran (optionnel)
 
 ```bash
 mkdir -p ~/.config/my_ubuntu/wallpapers

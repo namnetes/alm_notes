@@ -34,7 +34,11 @@
 | `.functions/bin/` | `~/.functions/bin/` | Scripts exécutables dans le PATH |
 | `.functions/lib/` | `~/.functions/lib/` | Librairies shell (sourcées au démarrage) |
 | `.functions/tools/` | `~/.functions/tools/` | Utilitaires Python |
-| `.local/share/applications/` | `~/.local/share/applications/` | Raccourcis bureau |
+| `.gitconfig` | `~/.gitconfig` | Configuration Git (alias, éditeur, options) |
+| `.claudecodeignore` | `~/.claudecodeignore` | Fichiers ignorés par Claude Code |
+| `.ssh/config` | `~/.ssh/config` | Alias SSH pour le serveur SFTP local |
+| `CLAUDE.md` | `~/CLAUDE.md` | Règles globales Claude Code (tous projets) |
+| `.claude/` | `~/.claude/` | Templates CLAUDE.md + règles Claude |
 
 ---
 
@@ -43,16 +47,17 @@
 Le fichier `.stow-local-ignore` exclut du déploiement les éléments suivants :
 
 ```
-.git
-.gitconfig
+.git/
 .gitignore
-CLAUDE.md
-.claudecodeignore
+system-config/
+settings.local.json
+.github/
 .editorconfig
-.github
-system-config
 README.md
 ```
 
-!!! warning "`.gitconfig` non déployé"
-    `.gitconfig` est exclu car il contient des données personnelles (email, clé GPG). Il doit être configuré manuellement après le déploiement — voir [Installation](installation.md).
+!!! info "`.gitconfig` est stowé"
+    Contrairement à ce que l'on pourrait croire, `.gitconfig` **est bien déployé par Stow** (`~/.gitconfig → alm_dots/.gitconfig`). La configuration Git (nom, email, alias) est donc restaurée automatiquement à la réinstallation.
+
+!!! info "`settings.local.json` non stowé"
+    Ce fichier contient les permissions accordées à Claude Code session par session. Il est exclu de Stow et n'est pas versionné — Claude Code le recrée automatiquement.
