@@ -114,12 +114,15 @@ Après un `git pull` sur `alm_tools` :
 
 ```bash
 cd ~/alm_tools/pioinit
-uv tool install . --force
+uv tool install --no-cache .
 pioinit --version
 ```
 
-Le `--force` réinstalle même si le numéro de version n'a pas changé —
-utile pendant le développement actif de pioinit.
+!!! warning "Toujours utiliser `--no-cache`"
+    `uv tool install --force` réutilise le wheel mis en cache par uv et
+    **n'installe pas les modifications du code source**. L'option `--no-cache`
+    force un rebuild complet du wheel depuis les sources — indispensable après
+    toute modification de pioinit.
 
 ### Désinstaller
 
