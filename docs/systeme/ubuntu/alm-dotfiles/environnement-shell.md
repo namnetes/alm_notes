@@ -85,17 +85,87 @@ Toutes les fonctions sont accessibles depuis n'importe quel répertoire. La comm
 
 ## Alias Git dynamiques — `.functions/lib/git_aliases.sh`
 
-Au démarrage, `git_aliases.sh` lit la section `[alias]` de `.gitconfig` et crée des alias Bash équivalents :
+Au démarrage, `git_aliases.sh` lit la section `[alias]` de `.gitconfig` et crée les alias Bash correspondants. Tous les alias commencent par `g` — taper `g` + `Tab` dans le terminal affiche l'ensemble des opérations disponibles.
 
-| Alias Bash | Commande Git |
-|-----------|-------------|
-| `st` | `git status` |
-| `co` | `git checkout` |
-| `ci` | `git commit` |
-| `d` | `git diff` |
-| `lg` | `git log --oneline --graph --decorate` |
-| `gl10` | `git log -10 --oneline` |
-| `gcleanup` | Supprime les branches locales déjà mergées |
+**Status / Info**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gst` | `git status -sb` |
+
+**Branches**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gb` | `git branch` |
+| `gco` | `git checkout` |
+| `gcb` | `git checkout -b` |
+| `gbd` | `git branch -d` |
+| `gbD` | `git branch -D` |
+
+**Commit**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gc` | `git commit` |
+| `gcm` | `git commit -m` |
+| `gca` | `git commit --amend --no-edit` |
+
+**Diff**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gd` | `git diff` |
+| `gds` | `git diff --staged` |
+| `gdt` | `git difftool` (visuel Kitty) |
+| `gdts` | `git difftool --staged` |
+
+**Fetch / Pull / Push**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gf` | `git fetch` |
+| `gfa` | `git fetch --all` |
+| `gl` | `git pull` |
+| `gp` | `git push` |
+| `gpo` | `git push origin HEAD` |
+
+**Log**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `glg` | `git log --graph` (coloré, toutes branches) |
+| `glo` | `git log --oneline --decorate` |
+| `glast` | `git log -1 HEAD` |
+
+**Stash**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gsta` | `git stash` |
+| `gstp` | `git stash pop` |
+| `gstl` | `git stash list` |
+
+**Reset / Undo**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gundo` | `git reset --soft HEAD~1` |
+| `gunstage` | `git reset HEAD --` |
+
+**Rebase**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `grb` | `git rebase` |
+| `grbi` | `git rebase -i` |
+
+**Maintenance**
+
+| Alias | Commande Git |
+|-------|-------------|
+| `gclean` | Supprime les branches locales déjà mergées |
+| `gprune` | `git remote prune origin` |
 
 ---
 
