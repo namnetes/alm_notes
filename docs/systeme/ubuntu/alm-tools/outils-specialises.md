@@ -23,13 +23,13 @@ Il supporte cinq **types de projets** via l'option `--type`.
 
 ```bash
 cd ~/alm_tools
-uv tool install ./devinit
+uv tool install ./cli/devinit
 ```
 
 **Mode développement** — les modifications du code source sont actives immédiatement :
 
 ```bash
-cd ~/alm_tools/devinit
+cd ~/alm_tools/cli/devinit
 uv tool install --editable .
 ```
 
@@ -131,7 +131,7 @@ make docker-clean  # supprimer conteneurs, volumes et images locales
 make docs          # serveur MkDocs en local
 ```
 
-Documentation complète : [devinit/README.md](https://github.com/namnetes/alm_tools/blob/main/devinit/README.md)
+Documentation complète : [devinit/README.md](https://github.com/namnetes/alm_tools/blob/main/cli/devinit/README.md)
 
 ---
 
@@ -148,7 +148,7 @@ Installés automatiquement à l'étape 5 : `qemu-kvm`, `libvirt-daemon-system`, 
 L'installateur supporte trois modes :
 
 ```bash
-cd ~/alm_tools/vmforge
+cd ~/alm_tools/cli/vmforge
 
 # Mode utilisateur (défaut) — shim dans ~/.local/bin, pas de sudo
 bash install.sh
@@ -169,7 +169,7 @@ L'installateur :
 ### Désinstallation
 
 ```bash
-cd ~/alm_tools/vmforge
+cd ~/alm_tools/cli/vmforge
 
 # Désinstallation utilisateur (shim dans ~/.local/bin)
 bash uninstall.sh
@@ -184,7 +184,7 @@ sudo bash uninstall.sh system
 
     ```bash
     rm -rf ~/.local/share/vmforge
-    rm -f  ~/alm_tools/vmforge/lib/images/alpine-base.qcow2
+    rm -f  ~/alm_tools/cli/vmforge/lib/images/alpine-base.qcow2
     ```
 
 ### Commandes
@@ -209,8 +209,8 @@ vmforge help                 # Aide complète
 
 | Document | Sujet |
 |----------|-------|
-| [vmforge/README.md](https://github.com/namnetes/alm_tools/blob/main/vmforge/README.md) | Vue d'ensemble |
-| [vmforge/USAGE.md](https://github.com/namnetes/alm_tools/blob/main/vmforge/USAGE.md) | Guide d'utilisation |
+| [vmforge/README.md](https://github.com/namnetes/alm_tools/blob/main/cli/vmforge/README.md) | Vue d'ensemble |
+| [vmforge/USAGE.md](https://github.com/namnetes/alm_tools/blob/main/cli/vmforge/USAGE.md) | Guide d'utilisation |
 | `doc/01-concepts.md` | Architecture et concepts |
 | `doc/02-installation.md` | Installation détaillée |
 | `doc/03-configuration.md` | Options de configuration |

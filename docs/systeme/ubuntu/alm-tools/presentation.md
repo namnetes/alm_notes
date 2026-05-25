@@ -12,8 +12,8 @@
 | Lanceur arrière-plan | `jobs/runbg.sh` | Lance un script en tâche de fond avec journalisation |
 | Sauvegarde Google Drive | `jobs/backup_googledrive.sh` | Synchronisation et archivage déterministe |
 | Sandbox Python | `python/sandbox.sh` | Environnement JupyterLab isolé |
-| devinit | `devinit/` | Générateur de projets Python |
-| vmforge | `vmforge/` | Automatisation de VMs KVM/Alpine Linux |
+| devinit | `cli/devinit/` | Générateur de projets Python |
+| vmforge | `cli/vmforge/` | Automatisation de VMs KVM/Alpine Linux |
 
 ---
 

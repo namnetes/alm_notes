@@ -83,7 +83,7 @@ source ~/.bashrc
 ### Étape 2 — Installer pioinit
 
 ```bash
-cd ~/alm_tools/pioinit
+cd ~/alm_tools/cli/pioinit
 uv tool install .
 ```
 
@@ -113,7 +113,7 @@ revérifiez l'étape 1.
 Après un `git pull` sur `alm_tools` :
 
 ```bash
-cd ~/alm_tools/pioinit
+cd ~/alm_tools/cli/pioinit
 uv tool install --no-cache .
 pioinit --version
 ```

@@ -86,7 +86,7 @@ flowchart TD
 ### Vue d'ensemble
 
 ```
-alm_tools/.functions/
+alm_tools/postinstall/
 └── session-checks/                     ← sources versionnées dans Git
     ├── install.sh                      ← installation complète (sudo bash install.sh)
     ├── run-session-checks              ← copié vers /usr/local/bin/
@@ -406,11 +406,11 @@ fi
 
 ### Étapes concrètes
 
-1. **Créer le fichier** dans `alm_tools/.functions/session-checks/` :
+1. **Créer le fichier** dans `alm_tools/postinstall/session-checks/` :
 
     ```bash
-    touch ~/alm_tools/.functions/session-checks/20-mon-controle
-    chmod +x ~/alm_tools/.functions/session-checks/20-mon-controle
+    touch ~/alm_tools/postinstall/session-checks/20-mon-controle
+    chmod +x ~/alm_tools/postinstall/session-checks/20-mon-controle
     ```
 
 2. **Écrire la logique** en suivant le modèle ci-dessus.
@@ -418,7 +418,7 @@ fi
 3. **Tester manuellement** avant de l'intégrer :
 
     ```bash
-    bash ~/alm_tools/.functions/session-checks/20-mon-controle
+    bash ~/alm_tools/postinstall/session-checks/20-mon-controle
     echo "Code de retour : $?"
     ```
 
@@ -426,7 +426,7 @@ fi
 
     ```bash
     sudo install -m 755 \
-        ~/alm_tools/.functions/session-checks/20-mon-controle \
+        ~/alm_tools/postinstall/session-checks/20-mon-controle \
         /usr/local/lib/session-checks/20-mon-controle
     ```
 
@@ -508,7 +508,7 @@ Si vous souhaitez installer uniquement le framework, sans relancer
 tout le postinstall :
 
 ```bash
-sudo bash ~/alm_tools/.functions/session-checks/install.sh
+sudo bash ~/alm_tools/postinstall/session-checks/install.sh
 ```
 
 Ce script installe en une seule commande :
@@ -609,4 +609,4 @@ s'exécuter uniquement dans une session graphique GNOME.
 | `gsettings get com.github.stunkymonkey.nautilus-open-any-terminal terminal` | Vérifier le terminal configuré |
 | `sudo install -m 755 <fichier> /usr/local/lib/session-checks/` | Ajouter un contrôle |
 | `sudo rm /usr/local/lib/session-checks/<nom>` | Supprimer un contrôle |
-| `sudo bash ~/alm_tools/.functions/session-checks/install.sh` | Réinstaller le framework complet |
+| `sudo bash ~/alm_tools/postinstall/session-checks/install.sh` | Réinstaller le framework complet |

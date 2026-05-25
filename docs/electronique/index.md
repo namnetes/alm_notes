@@ -12,15 +12,11 @@ qu'aux développeurs habitués au logiciel qui souhaitent s'initier au matériel
 | Section | Description |
 |---------|-------------|
 | [PlatformIO](platformio/index.md) | Chaîne de compilation universelle pour microcontrôleurs — CLI et intégration Zed |
-
+| [pioinit](pioinit/index.md) | Outil d'initialisation de projets PlatformIO — génère la structure complète |
 ---
 
 ## Matériel cible
 
-Les tutoriels de cette section utilisent principalement :
+Les tutoriels de cette section utilisent :
 
-- **Arduino Uno** — carte d'initiation idéale, très documentée
-- **ESP32** — microcontrôleur Wi-Fi/Bluetooth populaire pour les projets connectés
-
-La démarche reste identique pour la grande majorité des cartes supportées par PlatformIO
-(plus de 1 000 cartes et 50 plateformes).
+- **Arduino Uno / ESP32** — via PlatformIO (chaîne de compilation moderne)

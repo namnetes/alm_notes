@@ -190,7 +190,7 @@ sudo apt install doxygen
 ### 2. Réinstaller pioinit
 
 ```bash
-cd ~/alm_tools/pioinit
+cd ~/alm_tools/cli/pioinit
 uv tool install .
 pioinit --version
 ```
