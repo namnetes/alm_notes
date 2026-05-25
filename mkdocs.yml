@@ -73,43 +73,37 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 nav:
   - Accueil: index.md
-  - Ubuntu:
-      - systeme/ubuntu/index.md
-      - Réinstallation WebFAI: systeme/ubuntu/webfai.md
-      - Post-Installation: systeme/ubuntu/post-installation.md
-      - Déploiement après installation fraîche: systeme/ubuntu/deploiement-post-installation.md
-      - alm-dotfiles:
-          - systeme/ubuntu/alm-dotfiles/index.md
-          - Présentation: systeme/ubuntu/alm-dotfiles/presentation.md
-          - Installation: systeme/ubuntu/alm-dotfiles/installation.md
-          - Environnement shell: systeme/ubuntu/alm-dotfiles/environnement-shell.md
-          - Outils et applications: systeme/ubuntu/alm-dotfiles/outils-et-applications.md
-          - Scripts et utilitaires: systeme/ubuntu/alm-dotfiles/scripts-et-utilitaires.md
-          - Service MkDocs: systeme/ubuntu/alm-dotfiles/service-mkdocs.md
-      - alm-tools:
-          - systeme/ubuntu/alm-tools/index.md
-          - Présentation: systeme/ubuntu/alm-tools/presentation.md
-          - Post-installation: systeme/ubuntu/alm-tools/post-installation.md
-          - Packages et dépôts: systeme/ubuntu/alm-tools/packages-et-depots.md
-          - Outils spécialisés: systeme/ubuntu/alm-tools/outils-specialises.md
-          - Utilitaires Python et sandbox: systeme/ubuntu/alm-tools/utilitaires-python.md
-          - Framework session-checks: systeme/ubuntu/alm-tools/session-checks.md
-  - Alpine Linux:
-      - systeme/alpine/index.md
-      - Post-Installation: systeme/alpine/post-installation.md
-      - Changer le nom d’hôte: systeme/alpine/changer-le-nom-dhote.md
-      - VM avec Cloud-Init: systeme/alpine/vm-cloud-init.md
-      - Création d’un partage de répertoire(s): systeme/alpine/creation-dun-partage-de-repertoires.md
-      - Docker sur Alpine: systeme/alpine/docker.md
-      - Lazydocker: systeme/alpine/lazydocker.md
-      - Compatibilité des terminaux: systeme/alpine/compatibilite-terminal.md
-  - Outils:
-      - outils/index.md
-      - GitHub CLI: outils/github-cli.md
-      - ExifTool: outils/exiftool.md
-      - yt-dlp: outils/yt-dlp.md
-      - Documentation Zed: outils/zed-docs.md
-      - Claude Code & Zed: outils/claude-code.md
+  - Système:
+      - Ubuntu:
+          - systeme/ubuntu/index.md
+          - Réinstallation WebFAI: systeme/ubuntu/webfai.md
+          - Post-Installation: systeme/ubuntu/post-installation.md
+          - Déploiement après installation fraîche: systeme/ubuntu/deploiement-post-installation.md
+          - alm-dotfiles:
+              - systeme/ubuntu/alm-dotfiles/index.md
+              - Présentation: systeme/ubuntu/alm-dotfiles/presentation.md
+              - Installation: systeme/ubuntu/alm-dotfiles/installation.md
+              - Environnement shell: systeme/ubuntu/alm-dotfiles/environnement-shell.md
+              - Outils et applications: systeme/ubuntu/alm-dotfiles/outils-et-applications.md
+              - Scripts et utilitaires: systeme/ubuntu/alm-dotfiles/scripts-et-utilitaires.md
+              - Service MkDocs: systeme/ubuntu/alm-dotfiles/service-mkdocs.md
+          - alm-tools:
+              - systeme/ubuntu/alm-tools/index.md
+              - Présentation: systeme/ubuntu/alm-tools/presentation.md
+              - Post-installation: systeme/ubuntu/alm-tools/post-installation.md
+              - Packages et dépôts: systeme/ubuntu/alm-tools/packages-et-depots.md
+              - Outils spécialisés: systeme/ubuntu/alm-tools/outils-specialises.md
+              - Utilitaires Python et sandbox: systeme/ubuntu/alm-tools/utilitaires-python.md
+              - Framework session-checks: systeme/ubuntu/alm-tools/session-checks.md
+      - Alpine Linux:
+          - systeme/alpine/index.md
+          - Post-Installation: systeme/alpine/post-installation.md
+          - Changer le nom d’hôte: systeme/alpine/changer-le-nom-dhote.md
+          - VM avec Cloud-Init: systeme/alpine/vm-cloud-init.md
+          - Création d’un partage de répertoire(s): systeme/alpine/creation-dun-partage-de-repertoires.md
+          - Docker sur Alpine: systeme/alpine/docker.md
+          - Lazydocker: systeme/alpine/lazydocker.md
+          - Compatibilité des terminaux: systeme/alpine/compatibilite-terminal.md
   - Développement:
       - developpement/index.md
       - Python:
@@ -135,11 +129,6 @@ nav:
               - developpement/python/patterns/index.md
               - Policy Pattern: developpement/python/patterns/policy-pattern.md
               - Ports & Adapters: developpement/python/patterns/ports-and-adapters.md
-  - LCL:
-      - lcl/index.md
-      - Kafka:
-          - lcl/kafka/index.md
-          - Architecture z/OS → Kafka: lcl/kafka/architecture-zos-kafka.md
   - Électronique:
       - electronique/index.md
       - PlatformIO:
@@ -148,7 +137,41 @@ nav:
           - Intégration Zed: electronique/platformio/zed.md
       - pioinit:
           - electronique/pioinit/index.md
-          - Guide d'utilisation: electronique/pioinit/utilisation.md
+          - Guide d’utilisation: electronique/pioinit/utilisation.md
+  - Outils:
+      - outils/index.md
+      - GitHub CLI: outils/github-cli.md
+      - ExifTool: outils/exiftool.md
+      - yt-dlp: outils/yt-dlp.md
+      - Documentation Zed: outils/zed-docs.md
+      - Claude Code & Zed: outils/claude-code.md
+  - LCL:
+      - lcl/index.md
+      - Kafka:
+          - lcl/kafka/index.md
+          - Architecture z/OS → Kafka: lcl/kafka/architecture-zos-kafka.md
+      - Plugin zDevOps IDz:
+          - lcl/zdevops/index.md
+          - Fonctions:
+              - Gestion des évolutions: lcl/zdevops/fonctions-evolutions.md
+              - Gestion du manifest: lcl/zdevops/fonctions-manifest.md
+              - Pipelines CI/CD: lcl/zdevops/fonctions-cicd.md
+              - Déploiement unitaire: lcl/zdevops/fonctions-unitaire.md
+              - Configuration: lcl/zdevops/configuration.md
+          - Infrastructure Jenkins: lcl/zdevops/infrastructure-jenkins.md
+          - Architecture générale: lcl/zdevops/architecture-generale.md
+          - Cas concrets:
+              - POST /evolutions: lcl/zdevops/cas-concret-post-evolutions.md
+              - Participer à une évolution: lcl/zdevops/cas-concret-participer-evolution.md
+              - Configuration des tokens: lcl/zdevops/cas-concret-configuration-tokens.md
+          - Décisions (ADR):
+              - ADR-001 — next_artifact_number: lcl/zdevops/adr-001-next-artifact-number.md
+              - ADR-002 — Stockage credentials: lcl/zdevops/adr-002-stockage-tokens.md
+              - ADR-003 — gitpython async: lcl/zdevops/adr-003-async-sync-gitpython.md
+              - ADR-004 — Stratégie tests: lcl/zdevops/adr-004-strategie-tests.md
+              - ADR-005 — Versioning API: lcl/zdevops/adr-005-versioning-api.md
+      - Refactoring Plugin → API:
+          - lcl/refactoring/index.md
   - Sécurité:
       - securite/index.md
       - Certificats: securite/certificats.md
