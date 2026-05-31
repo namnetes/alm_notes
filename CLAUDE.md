@@ -34,11 +34,13 @@ uv run ruff check new-page.py --fix   # linter new-page.py (ruff.toml à la raci
 | `systeme/alpine/` | Alpine | Alpine Linux, VMs, Docker |
 | `electronique/` | Électronique | PlatformIO, pioinit |
 | `developpement/python/` | Développement | uv, FastAPI, concurrence, design patterns |
-| `lcl/` | LCL | Mainframe / z/OS (Kafka, CICS) |
+| `lcl/` | LCL | Mainframe / z/OS (Kafka, CICS, zDevOps plugin) |
 | `securite/` | Sécurité | TLS, AppArmor, OpenSSL, Proton |
-| `outils/` | Outils | GitHub CLI, Zed, Claude Code, yt-dlp |
+| `outils/` | Outils | Kitty, yt-dlp, Claude Code, MkDocs |
 
-Chaque section a généralement un `index.md` (page d'accueil) + des pages thématiques.
+Chaque section utilise `navigation.indexes` : le `index.md` du répertoire est la page d'accueil cliquable de la section dans la nav. Toute section créée avec des sous-sections **doit** avoir un `index.md`.
+
+**Cross-référence pioinit** : `electronique/pioinit/index.md` apparaît à la fois sous l'onglet Électronique et sous Ubuntu > alm_tools > Outils spécialisés. C'est intentionnel — ne pas dupliquer le fichier.
 
 ## Répertoire de staging — `drafts/`
 
@@ -46,6 +48,8 @@ Chaque section a généralement un `index.md` (page d'accueil) + des pages thém
 
 - **`drafts/*.md`** — brouillons de pages pas encore placés dans `docs/` ni enregistrés dans `nav:`
 - **`drafts/img/`** — images en attente de déplacement vers `docs/assets/images/`
+
+Brouillon actuellement en attente : `drafts/cics_event_processing.md` (à intégrer dans `lcl/`).
 
 Workflow d'intégration d'un brouillon :
 1. Déplacer le `.md` dans le bon sous-répertoire de `docs/`

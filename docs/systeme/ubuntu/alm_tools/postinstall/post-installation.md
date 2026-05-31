@@ -129,6 +129,7 @@ sudo make devtools  # outils de développement personnels
     |-------|-------|-----------|
     | `devinit` | Scaffolder de projets Python | `uv` |
     | `pioinit` | Scaffolder de projets PlatformIO | `uv` |
+    | `mkdocsinit` | Configuration MkDocs Material (idempotent) | `uv` |
     | `vmforge` | Automatisation de VMs KVM | — |
 
 ---
@@ -156,6 +157,7 @@ Si la cible amont échoue, la cible aval ne s'exécute pas :
 | `node` | `fnm` | Node.js est installé et géré par fnm |
 | `devinit` | `uv` | devinit est un outil uv (`uv tool install`) |
 | `pioinit` | `uv` | pioinit est un outil uv (`uv tool install`) |
+| `mkdocsinit` | `uv` | mkdocsinit est un outil uv (`uv tool install`) |
 
 !!! tip "Vérifier avant de lancer `devtools`"
     Si `uv` n'est pas encore installé, `sudo make devtools` échouera sur

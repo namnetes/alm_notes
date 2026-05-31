@@ -155,6 +155,15 @@ nav:
           - Skills: outils/claude-code/skills.md
           - Assistant terminal: outils/claude-code/terminal.md
           - Intégration Zed: outils/claude-code/zed.md
+      - MkDocs:
+          - outils/mkdocs/index.md
+          - Installation: outils/mkdocs/installation.md
+          - Configuration: outils/mkdocs/configuration.md
+          - Contenu Markdown: outils/mkdocs/contenu.md
+          - Commandes: outils/mkdocs/commandes.md
+          - Script Bash & CI: outils/mkdocs/bash.md
+          - Personnalisations: outils/mkdocs/personnalisation.md
+          - Dépannage: outils/mkdocs/depannage.md
   - LCL:
       - lcl/index.md
       - Kafka:

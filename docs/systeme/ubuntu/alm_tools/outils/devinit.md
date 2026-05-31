@@ -105,17 +105,27 @@ mon-projet/
 ├── .pre-commit-config.yaml    # ruff + gitlint
 ├── .envrc                     # direnv + PYTHONPATH
 ├── .env.example
-├── Makefile                   # install, test, lint, docs, run*, docker-*
-├── mkdocs.yml                 # documentation MkDocs (toujours présent)
+├── Makefile                   # install, test, lint, run*, docker-*
+│                              # + docs* ajoutés par mkdocsinit
+├── mkdocs.yml                 # généré par mkdocsinit
 ├── src/mon_projet/
 │   └── main.py                # adapté au type choisi
 ├── tests/
 ├── data/
 ├── docs/
-│   └── stylesheets/extra.css
+│   ├── index.md               # page d'accueil (contenu projet-spécifique)
+│   ├── api.md                 # autodoc mkdocstrings
+│   ├── stylesheets/extra.css  # généré par mkdocsinit
+│   └── javascripts/           # nav-dropdown.js, mathjax.js — générés par mkdocsinit
 ├── .vscode/                   # settings, launch.json (debug adapté), tasks.json
 └── .zed/                      # settings.json + tasks.json (toutes les cibles)
 ```
+
+!!! info "mkdocsinit — source unique de vérité pour MkDocs"
+    La configuration MkDocs (`mkdocs.yml`, CSS, JS, cibles Makefile) est générée
+    par [`mkdocsinit`](mkdocsinit.md), appelé automatiquement en fin de `devinit`.
+    Si `mkdocsinit` n'est pas installé, un avertissement est affiché mais le
+    projet est créé quand même — relancer `mkdocsinit .` suffit.
 
 **Fichiers supplémentaires par type :**
 
@@ -139,7 +149,10 @@ make docker-build  # construire l'image Docker
 make docker-up     # démarrer les conteneurs
 make docker-down   # arrêter les conteneurs
 make docker-clean  # supprimer conteneurs, volumes et images locales
-make docs          # serveur MkDocs en local
+make docs          # serveur MkDocs en local (ajouté par mkdocsinit)
+make docs-start    # serveur MkDocs en arrière-plan
+make docs-stop     # arrêter le serveur arrière-plan
+make docs-build    # générer le site statique dans site/
 ```
 
 ---
