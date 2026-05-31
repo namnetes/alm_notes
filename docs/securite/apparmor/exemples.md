@@ -14,7 +14,7 @@ ICMP bruts, ce qui nécessite un accès réseau de bas niveau normalement réser
 
 Créez le fichier `/etc/apparmor.d/bin.ping` :
 
-```
+```text
 #include <tunables/global>
 
 profile /bin/ping {
@@ -104,7 +104,7 @@ sudo apparmor_parser -r /etc/apparmor.d/bin.ping
 ping -c 3 8.8.8.8
 ```
 
-```
+```text
 ping: socket: Operation not permitted
 ```
 
@@ -139,7 +139,7 @@ qu'aux fichiers du site et au répertoire temporaire.
 
 ### Le profil
 
-```
+```text
 #include <tunables/global>
 
 profile php-script /usr/bin/php* {
@@ -205,7 +205,7 @@ vulnérabilité exploitée.
 
 Créez `/etc/apparmor.d/usr.sbin.nginx` :
 
-```
+```text
 #include <tunables/global>
 
 profile nginx /usr/sbin/nginx {
@@ -278,7 +278,7 @@ sudo nano /etc/apparmor.d/local/usr.sbin.nginx
 
 Contenu :
 
-```
+```text
 # Accès à mon site en dehors de /var/www/
 /data/sites/mon-site/   r,
 /data/sites/mon-site/** r,
@@ -379,7 +379,7 @@ ou vos mots de passe.
 
 Créez `/etc/apparmor.d/usr.local.bin.mkdocs` :
 
-```
+```text
 #include <tunables/global>
 
 # Variables spécifiques à ce projet

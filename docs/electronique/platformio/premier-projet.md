@@ -28,7 +28,7 @@ PlatformIO crée automatiquement la structure du projet et télécharge la platf
 
 ## 2. Comprendre la structure du projet
 
-```
+```text
 blink-led/
 ├── platformio.ini   # Configuration du projet (carte, framework, options)
 ├── src/             # Votre code source
@@ -93,7 +93,7 @@ pio run
 
 PlatformIO compile le code et affiche le résultat :
 
-```
+```text
 Building in .pio/build/uno
 Compiling .pio/build/uno/src/main.cpp.o
 Linking .pio/build/uno/firmware.elf
@@ -119,7 +119,7 @@ pio device list
 
 Exemple de sortie :
 
-```
+```text
 /dev/ttyACM0
 ------------
 Hardware ID: USB VID:PID=2341:0043
@@ -150,7 +150,7 @@ dmesg | tail -20
 
 Cherchez une ligne comme :
 
-```
+```text
 usb 1-2: new full-speed USB device number 5 using xhci_hcd
 usb 1-2: New USB device found, idVendor=2341, idProduct=0043
 cdc_acm 1-2:1.0: ttyACM0: USB ACM device
@@ -166,7 +166,7 @@ lsusb
 
 Chaque ligne correspond à un périphérique USB. Cherchez votre carte :
 
-```
+```text
 Bus 001 Device 005: ID 2341:0043 Arduino SA Uno R3 (CDC ACM)
 ```
 
@@ -188,7 +188,7 @@ ls -la /dev/tty{ACM,USB}* 2>/dev/null
 
 Exemple :
 
-```
+```text
 crw-rw---- 1 root dialout 166, 0 mai 22 14:31 /dev/ttyACM0
 ```
 
@@ -226,7 +226,7 @@ pio run --target upload
 
 PlatformIO compile (si nécessaire) puis transfère le programme :
 
-```
+```text
 Uploading .pio/build/uno/firmware.hex
 avrdude: AVR device initialized and ready to accept instructions
 avrdude: writing flash (1040 bytes):
@@ -273,7 +273,7 @@ pio run --target upload && pio device monitor --baud 9600
 
 Vous verrez s'afficher :
 
-```
+```text
 --- Terminal on /dev/ttyACM0 | 9600 8-N-1
 LED allumée
 LED éteinte

@@ -1,11 +1,25 @@
 #!/usr/bin/env python3
-"""Script interactif pour gérer les pages du wiki MkDocs."""
+"""Script interactif pour gérer les pages du wiki MkDocs.
+
+Quatre opérations disponibles :
+  1. Créer une section  (entrée nav + répertoire + index.md optionnel)
+  2. Ajouter une page   (fichier .md + entrée nav dans la section choisie)
+  3. Supprimer une page (avec analyse des références entrantes)
+  4. Supprimer une section (avec analyse d'impact sur les liens externes)
+
+La navigation est explicite dans mkdocs.yml — toute page créée est
+immédiatement enregistrée dans nav:.
+
+Example:
+    uv run python new-page.py
+"""
 
 import os
 import re
 import sys
 import unicodedata
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -15,6 +29,9 @@ MKDOCS_YML = Path(__file__).parent / "mkdocs.yml"
 PAGE_TEMPLATE = """# {title}
 
 """
+
+# Structure nav MkDocs : list[dict[str, Nav | str] | str], récursive.
+Nav = list[Any]
 
 
 # ---------------------------------------------------------------------------
@@ -30,17 +47,23 @@ class _PythonTag:
 def _build_loader() -> type:
     loader = yaml.SafeLoader
 
-    def constructor(ldr, tag_suffix, node):
-        return _PythonTag(f"tag:yaml.org,2002:python/name:{tag_suffix}", node.value)
+    def constructor(ldr: Any, tag_suffix: str, node: Any) -> _PythonTag:
+        """Reconstruit un _PythonTag depuis un nœud YAML python/name:."""
+        return _PythonTag(
+            f"tag:yaml.org,2002:python/name:{tag_suffix}", node.value
+        )
 
-    yaml.add_multi_constructor("tag:yaml.org,2002:python/name:", constructor, Loader=loader)
+    yaml.add_multi_constructor(
+        "tag:yaml.org,2002:python/name:", constructor, Loader=loader
+    )
     return loader
 
 
 def _build_dumper() -> type:
     dumper = yaml.Dumper
 
-    def representer(dmp, data: _PythonTag):
+    def representer(dmp: Any, data: _PythonTag) -> Any:
+        """Sérialise un _PythonTag en scalaire YAML avec son tag python/name:."""
         return dmp.represent_scalar(data.tag, data.value)
 
     dumper.add_representer(_PythonTag, representer)
@@ -51,21 +74,41 @@ _LOADER = _build_loader()
 _DUMPER = _build_dumper()
 
 
-def load_mkdocs() -> dict:
+def load_mkdocs() -> dict[str, Any]:
+    """Charge et retourne le contenu de mkdocs.yml.
+
+    Utilise un loader personnalisé pour préserver les tags ``!!python/name:``
+    requis par ``pymdownx.superfences``.
+
+    Returns:
+        Contenu du fichier YAML sous forme de dictionnaire.
+    """
     with open(MKDOCS_YML, encoding="utf-8") as f:
         return yaml.load(f, Loader=_LOADER)
 
 
-def save_mkdocs(data: dict) -> None:
+def save_mkdocs(data: dict[str, Any]) -> None:
+    """Écrit data dans mkdocs.yml en préservant les tags ``!!python/name:``.
+
+    Args:
+        data: Contenu complet de mkdocs.yml à sérialiser.
+    """
     with open(MKDOCS_YML, "w", encoding="utf-8") as f:
-        yaml.dump(data, f, Dumper=_DUMPER, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        yaml.dump(
+            data,
+            f,
+            Dumper=_DUMPER,
+            allow_unicode=True,
+            default_flow_style=False,
+            sort_keys=False,
+        )
 
 
 # ---------------------------------------------------------------------------
 # Utilitaires — nav
 # ---------------------------------------------------------------------------
 
-def collect_sections(nav: list, prefix: str = "") -> list[tuple[str, list]]:
+def collect_sections(nav: Nav, prefix: str = "") -> list[tuple[str, Nav]]:
     """Retourne [(label_complet, liste_nav)] pour toutes les sections."""
     sections = []
     for item in nav:
@@ -74,11 +117,13 @@ def collect_sections(nav: list, prefix: str = "") -> list[tuple[str, list]]:
                 if isinstance(value, list):
                     label = f"{prefix}{key}" if prefix else key
                     sections.append((label, value))
-                    sections.extend(collect_sections(value, prefix=f"{label} > "))
+                    sections.extend(
+                        collect_sections(value, prefix=f"{label} > ")
+                    )
     return sections
 
 
-def collect_pages(nav: list) -> list[tuple[str, str]]:
+def collect_pages(nav: Nav) -> list[tuple[str, str]]:
     """Retourne [(titre, chemin_relatif)] pour toutes les pages dans nav."""
     pages = []
     for item in nav:
@@ -93,7 +138,19 @@ def collect_pages(nav: list) -> list[tuple[str, str]]:
     return pages
 
 
-def infer_section_dir(section_nav: list) -> str | None:
+def infer_section_dir(section_nav: Nav) -> str | None:
+    """Devine le sous-répertoire d'une section à partir de ses entrées nav.
+
+    Lit le chemin de la première page trouvée dans section_nav pour en
+    extraire le répertoire parent. Retourne None si aucune page n'a de
+    chemin avec un séparateur.
+
+    Args:
+        section_nav: Liste nav de la section à analyser.
+
+    Returns:
+        Chemin relatif du répertoire (ex. ``"lcl"``), ou None.
+    """
     for item in section_nav:
         if isinstance(item, dict):
             for value in item.values():
@@ -104,7 +161,27 @@ def infer_section_dir(section_nav: list) -> str | None:
     return None
 
 
-def nav_add_to_section(nav: list, target_label: str, entry: dict, prefix: str = "") -> bool:
+def nav_add_to_section(
+    nav: Nav,
+    target_label: str,
+    entry: dict[str, Any],
+    prefix: str = "",
+) -> bool:
+    """Insère entry dans la section identifiée par target_label dans nav.
+
+    Parcourt nav récursivement jusqu'à trouver la section dont le label
+    complet correspond à target_label.
+
+    Args:
+        nav: Liste nav MkDocs à modifier en place.
+        target_label: Label complet de la section cible (ex. ``"LCL > Kafka"``).
+        entry: Entrée nav à insérer, ex. ``{"Titre": "lcl/page.md"}``.
+        prefix: Préfixe accumulé lors de la récursion. Laisser vide à l'appel
+            initial.
+
+    Returns:
+        True si la section a été trouvée et l'entrée insérée, False sinon.
+    """
     for item in nav:
         if isinstance(item, dict):
             for key, value in item.items():
@@ -113,12 +190,14 @@ def nav_add_to_section(nav: list, target_label: str, entry: dict, prefix: str = 
                     if label == target_label:
                         value.append(entry)
                         return True
-                    if nav_add_to_section(value, target_label, entry, prefix=f"{label} > "):
+                    if nav_add_to_section(
+                        value, target_label, entry, prefix=f"{label} > "
+                    ):
                         return True
     return False
 
 
-def nav_remove_page(nav: list, target_rel: str) -> bool:
+def nav_remove_page(nav: Nav, target_rel: str) -> bool:
     """Supprime dans nav l'entrée pointant vers target_rel."""
     for i, item in enumerate(nav):
         if isinstance(item, dict):
@@ -134,7 +213,7 @@ def nav_remove_page(nav: list, target_rel: str) -> bool:
     return False
 
 
-def nav_remove_section(nav: list, target_label: str, prefix: str = "") -> bool:
+def nav_remove_section(nav: Nav, target_label: str, prefix: str = "") -> bool:
     """Supprime dans nav la section identifiée par son label complet."""
     for i, item in enumerate(nav):
         if isinstance(item, dict):
@@ -144,7 +223,9 @@ def nav_remove_section(nav: list, target_label: str, prefix: str = "") -> bool:
                     if label == target_label:
                         nav.pop(i)
                         return True
-                    if nav_remove_section(value, target_label, prefix=f"{label} > "):
+                    if nav_remove_section(
+                        value, target_label, prefix=f"{label} > "
+                    ):
                         return True
     return False
 
@@ -156,10 +237,18 @@ def nav_remove_section(nav: list, target_label: str, prefix: str = "") -> bool:
 _LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)#\s]+)\)")
 
 
-def find_references(target_rel: str, exclude_rels: set[str] | None = None) -> list[tuple[Path, int, str]]:
-    """
-    Cherche dans tous les fichiers .md de docs/ les liens pointant vers target_rel.
-    exclude_rels : chemins relatifs à ignorer (ex. pages de la même section).
+def find_references(
+    target_rel: str,
+    exclude_rels: set[str] | None = None,
+) -> list[tuple[Path, int, str]]:
+    """Cherche dans tous les .md de docs/ les liens pointant vers target_rel.
+
+    Args:
+        target_rel: Chemin relatif de la page cible (ex. ``"lcl/kafka.md"``).
+        exclude_rels: Chemins relatifs à ignorer (ex. pages de la même section).
+
+    Returns:
+        Liste de (fichier_source, numéro_de_ligne, contenu_de_la_ligne).
     """
     target_path = Path(target_rel)
     filename = target_path.name
@@ -184,6 +273,12 @@ def find_references(target_rel: str, exclude_rels: set[str] | None = None) -> li
 
 
 def print_refs(refs: list[tuple[Path, int, str]]) -> None:
+    """Affiche chaque référence sous la forme docs/fichier:ligne.
+
+    Args:
+        refs: Liste de (fichier, numéro de ligne, contenu) issue de
+            find_references.
+    """
     for md_file, lineno, line in refs:
         rel = md_file.relative_to(DOCS_DIR)
         print(f"   docs/{rel}:{lineno}")
@@ -195,6 +290,14 @@ def print_refs(refs: list[tuple[Path, int, str]]) -> None:
 # ---------------------------------------------------------------------------
 
 def slugify(text: str) -> str:
+    """Convertit text en slug URL sans accents ni caractères spéciaux.
+
+    Args:
+        text: Texte d'entrée (titre de section ou de page).
+
+    Returns:
+        Slug normalisé, ex. ``"mon-titre"`` pour ``"Mon Titre !"``.
+    """
     text = unicodedata.normalize("NFD", text)
     text = "".join(c for c in text if unicodedata.category(c) != "Mn")
     text = text.lower()
@@ -204,6 +307,18 @@ def slugify(text: str) -> str:
 
 
 def prompt(message: str, default: str = "") -> str:
+    """Affiche un prompt interactif et retourne la saisie de l'utilisateur.
+
+    Quitte proprement sur Ctrl-C ou EOF (fin de pipe).
+
+    Args:
+        message: Texte affiché avant le prompt.
+        default: Valeur retournée si l'utilisateur valide sans saisir.
+            Affichée entre crochets si non vide.
+
+    Returns:
+        Saisie de l'utilisateur, ou default si vide.
+    """
     suffix = f" [{default}]" if default else ""
     try:
         answer = input(f"{message}{suffix}: ").strip()
@@ -214,6 +329,17 @@ def prompt(message: str, default: str = "") -> str:
 
 
 def choose_from_list(items: list[str], label: str) -> int:
+    """Affiche une liste numérotée et retourne l'indice (0-based) du choix.
+
+    Boucle jusqu'à obtenir un entier valide dans [1, len(items)].
+
+    Args:
+        items: Options à afficher.
+        label: Titre affiché au-dessus de la liste.
+
+    Returns:
+        Indice 0-based de l'élément sélectionné.
+    """
     print(f"\n{label}")
     for i, item in enumerate(items, 1):
         print(f"  {i:2}. {item}")
@@ -228,8 +354,16 @@ def choose_from_list(items: list[str], label: str) -> int:
 # Commandes
 # ---------------------------------------------------------------------------
 
-def cmd_create_section(config: dict) -> None:
-    nav: list = config.get("nav", [])
+def cmd_create_section(config: dict[str, Any]) -> None:
+    """Crée une section dans la nav avec son répertoire et un index optionnel.
+
+    Propose de placer la section à la racine ou dans une section parente.
+    Crée un index.md dans le répertoire si l'utilisateur le demande.
+
+    Args:
+        config: Contenu complet de mkdocs.yml (modifié en place).
+    """
+    nav: Nav = config.get("nav", [])
     sections = collect_sections(nav)
 
     section_name = prompt("\nNom de la nouvelle section")
@@ -239,12 +373,11 @@ def cmd_create_section(config: dict) -> None:
 
     section_dir = prompt("Repertoire (sous docs/)", default=slugify(section_name))
 
-    # Section parente optionnelle
     parent_labels = ["[ Racine ]"] + [label for label, _ in sections]
     parent_idx = choose_from_list(parent_labels, "Ou placer cette section ?")
 
-    new_section_nav: list = []
-    nav_entry = {section_name: new_section_nav}
+    new_section_nav: Nav = []
+    nav_entry: dict[str, Any] = {section_name: new_section_nav}
 
     if parent_idx == 0:
         nav.append(nav_entry)
@@ -252,12 +385,13 @@ def cmd_create_section(config: dict) -> None:
         parent_label = parent_labels[parent_idx]
         nav_add_to_section(nav, parent_label, nav_entry)
 
-    # Index optionnel
     want_index = prompt("Creer un fichier index.md ? (o/n)", default="o")
     if want_index.lower() in ("o", "oui", "y", "yes"):
         index_path = DOCS_DIR / section_dir / "index.md"
         index_path.parent.mkdir(parents=True, exist_ok=True)
-        index_path.write_text(PAGE_TEMPLATE.format(title=section_name), encoding="utf-8")
+        index_path.write_text(
+            PAGE_TEMPLATE.format(title=section_name), encoding="utf-8"
+        )
         new_section_nav.append(f"{section_dir}/index.md")
         print(f"Index cree  : docs/{section_dir}/index.md")
     else:
@@ -268,17 +402,31 @@ def cmd_create_section(config: dict) -> None:
     print(f"Section '{section_name}' ajoutee dans mkdocs.yml")
 
 
-def cmd_add_page(config: dict) -> None:
-    nav: list = config.get("nav", [])
+def cmd_add_page(config: dict[str, Any]) -> None:
+    """Crée un fichier Markdown et l'enregistre dans la nav MkDocs.
+
+    Demande la section cible, le titre et le nom de fichier, affiche un
+    récapitulatif, puis crée le fichier et met mkdocs.yml à jour.
+
+    Args:
+        config: Contenu complet de mkdocs.yml (modifié en place).
+    """
+    nav: Nav = config.get("nav", [])
 
     sections = collect_sections(nav)
     if not sections:
         print("Aucune section existante. Creez d'abord une section.")
         return
 
-    idx = choose_from_list([label for label, _ in sections], "Dans quelle section ajouter la page ?")
+    idx = choose_from_list(
+        [label for label, _ in sections],
+        "Dans quelle section ajouter la page ?",
+    )
     target_label, target_nav_list = sections[idx]
-    section_dir = infer_section_dir(target_nav_list) or slugify(target_label.split(" > ")[-1])
+    section_dir = (
+        infer_section_dir(target_nav_list)
+        or slugify(target_label.split(" > ")[-1])
+    )
 
     page_title = prompt("\nTitre de la page")
     if not page_title:
@@ -293,14 +441,18 @@ def cmd_add_page(config: dict) -> None:
     print(f"  Titre   : {page_title}")
     print(f"  Fichier : docs/{rel_path}")
     print(f"  Section : {target_label}")
-    if prompt("Confirmer ? (o/n)", default="o").lower() not in ("o", "oui", "y", "yes"):
+    if prompt("Confirmer ? (o/n)", default="o").lower() not in (
+        "o", "oui", "y", "yes"
+    ):
         print("Annule.")
         return
 
     abs_path.parent.mkdir(parents=True, exist_ok=True)
     if abs_path.exists():
         print(f"\nATTENTION : docs/{rel_path} existe deja.")
-        if prompt("Ecraser ? (o/n)", default="n").lower() not in ("o", "oui", "y", "yes"):
+        if prompt("Ecraser ? (o/n)", default="n").lower() not in (
+            "o", "oui", "y", "yes"
+        ):
             print("Annule.")
             return
 
@@ -311,15 +463,28 @@ def cmd_add_page(config: dict) -> None:
     config["nav"] = nav
     save_mkdocs(config)
 
-    editor = config.get("editor") or os.environ.get("EDITOR") or os.environ.get("VISUAL") or "nano"
+    editor = (
+        config.get("editor")
+        or os.environ.get("EDITOR")
+        or os.environ.get("VISUAL")
+        or "nano"
+    )
     print(f"\nPage creee  : docs/{rel_path}")
     print("nav mis a jour dans mkdocs.yml\n")
     print("Pour editer la page :")
     print(f"\n    {editor} docs/{rel_path}\n")
 
 
-def cmd_delete_page(config: dict) -> None:
-    nav: list = config.get("nav", [])
+def cmd_delete_page(config: dict[str, Any]) -> None:
+    """Supprime une page après analyse de ses références entrantes.
+
+    Affiche les liens d'autres pages vers la page cible avant de demander
+    confirmation. Supprime le fichier et l'entrée nav si confirmé.
+
+    Args:
+        config: Contenu complet de mkdocs.yml (modifié en place).
+    """
+    nav: Nav = config.get("nav", [])
     pages = collect_pages(nav)
 
     if not pages:
@@ -344,7 +509,9 @@ def cmd_delete_page(config: dict) -> None:
     else:
         print("  Aucune reference trouvee dans les autres pages.\n")
 
-    if prompt("Supprimer definitivement ? (o/n)", default="n").lower() not in ("o", "oui", "y", "yes"):
+    if prompt("Supprimer definitivement ? (o/n)", default="n").lower() not in (
+        "o", "oui", "y", "yes"
+    ):
         print("Annule.")
         return
 
@@ -360,15 +527,26 @@ def cmd_delete_page(config: dict) -> None:
     print("Navigation mise a jour dans mkdocs.yml")
 
 
-def cmd_delete_section(config: dict) -> None:
-    nav: list = config.get("nav", [])
+def cmd_delete_section(config: dict[str, Any]) -> None:
+    """Supprime une section entière avec analyse d'impact sur les liens externes.
+
+    Collecte toutes les pages de la section, identifie les références depuis
+    l'extérieur, affiche un rapport, puis supprime fichiers et entrée nav
+    après confirmation.
+
+    Args:
+        config: Contenu complet de mkdocs.yml (modifié en place).
+    """
+    nav: Nav = config.get("nav", [])
     sections = collect_sections(nav)
 
     if not sections:
         print("Aucune section dans la navigation.")
         return
 
-    idx = choose_from_list([label for label, _ in sections], "Quelle section supprimer ?")
+    idx = choose_from_list(
+        [label for label, _ in sections], "Quelle section supprimer ?"
+    )
     target_label, section_nav = sections[idx]
     pages_in_section = collect_pages(section_nav)
     section_rels = {rel for _, rel in pages_in_section}
@@ -379,7 +557,7 @@ def cmd_delete_section(config: dict) -> None:
         print(f"  - {title}  (docs/{rel})")
 
     print("\nAnalyse des references externes en cours...")
-    impact: dict[str, tuple[str, list]] = {}
+    impact: dict[str, tuple[str, list[tuple[Path, int, str]]]] = {}
     for title, rel in pages_in_section:
         refs = find_references(rel, exclude_rels=section_rels)
         if refs:
@@ -387,7 +565,10 @@ def cmd_delete_section(config: dict) -> None:
 
     if impact:
         total = sum(len(r) for _, r in impact.values())
-        print(f"\n[!] {total} reference(s) externe(s) vers des pages de cette section :\n")
+        print(
+            f"\n[!] {total} reference(s) externe(s) vers des pages"
+            f" de cette section :\n"
+        )
         for rel, (title, refs) in impact.items():
             print(f"  [{title}]  docs/{rel}")
             print_refs(refs)
@@ -395,7 +576,9 @@ def cmd_delete_section(config: dict) -> None:
     else:
         print("  Aucune reference externe trouvee.\n")
 
-    if prompt("Supprimer la section et tous ses fichiers ? (o/n)", default="n").lower() not in ("o", "oui", "y", "yes"):
+    if prompt(
+        "Supprimer la section et tous ses fichiers ? (o/n)", default="n"
+    ).lower() not in ("o", "oui", "y", "yes"):
         print("Annule.")
         return
 
@@ -425,6 +608,7 @@ def cmd_delete_section(config: dict) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    """Lance le menu interactif du gestionnaire de pages du wiki."""
     print("=" * 50)
     print("  Wikinotes — Gestionnaire de pages")
     print("=" * 50)

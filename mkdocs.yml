@@ -73,37 +73,43 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 nav:
   - Accueil: index.md
-  - Système:
-      - Ubuntu:
-          - systeme/ubuntu/index.md
-          - Réinstallation WebFAI: systeme/ubuntu/webfai.md
-          - Post-Installation: systeme/ubuntu/post-installation.md
-          - Déploiement après installation fraîche: systeme/ubuntu/deploiement-post-installation.md
-          - alm-dotfiles:
-              - systeme/ubuntu/alm-dotfiles/index.md
-              - Présentation: systeme/ubuntu/alm-dotfiles/presentation.md
-              - Installation: systeme/ubuntu/alm-dotfiles/installation.md
-              - Environnement shell: systeme/ubuntu/alm-dotfiles/environnement-shell.md
-              - Outils et applications: systeme/ubuntu/alm-dotfiles/outils-et-applications.md
-              - Scripts et utilitaires: systeme/ubuntu/alm-dotfiles/scripts-et-utilitaires.md
-              - Service MkDocs: systeme/ubuntu/alm-dotfiles/service-mkdocs.md
-          - alm-tools:
-              - systeme/ubuntu/alm-tools/index.md
-              - Présentation: systeme/ubuntu/alm-tools/presentation.md
-              - Post-installation: systeme/ubuntu/alm-tools/post-installation.md
-              - Packages et dépôts: systeme/ubuntu/alm-tools/packages-et-depots.md
-              - Outils spécialisés: systeme/ubuntu/alm-tools/outils-specialises.md
-              - Utilitaires Python et sandbox: systeme/ubuntu/alm-tools/utilitaires-python.md
-              - Framework session-checks: systeme/ubuntu/alm-tools/session-checks.md
-      - Alpine Linux:
-          - systeme/alpine/index.md
-          - Post-Installation: systeme/alpine/post-installation.md
-          - Changer le nom d’hôte: systeme/alpine/changer-le-nom-dhote.md
-          - VM avec Cloud-Init: systeme/alpine/vm-cloud-init.md
-          - Création d’un partage de répertoire(s): systeme/alpine/creation-dun-partage-de-repertoires.md
-          - Docker sur Alpine: systeme/alpine/docker.md
-          - Lazydocker: systeme/alpine/lazydocker.md
-          - Compatibilité des terminaux: systeme/alpine/compatibilite-terminal.md
+  - Ubuntu:
+      - systeme/ubuntu/index.md
+      - Réinstallation WebFAI: systeme/ubuntu/webfai.md
+      - Configuration manuelle: systeme/ubuntu/post-installation.md
+      - Déploiement après installation fraîche: systeme/ubuntu/deploiement-post-installation.md
+      - alm_dots:
+          - systeme/ubuntu/alm_dots/index.md
+          - Présentation: systeme/ubuntu/alm_dots/presentation.md
+          - Installation: systeme/ubuntu/alm_dots/installation.md
+          - Environnement shell: systeme/ubuntu/alm_dots/environnement-shell.md
+          - Outils et applications: systeme/ubuntu/alm_dots/outils-et-applications.md
+          - Scripts et utilitaires: systeme/ubuntu/alm_dots/scripts-et-utilitaires.md
+          - Service MkDocs: systeme/ubuntu/alm_dots/service-mkdocs.md
+      - alm_tools:
+          - systeme/ubuntu/alm_tools/index.md
+          - postinstall:
+              - systeme/ubuntu/alm_tools/postinstall/index.md
+              - Post-installation: systeme/ubuntu/alm_tools/postinstall/post-installation.md
+              - Déboguer: systeme/ubuntu/alm_tools/postinstall/deboguer.md
+              - Personnaliser: systeme/ubuntu/alm_tools/postinstall/personnaliser.md
+              - Session-checks: systeme/ubuntu/alm_tools/postinstall/session-checks.md
+              - Architecture: systeme/ubuntu/alm_tools/postinstall/architecture.md
+              - Packages et dépôts: systeme/ubuntu/alm_tools/postinstall/packages-et-depots.md
+          - Outils spécialisés:
+              - systeme/ubuntu/alm_tools/outils/index.md
+              - devinit: systeme/ubuntu/alm_tools/outils/devinit.md
+              - pioinit: electronique/pioinit/index.md
+              - vmforge: systeme/ubuntu/alm_tools/outils/vmforge.md
+              - runbg: systeme/ubuntu/alm_tools/outils/runbg.md
+              - Backup Google Drive: systeme/ubuntu/alm_tools/outils/backup-googledrive.md
+  - Alpine:
+      - systeme/alpine/index.md
+      - Post-Installation: systeme/alpine/post-installation.md
+      - Création d’un partage de répertoire(s): systeme/alpine/creation-dun-partage-de-repertoires.md
+      - Docker sur Alpine: systeme/alpine/docker.md
+      - Lazydocker: systeme/alpine/lazydocker.md
+      - Compatibilité des terminaux: systeme/alpine/compatibilite-terminal.md
   - Développement:
       - developpement/index.md
       - Python:
@@ -140,11 +146,15 @@ nav:
           - Guide d’utilisation: electronique/pioinit/utilisation.md
   - Outils:
       - outils/index.md
-      - GitHub CLI: outils/github-cli.md
-      - ExifTool: outils/exiftool.md
+      - Kitty: outils/kitty.md
       - yt-dlp: outils/yt-dlp.md
-      - Documentation Zed: outils/zed-docs.md
-      - Claude Code & Zed: outils/claude-code.md
+      - Claude Code:
+          - outils/claude-code/index.md
+          - Installation & Authentification: outils/claude-code/installation.md
+          - Configuration: outils/claude-code/configuration.md
+          - Skills: outils/claude-code/skills.md
+          - Assistant terminal: outils/claude-code/terminal.md
+          - Intégration Zed: outils/claude-code/zed.md
   - LCL:
       - lcl/index.md
       - Kafka:

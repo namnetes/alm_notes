@@ -44,7 +44,7 @@ thread peut l'avoir à la fois.
 *"Tu n'as pas besoin de la clé pendant que tu attends — pose-la."* Le GIL est
 alors libéré, et un autre thread peut en profiter.
 
-```
+```text
 Tâches I/O (réseau, fichier, sleep) :
 
 Thread 1 → [Python] ──[ATTENTE 1s — GIL libéré]──────────── [Python]
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
 **Résultat attendu :**
 
-```
+```text
   → [Utilisateurs] Début  (durée : 1.0s)
   → [Produits] Début  (durée : 0.8s)
   → [Commandes] Début  (durée : 1.2s)
@@ -213,7 +213,7 @@ if __name__ == "__main__":
 
 **Résultat attendu :**
 
-```
+```text
 [SYNC]    4 calculs : 2.40s
 [THREADS] 4 calculs : 2.50s
 → Les temps sont quasi-identiques.
@@ -240,7 +240,7 @@ des threads — ordre qui change à chaque lancement.
 L'opération `counter += 1` semble simple, mais Python la décompose
 en **trois étapes** :
 
-```
+```text
 1. Lire counter   (valeur = 5)
 2. Calculer +1    (résultat = 6)
 3. Écrire counter (counter = 6)
@@ -314,7 +314,7 @@ if __name__ == "__main__":
 
 **Résultat attendu :**
 
-```
+```text
   [Thread-1] a lu 0 → écrit 1
   [Thread-2] a lu 0 → écrit 1   ← les deux ont lu 0 en même temps !
   [Thread-1] a lu 1 → écrit 2
@@ -401,7 +401,7 @@ if __name__ == "__main__":
 
 **Résultat attendu :**
 
-```
+```text
   [Thread-1] a lu 0 → écrit 1
   [Thread-2] a lu 1 → écrit 2   ← Thread-2 a attendu que Thread-1 finisse
   [Thread-1] a lu 2 → écrit 3

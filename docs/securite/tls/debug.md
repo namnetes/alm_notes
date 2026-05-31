@@ -59,7 +59,7 @@ openssl s_client -connect exemple.com:443 -servername exemple.com \
     | openssl x509 -noout -dates
 ```
 
-```
+```text
 notBefore=Jan  1 00:00:00 2024 GMT
 notAfter=Apr  1 00:00:00 2025 GMT
 ```
@@ -81,7 +81,7 @@ openssl s_client -connect exemple.com:443 -servername exemple.com \
     | openssl x509 -noout -ext subjectAltName
 ```
 
-```
+```text
 X509v3 Subject Alternative Name:
     DNS:exemple.com, DNS:www.exemple.com, DNS:api.exemple.com
 ```
@@ -103,7 +103,7 @@ openssl s_client -connect mon-serveur.local:8443 \
 
 ### Interpréter la sortie
 
-```
+```text
 CONNECTED(00000005)
 depth=2 C=US, O=Let's Encrypt, CN=ISRG Root X1        ← CA racine
 depth=1 C=US, O=Let's Encrypt, CN=R10                  ← CA intermédiaire
@@ -142,7 +142,7 @@ curl -vvv https://exemple.com
 ```
 
 Extrait de sortie :
-```
+```text
 * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
 * Server certificate:
 *  subject: CN=exemple.com
@@ -194,7 +194,7 @@ nmap --script ssl-enum-ciphers -p 443 exemple.com
 ```
 
 Extrait de sortie :
-```
+```text
 PORT    STATE SERVICE
 443/tcp open  https
 | ssl-enum-ciphers:
@@ -251,7 +251,7 @@ cd testssl.sh
 ```
 
 Extrait de sortie :
-```
+```text
  Testing protocols via sockets
 
  SSLv2      not offered (OK)

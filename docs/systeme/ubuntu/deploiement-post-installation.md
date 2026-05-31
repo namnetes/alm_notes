@@ -1,6 +1,6 @@
 # Déploiement après installation fraîche
 
-Guide complet pour configurer un poste Ubuntu 26.04 après une installation fraîche, en s'appuyant sur [alm-tools](alm-tools/index.md) et [alm-dotfiles](alm-dotfiles/index.md).
+Guide complet pour configurer un poste Ubuntu 26.04 après une installation fraîche, en s'appuyant sur [alm_tools](alm_tools/index.md) et [alm_dots](alm_dots/index.md).
 
 ---
 
@@ -14,7 +14,7 @@ sudo apt update -y && sudo apt upgrade -y
 
 ## Étape 2 — Créer une clé SSH pour GitHub
 
-Voir [SSH et GitHub](post-installation.md#6-ssh-et-github).
+Voir [SSH et GitHub](post-installation.md#5-ssh-et-github).
 
 ```bash
 ssh-keygen -t ed25519 -C "votre@email.com"
@@ -35,13 +35,13 @@ git clone git@github.com:namnetes/alm_notes.git
 
 | Dépôt | Emplacement local | Rôle | Documentation |
 |-------|-------------------|------|---------------|
-| [namnetes/alm_tools](https://github.com/namnetes/alm_tools) | `~/alm_tools` | Post-installation + outils système | [alm-tools](alm-tools/index.md) |
-| [namnetes/alm_dots](https://github.com/namnetes/alm_dots) | `~/alm_dots` | Fichiers de configuration (dotfiles) | [alm-dotfiles](alm-dotfiles/index.md) |
+| [namnetes/alm_tools](https://github.com/namnetes/alm_tools) | `~/alm_tools` | Post-installation + outils système | [alm_tools](alm_tools/index.md) |
+| [namnetes/alm_dots](https://github.com/namnetes/alm_dots) | `~/alm_dots` | Fichiers de configuration (dotfiles) | [alm_dots](alm_dots/index.md) |
 | [namnetes/alm_notes](https://github.com/namnetes/alm_notes) | `~/alm_notes` | Wiki personnel MkDocs | — |
 
 ---
 
-## Étape 4 — Lancer la post-installation alm-tools
+## Étape 4 — Lancer la post-installation alm_tools
 
 !!! warning "Étape la plus longue"
     Cette étape installe 150+ paquets et tous les outils de développement. Durée : 20 à 40 min selon la connexion internet.
@@ -53,7 +53,7 @@ sudo DEBUG=true ./run_build.sh
 
 Journaux disponibles dans `/var/log/debug_build_ubuntu_*.log`.
 
-Voir le détail des 22 étapes dans [alm-tools — Post-installation](alm-tools/post-installation.md).
+Voir le détail des 22 étapes dans [alm_tools — Post-installation](alm_tools/postinstall/post-installation.md).
 
 ---
 
@@ -78,7 +78,7 @@ source ~/.bashrc
 !!! info "`.gitconfig` déjà en place"
     Stow déploie également `~/.gitconfig` (nom, email, alias, options). Aucune configuration Git manuelle n'est nécessaire.
 
-Voir [alm-dotfiles — Installation](alm-dotfiles/installation.md) pour la vérification des liens symboliques.
+Voir [alm_dots — Installation](alm_dots/installation.md) pour la vérification des liens symboliques.
 
 ---
 
@@ -119,7 +119,7 @@ systemctl --user enable --now mkdocs.service
 systemctl --user enable --now change-wallpaper.timer
 ```
 
-Voir [alm-dotfiles — Service MkDocs](alm-dotfiles/service-mkdocs.md) pour les commandes de gestion.
+Voir [alm_dots — Service MkDocs](alm_dots/service-mkdocs.md) pour les commandes de gestion.
 
 ---
 

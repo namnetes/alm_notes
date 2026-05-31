@@ -7,7 +7,7 @@ qu'un programme est autorisé à faire. Cette page explique comment le lire et l
 
 ## Anatomie d'un profil
 
-```
+```text
 #include <tunables/global>                       ← (1) Variables globales
 
 profile mon-programme /usr/bin/mon-programme {  ← (2) Déclaration du profil
@@ -63,7 +63,7 @@ Chaque règle de fichier se termine par une virgule. Les permissions sont des le
 | `k` | Verrouillage (*lock*) | `flock()` sur un fichier |
 | `m` | Mappage mémoire exécutable | `mmap()` avec `PROT_EXEC` (bibliothèques partagées) |
 
-```
+```text
 /etc/passwd          r,    # lecture seule
 /var/log/app/*.log   rw,   # lecture + écriture
 /var/log/app/*.log   a,    # ajout uniquement (sans lecture)
@@ -87,7 +87,7 @@ Les jokers permettent de viser plusieurs fichiers avec une seule règle.
 | `**` | Correspond à **tout** y compris `/` — tous niveaux | `/var/www/**` |
 | `?` | Correspond à **un seul caractère** quelconque | `/tmp/php?????` |
 
-```
+```text
 /etc/nginx/          r,       # le répertoire lui-même
 /etc/nginx/*.conf    r,       # tous les .conf dans /etc/nginx/ (pas de sous-dossiers)
 /etc/nginx/**        r,       # tout dans /etc/nginx/ et ses sous-dossiers
@@ -116,7 +116,7 @@ d'un qualificateur qui précise ce que devient le processus fils.
 | `ux` | Le fils s'exécute **sans confinement** | À éviter sauf nécessité absolue |
 | `Ux` | Sans confinement, variables nettoyées | Légèrement moins risqué que `ux` |
 
-```
+```text
 /bin/bash             ix,   # bash hérite du profil (usage interne)
 /usr/bin/python3      ix,   # python hérite du profil
 /usr/sbin/sendmail    px,   # sendmail charge son propre profil
@@ -148,7 +148,7 @@ correspondent aux droits spéciaux que `root` possède, découpés en unités fi
 | `kill` | Envoyer des signaux à des processus arbitraires |
 | `chown` | Changer le propriétaire d'un fichier |
 
-```
+```text
 capability net_bind_service,   # Nginx sur le port 80
 capability setuid,             # Nginx change d'utilisateur après démarrage
 capability net_raw,            # ping a besoin de sockets ICMP bruts
@@ -165,7 +165,7 @@ capability net_raw,            # ping a besoin de sockets ICMP bruts
 
 Les règles réseau contrôlent les types de connexions qu'un programme peut établir.
 
-```
+```text
 network,                 # Autorise TOUT le réseau (à éviter)
 network tcp,             # TCP uniquement (IPv4 + IPv6)
 network udp,             # UDP uniquement
@@ -189,7 +189,7 @@ network unix stream,     # Socket Unix de type stream (IPC local)
 
 Les variables évitent de dupliquer des chemins et rendent les profils portables.
 
-```
+```text
 #include <tunables/global>
 
 # Utilisation des variables prédéfinies
@@ -209,7 +209,7 @@ Les variables évitent de dupliquer des chemins et rendent les profils portables
 
 Vous pouvez aussi définir vos propres variables dans un profil :
 
-```
+```text
 @{DOC_DIR} = /home/galan/workspaces/wikinotes
 
 profile mkdocs /usr/local/bin/mkdocs {
@@ -227,7 +227,7 @@ profile mkdocs /usr/local/bin/mkdocs {
 Les abstractions sont des fichiers d'inclusion prêts à l'emploi, situés dans
 `/etc/apparmor.d/abstractions/`. Elles regroupent les règles communes à une catégorie de programmes.
 
-```
+```text
 #include <abstractions/base>          # Accès minimal indispensable à tout programme (libc, /dev/null…)
 #include <abstractions/nameservice>   # DNS, NSS (/etc/hosts, /etc/resolv.conf…)
 #include <abstractions/python>        # Interpréteur Python et bibliothèques standard
@@ -255,14 +255,14 @@ Les fichiers locaux se trouvent dans `/etc/apparmor.d/local/`.
 
 Contenu de `/etc/apparmor.d/local/usr.sbin.nginx` :
 
-```
+```text
 # Autorisation supplémentaire pour mon site statique
 /data/sites/mon-site/** r,
 ```
 
 Cette règle est automatiquement incluse dans le profil Nginx principal grâce à la ligne :
 
-```
+```text
 include if exists <local/usr.sbin.nginx>
 ```
 
@@ -281,7 +281,7 @@ que tous les profils officiels contiennent.
 Un refus (`deny`) est prioritaire sur toute règle d'autorisation. Il sert à exclure explicitement
 un sous-ensemble d'une règle large.
 
-```
+```text
 # Autoriser tout le répertoire personnel...
 @{HOME}/** r,
 
@@ -300,7 +300,7 @@ deny @{HOME}/.gnupg/**  r,
 
 ## Récapitulatif : un profil minimal commenté
 
-```
+```text
 #include <tunables/global>
 
 profile mon-app /usr/bin/mon-app {

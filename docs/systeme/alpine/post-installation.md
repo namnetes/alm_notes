@@ -5,7 +5,7 @@ d'Alpine Linux. À la fin de cette page, votre système sera à jour, `sudo`
 configuré, et les outils courants installés.
 
 !!! info "Prérequis"
-    - Alpine Linux installé (voir [VM avec Cloud-Init](vm-cloud-init.md))
+    - VM Alpine Linux créée et démarrée (voir [vmforge](../../ubuntu/alm_tools/outils/vmforge.md))
     - Connexion en tant que **root** pour les premières étapes
     - Accès Internet depuis la VM
 
@@ -322,17 +322,56 @@ développement. Ils sont tous disponibles dans le dépôt `community`.
 
 ---
 
-## 5. Pour aller plus loin
+## 5. Changer le nom d'hôte
+
+### Changement temporaire
+
+Actif jusqu'au prochain redémarrage uniquement :
+
+```bash
+sudo hostname nouveau-nom
+hostname   # vérifier
+```
+
+### Changement permanent
+
+Modifier deux fichiers puis redémarrer le service :
+
+**`/etc/hostname`** — contient uniquement le nom court :
+
+```bash
+sudo nano /etc/hostname
+# Contenu : nouveau-nom
+```
+
+**`/etc/hosts`** — associe le nom à l'IP locale :
+
+```bash
+sudo nano /etc/hosts
+# 127.0.0.1   nouveau-nom.domaine.local nouveau-nom localhost.localdomain localhost
+# ::1         localhost localhost.localdomain
+```
+
+Appliquer sans reboot :
+
+```bash
+sudo rc-service hostname restart
+hostname      # nom court
+hostname -f   # FQDN
+```
+
+---
+
+## 6. Pour aller plus loin
 
 | Sujet | Page dédiée |
 |---|---|
-| Changer le nom d'hôte de la VM | [Changer le nom d'hôte](changer-le-nom-dhote.md) |
-| Partager un répertoire entre l'hôte et la VM | [Création d'un partage de répertoire(s)](creation-dun-partage-de-repertoires.md) |
+| Partager un répertoire entre l'hôte et la VM | [Partage de répertoires via VirtioFS](creation-dun-partage-de-repertoires.md) |
 | Installer Docker | [Docker sur Alpine](docker.md) |
 
 ---
 
-## 6. Compatibilité des terminaux (optionnel)
+## 7. Compatibilité des terminaux (optionnel)
 
 Si vous vous connectez à la VM depuis un terminal moderne (Kitty, foot,
 Ghostty, WezTerm…) et que vous obtenez une erreur du type

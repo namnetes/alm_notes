@@ -524,4 +524,11 @@ Pour 21 Go de données, quelques règles pratiques :
 
 ---
 
+## Annexe — Document source
+
+Ce document est issu d'une expression de besoin formalisée en PDF :
+[Télécharger architecture-zos-kafka.pdf](architecture-zos-kafka.pdf)
+
+---
+
 _Document maintenu par l'équipe LCL — Version 1.0 — Avril 2026._

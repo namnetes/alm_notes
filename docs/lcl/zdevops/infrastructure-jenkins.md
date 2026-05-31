@@ -30,7 +30,7 @@ Le plugin IDz délègue **intégralement** la compilation, le déploiement et l'
 
 Nom du fichier `.mf.json` présent dans `META-INF/`, **sans l'extension**.
 
-```
+```text
 Fichier : da01_correction_bug_42.mf.json
 Paramètre envoyé : da01_correction_bug_42
 ```
@@ -90,7 +90,7 @@ Le plugin utilise le **client HTTP Java 11** (`java.net.http.HttpClient`) avec l
 
 ### Authentification
 
-```
+```text
 Authorization: Basic <Base64("<login_windows>@id.fr.cly:<token_jenkins>")>
 ```
 
@@ -114,7 +114,7 @@ flowchart LR
 
 **Étape 1 — Déclenchement**
 
-```
+```text
 POST <jenkins_url>/job/<pipeline>/buildWithParameters?<param>=<valeur>
 → HTTP 201
 → Header Location: <jenkins_url>/queue/item/<id>/
@@ -122,7 +122,7 @@ POST <jenkins_url>/job/<pipeline>/buildWithParameters?<param>=<valeur>
 
 **Étape 2 — Attente du démarrage** (max 60 secondes / 30 tentatives)
 
-```
+```text
 GET <queue_url>/api/json  (toutes les 2 secondes)
 → Attendre que "executable.url" soit présent dans la réponse
 → Récupérer l'URL du build : <jenkins_url>/job/<pipeline>/<num>/
@@ -130,7 +130,7 @@ GET <queue_url>/api/json  (toutes les 2 secondes)
 
 **Étape 3 — Surveillance du build**
 
-```
+```text
 GET <build_url>/api/json  (toutes les 2 secondes)
 → Surveiller le champ "building"
 → Quand building=false : build terminé
@@ -140,7 +140,7 @@ GET <build_url>/api/json  (toutes les 2 secondes)
 
 Dès le démarrage du build, la vue **Jenkins Browser** s'ouvre automatiquement dans IDz sur l'interface Blue Ocean :
 
-```
+```text
 <jenkins_base>/blue/organizations/jenkins/<pipeline>/detail/<pipeline>/<num>/pipeline/
 ```
 
@@ -153,7 +153,7 @@ Dès le démarrage du build, la vue **Jenkins Browser** s'ouvre automatiquement 
 
 Les noms des pipelines et URLs sont stockés dans les fichiers `.properties` embarqués dans le plugin :
 
-```
+```text
 plugin/src/fr/lcl/zdevops/idz/plugin/config/
 ├── dev.properties
 ├── rec.properties

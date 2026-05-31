@@ -8,6 +8,9 @@ code C/C++, Makefile, configuration Zed, et documentation Doxygen.
     pioinit est à l'électronique ce que `devinit` est au Python :
     un initialiseur de projet opinionné qui applique les standards du dépôt.
 
+!!! info "Dépôt source"
+    pioinit fait partie du dépôt [alm_tools](../../systeme/ubuntu/alm_tools/index.md) — `cli/pioinit/`.
+
 ---
 
 ## Ce que pioinit génère

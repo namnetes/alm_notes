@@ -21,21 +21,22 @@ make docs-build               # compiler vers site/
 make check-deps               # vérifier uv et lsof
 
 uv run python new-page.py     # gestionnaire interactif de pages
+uv run ruff check new-page.py --fix   # linter new-page.py (ruff.toml à la racine)
 ```
 
 > Toujours utiliser `uv run python new-page.py` — PyYAML est disponible comme dépendance transitive de MkDocs dans l'environnement uv. Le shim `wnp` / `install.sh` est un artefact ancien, ne pas s'en servir.
 
 ## Carte du contenu (`docs/`)
 
-| Répertoire | Thème |
-|---|---|
-| `systeme/ubuntu/` | Post-install Ubuntu, alm-dotfiles, alm-tools |
-| `systeme/alpine/` | Alpine Linux, VMs, Docker |
-| `electronique/` | PlatformIO, pioinit |
-| `developpement/python/` | uv, FastAPI, concurrence, design patterns |
-| `lcl/` | Mainframe / z/OS (Kafka, CICS) |
-| `securite/` | TLS, AppArmor, OpenSSL, Proton |
-| `outils/` | GitHub CLI, Zed, Claude Code, yt-dlp |
+| Répertoire | Onglet nav | Thème |
+|---|---|---|
+| `systeme/ubuntu/` | Ubuntu | Post-install Ubuntu, alm_dots, alm_tools |
+| `systeme/alpine/` | Alpine | Alpine Linux, VMs, Docker |
+| `electronique/` | Électronique | PlatformIO, pioinit |
+| `developpement/python/` | Développement | uv, FastAPI, concurrence, design patterns |
+| `lcl/` | LCL | Mainframe / z/OS (Kafka, CICS) |
+| `securite/` | Sécurité | TLS, AppArmor, OpenSSL, Proton |
+| `outils/` | Outils | GitHub CLI, Zed, Claude Code, yt-dlp |
 
 Chaque section a généralement un `index.md` (page d'accueil) + des pages thématiques.
 
@@ -67,13 +68,21 @@ Script interactif qui lit et écrit `mkdocs.yml`. Quatre opérations :
 
 La navigation est **explicite** dans `mkdocs.yml`, pas auto-découverte. Toute nouvelle page doit être enregistrée dans `nav:` (via `new-page.py` ou manuellement). Après toute modification manuelle, vérifier avec `make docs-build`.
 
+## Assets statiques
+
+- **Images** : toutes les images référencées dans les pages vont dans `docs/assets/images/`. Ne pas créer de sous-dossiers images dans les répertoires de sections.
+- **JS custom** (`docs/javascripts/`) :
+  - `mathjax.js` — initialise MathJax 3 pour `pymdownx.arithmatex` (LaTeX dans les pages)
+  - `nav-dropdown.js` — comportement de navigation personnalisé
+- **CSS** : `docs/stylesheets/extra.css` — mise en page 100 % largeur + sidebars (voir standard dans `~/.claude/CLAUDE.md`)
+
 ## Extensions MkDocs spécifiques à ce projet
 
-- **MathJax** : rendu LaTeX via `pymdownx.arithmatex` + CDN MathJax 3, initialisé par `docs/javascripts/mathjax.js`.
-- **nav-dropdown** : comportement de navigation personnalisé via `docs/javascripts/nav-dropdown.js`.
-- La config MkDocs suit le standard défini dans `~/CLAUDE.md` (theme material, font: false, extra.css full-width, Makefile cibles).
+- **MathJax** : rendu LaTeX via `pymdownx.arithmatex` + CDN MathJax 3.
+- La config MkDocs suit le standard défini dans `~/.claude/CLAUDE.md` (theme material, font: false, extra.css full-width, Makefile cibles).
 
 ## Fichiers à ne pas modifier
 
-- `migrate.py` — script de migration one-shot TiddlyWiki → MkDocs (artefact historique). Ne fait pas partie du workflow courant.
-- `site/` — sortie générée, ignorée par git.
+- `migrate.py` — script de migration one-shot TiddlyWiki → MkDocs (artefact historique).
+- `install.sh` — ancien shim d'installation pour `new-page.py`, remplacé par `uv run python new-page.py`.
+- `site/` — sortie générée par `make docs-build`, ignorée par git.
