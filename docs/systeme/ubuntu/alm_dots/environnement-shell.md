@@ -1,5 +1,17 @@
 # Environnement shell
 
+??? info "Vocabulaire — termes récurrents dans la doc `alm_*`"
+    Quelques mots reviennent souvent dans cette page et dans la documentation
+    des dépôts `alm_dots` / `alm_tools`, sans toujours être définis sur place :
+
+    | Terme | Signification |
+    |-------|---------------|
+    | **Shim** | Petit script "passe-plat" placé dans `~/.local/bin` (donc dans le `PATH`) qui pointe vers un outil ou projet réel ailleurs sur le disque — permet de lancer l'outil par un nom court depuis n'importe où. Voir la section [Registre des shims](#registre-des-shims-fonctionnement-et-ajout) plus bas |
+    | **Idempotent** | Se dit d'une opération qui produit le même résultat qu'on l'exécute une ou plusieurs fois — la relancer ne casse rien et ne duplique rien. `stow .` ou `mkdocsinit` sont conçus pour être rejoués sans risque |
+    | **Stow (GNU Stow)** | Outil qui déploie les fichiers d'un dépôt (ici `alm_dots`) vers `$HOME` via des liens symboliques, en reproduisant l'arborescence du dépôt dans `~`. Voir [Présentation d'alm_dots](presentation.md) |
+    | **Best-effort** | Étape d'un script qui s'exécute "du mieux possible" : si elle échoue (outil absent, permission refusée…), un avertissement s'affiche mais le script continue plutôt que de s'arrêter en erreur |
+    | **Wheel** | ⚠️ Deux sens distincts selon le contexte : un *wheel* Python est un paquet pré-compilé installé par `uv`/`pip` (le "rebuild du wheel" = recompiler le paquet après modification du code source) ; le groupe Linux `wheel` (mentionné dans la doc Alpine) est un groupe système autorisant `sudo` — sans rapport avec le précédent |
+
 ---
 
 ## Point d'entrée : `.bash_env`
@@ -115,11 +127,51 @@ d'alias déjà présents.
 | Raccourci bas | `Ctrl+J` |
 | Raccourci haut | `Ctrl+K` |
 
+### Raccourcis clavier FZF
+
+`.bash_env` charge `key-bindings.bash` (fourni par le paquet `fzf`), qui
+ajoute trois raccourcis globaux dans le shell — utilisables dans n'importe
+quelle commande, pas seulement avec les alias `f*` ci-dessous :
+
+| Raccourci | Effet |
+|-----------|-------|
+| `Ctrl+T` | Ouvre FZF et insère le(s) chemin(s) sélectionné(s) à la position du curseur |
+| `Ctrl+R` | Recherche floue dans l'historique des commandes |
+| `Alt+C` | Ouvre FZF sur les sous-répertoires et `cd` dans celui sélectionné |
+
+### Alias FZF — `.bash_aliases`
+
+| Alias | Commande | Description |
+|-------|----------|-------------|
+| `ff` | `fzf` | Lance FZF brut sur le répertoire courant |
+| `fz` | `zed $(fzf)` | Sélectionne un fichier via FZF et l'ouvre dans Zed |
+| `fn` | `nano $(fzf)` | Idem, ouverture dans Nano |
+| `fh` | `history \| fzf` | Recherche floue dans l'historique (alternative à `Ctrl+R`) |
+| `fcd` | `cd $(find . -type d \| fzf)` | Recherche un sous-répertoire et s'y déplace |
+| `fs` | `rg --files \| fzf --preview '...'` | Recherche un fichier avec aperçu `bat` coloré |
+
 ---
 
 ## Alias Git dynamiques — `.functions/lib/git_aliases.sh`
 
 Au démarrage, `git_aliases.sh` lit la section `[alias]` de `.gitconfig` et crée les alias Bash correspondants. Tous les alias commencent par `g` — taper `g` + `Tab` dans le terminal affiche l'ensemble des opérations disponibles.
+
+!!! warning "Alias qui réécrivent l'historique ou perdent du travail"
+    Certains alias ci-dessous ne sont pas de simples raccourcis de lecture —
+    ils modifient l'historique ou suppriment des données locales. À ne pas
+    taper par réflexe si vous débutez en Git :
+
+    | Alias | Risque |
+    |-------|--------|
+    | `gbD` (`git branch -D`) | Supprime une branche **même si elle n'est pas mergée** — les commits qu'elle contenait deviennent orphelins et peuvent être perdus |
+    | `gca` (`git commit --amend --no-edit`) | Remplace le dernier commit — dangereux s'il a déjà été poussé et partagé |
+    | `grbi` (`git rebase -i`) | Réécrit l'historique des commits sélectionnés — peut créer des conflits ou perdre des modifications en cas de mauvaise manipulation |
+    | `gundo` (`git reset --soft HEAD~1`) | Annule le dernier commit en gardant les modifications en attente — facile à enchaîner par erreur sur plusieurs commits |
+    | `gunstage` (`git reset HEAD --`) | Désindexe les fichiers stagés — sans danger pour le contenu, mais peut surprendre si on s'attendait à un `checkout` |
+
+    En cas de doute, `gst` (statut) et `gd` (diff) avant d'agir, et gardez à
+    l'esprit que `git reflog` permet souvent de récupérer un commit "perdu"
+    tant qu'il n'a pas été nettoyé par le ramasse-miettes Git.
 
 **Status / Info**
 
