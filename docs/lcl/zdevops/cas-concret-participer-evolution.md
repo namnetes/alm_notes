@@ -157,7 +157,7 @@ mais sans création de manifest ni écriture GitLab.
 **Correction appliquée :** vérifier `is_dirty()` avant toute suppression.
 Si le dépôt est dirty → `409 REPO_HAS_UNCOMMITTED_CHANGES`. Identique à la
 correction déjà documentée dans
-[Cas concret : POST /evolutions — RG-08a](cas-concret-post-evolutions.md#rg-08a--stratégie-delete_and_recreate-dépôt-existant).
+[Cas concret : POST /evolutions — RG-08a](cas-concret-post-evolutions.md#rg-08a-strategie-delete_and_recreate-depot-existant).
 
 ---
 

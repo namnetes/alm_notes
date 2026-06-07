@@ -17,7 +17,7 @@ fois sur le même projet, il ne touche que ce qui manque.
 | 3 | `docs/stylesheets/extra.css` | Ignoré si le fichier existe |
 | 4 | `docs/javascripts/nav-dropdown.js` | Ignoré si le fichier existe |
 | 5 | `docs/javascripts/mathjax.js` | Ignoré si le fichier existe |
-| 6 | `mkdocs.yml` | Créé si absent ; patché si plugin problématique actif |
+| 6 | `mkdocs.yml` | Créé si absent ; deux correctifs ciblés appliqués si besoin sur un fichier existant |
 | 7 | `docs/index.md` (page de bienvenue) | Ignoré si le fichier existe |
 | 8 | `docs/macros.py` (stub macros) | Ignoré si le fichier existe |
 | 9 | `Makefile` | **Créé** si absent ; **jamais modifié** s'il existe |
@@ -97,13 +97,23 @@ Initialise MathJax 3 pour le rendu LaTeX.  Déclaré **avant** le CDN dans
 
 ### `docs/macros.py`
 
-Stub minimal pour le plugin `mkdocs-macros`.  Sans ce fichier le plugin
+Stub pour le plugin `mkdocs-macros` — type, docstring et lien vers la
+référence sont déjà en place, prêt à compléter.  Sans ce fichier le plugin
 crashe au démarrage quand `module_name: docs/macros` est configuré.
 
 ```python
-def define_env(env):
-    # ajouter ici variables, filtres et macros personnalisés
-    pass
+"""MkDocs macros — variables, filtres et macros Jinja2 personnalisés.
+
+Référence : https://mkdocs-macros-plugin.readthedocs.io/
+"""
+
+from __future__ import annotations
+
+from mkdocs_macros.plugin import MacrosPlugin
+
+
+def define_env(env: MacrosPlugin) -> None:
+    """Déclare variables, filtres et macros disponibles dans les pages Markdown."""
 ```
 
 ### `mkdocs.yml`
@@ -112,10 +122,16 @@ def define_env(env):
 theme:
   language: fr       # interface en français
   font: false        # pas de Google Fonts
+  palette: light/dark indigo, bascule automatique selon le thème système
   features:
     - navigation.tabs / sections / indexes / expand / top
     - search.highlight / search.suggest
     - content.code.copy / content.code.annotate
+
+markdown_extensions:
+  - admonition / tables / attr_list / def_list / footnotes / md_in_html / toc
+  - pymdownx.superfences (+ Mermaid) / arithmatex (MathJax) / tabbed
+  - pymdownx.details / inlinehilite / keys / snippets / tasklist / highlight
 
 plugins:
   - search (lang: fr)
@@ -143,13 +159,35 @@ fichiers `.pages` (awesome-pages) pour contrôler l'ordre si nécessaire.
     uv add --dev mkdocs-git-revision-date-localized-plugin
     ```
 
-    Puis décommenter le bloc dans `mkdocs.yml` :
+    Puis décommenter le bloc dans `mkdocs.yml` **en conservant
+    `fallback_to_build_date: true`** :
 
     ```yaml
     - git-revision-date-localized:
         enable_creation_date: true
         fallback_to_build_date: true
     ```
+
+    Sans cette clé, le correctif n°1 décrit ci-dessous recommentera
+    automatiquement le bloc à la prochaine exécution de `mkdocsinit`.
+
+### Correctifs automatiques sur un `mkdocs.yml` existant
+
+Quand `mkdocs.yml` existe déjà, mkdocsinit ne le réécrit **jamais** — il se
+contente d'appliquer deux correctifs ciblés, chacun conditionnel à un motif
+précis dans le fichier :
+
+1. **`git-revision-date-localized` actif sans `fallback_to_build_date`**
+   → le bloc plugin entier est commenté automatiquement. Sans cette clé, le
+   plugin plante au premier `mkdocs serve` quand le dépôt n'a aucun commit
+   ou sous certaines restrictions de sécurité git (ex. dépôt dans `/tmp`).
+2. **Entrée `- macros` nue (sans `module_name`)** → réécrite en
+   `- macros:` suivi de `module_name: docs/macros`, pour empêcher le
+   plugin de charger par erreur un `main.py` généré par `uv init`.
+
+Si aucun des deux motifs n'est présent — plugin déjà commenté, déjà
+paramétré avec `module_name`, ou absent du fichier — celui-ci reste
+intact et seul le message `mkdocs.yml déjà présent` s'affiche.
 
 ### `Makefile` (créé seulement si absent)
 

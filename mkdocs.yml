@@ -99,6 +99,7 @@ nav:
           - Outils spécialisés:
               - systeme/ubuntu/alm_tools/outils/index.md
               - devinit: systeme/ubuntu/alm_tools/outils/devinit.md
+              - mkdocsinit: systeme/ubuntu/alm_tools/outils/mkdocsinit.md
               - pioinit: electronique/pioinit/index.md
               - vmforge: systeme/ubuntu/alm_tools/outils/vmforge.md
               - runbg: systeme/ubuntu/alm_tools/outils/runbg.md

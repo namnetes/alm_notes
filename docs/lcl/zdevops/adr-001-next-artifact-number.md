@@ -490,6 +490,6 @@ Cette décision doit être réexaminée si l'un des déclencheurs suivants est a
 
 ## Liens
 
-- [Cas concret POST /evolutions — RG-12](cas-concret-post-evolutions.md#rg-12-mise-à-jour-de-applicationsjson)
+- [Cas concret POST /evolutions — RG-12](cas-concret-post-evolutions.md#rg-12-mise-a-jour-de-applicationsjson)
 - [Architecture générale](architecture-generale.md)
 - Spec plugin Java : `cicd_zdevops/plugin_zdevops/doc/01_demarrer_evolution/business_rules.md`

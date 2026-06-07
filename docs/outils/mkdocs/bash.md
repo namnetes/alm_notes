@@ -116,6 +116,7 @@ bash script/build_docs.sh --output /var/www/html/mon-projet
 
 ## Intégration GitHub Actions
 
+{% raw %}
 ```yaml
 # .github/workflows/docs.yml
 name: Documentation
@@ -148,6 +149,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
 ```
+{% endraw %}
 
 !!! note "Alternative : `mkdocs gh-deploy`"
     MkDocs intègre une commande dédiée au déploiement sur GitHub Pages :

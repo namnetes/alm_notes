@@ -5,7 +5,7 @@ d'Alpine Linux. À la fin de cette page, votre système sera à jour, `sudo`
 configuré, et les outils courants installés.
 
 !!! info "Prérequis"
-    - VM Alpine Linux créée et démarrée (voir [vmforge](../../ubuntu/alm_tools/outils/vmforge.md))
+    - VM Alpine Linux créée et démarrée (voir [vmforge](../ubuntu/alm_tools/outils/vmforge.md))
     - Connexion en tant que **root** pour les premières étapes
     - Accès Internet depuis la VM
 

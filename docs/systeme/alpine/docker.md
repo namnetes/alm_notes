@@ -5,7 +5,7 @@ machine virtuelle Alpine Linux. Il s'adresse aussi bien aux débutants qu'aux
 utilisateurs déjà familiers avec Linux.
 
 !!! info "Prérequis"
-    - Une VM Alpine Linux installée et à jour (voir [vmforge](../../ubuntu/alm_tools/outils/vmforge.md) + [Post-Installation](post-installation.md))
+    - Une VM Alpine Linux installée et à jour (voir [vmforge](../ubuntu/alm_tools/outils/vmforge.md) + [Post-Installation](post-installation.md))
     - Un accès Internet depuis la VM
     - Un utilisateur avec les droits `sudo`
 

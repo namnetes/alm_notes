@@ -429,7 +429,7 @@ votre fonction.
 !!! info "Documentation complète"
     Pydantic, les `Field()`, `field_validator`, la génération OpenAPI automatique et la
     validation de réponse (`response_model`) sont expliqués en détail dans :
-    [FastAPI — Concepts avancés : Contrôle de types](../../developpement/python/fastapi/concepts-avances.md#3-contrôle-de-types-ce-que-fastapi-fait-avec-vos-annotations)
+    [FastAPI — Concepts avancés : Contrôle de types](../../developpement/python/fastapi/concepts-avances.md#3-controle-de-types-ce-que-fastapi-fait-avec-vos-annotations)
 
 Dans le contexte zDevOps, la valeur ajoutée est de **documenter les règles métier dans
 le modèle** via `@field_validator` (RG-01 et RG-02) plutôt que de les disperser dans
@@ -465,7 +465,7 @@ elle-même** — FastAPI assemble et injecte la chaîne à chaque requête.
 !!! info "Documentation complète"
     Le mécanisme de `Depends`, les dépendances enchaînées, l'auth par header et la
     résolution du graphe de dépendances sont expliqués de zéro dans :
-    [FastAPI — Architecture et Code](../../developpement/python/fastapi/code.md#linjection-de-dépendances-depends)
+    [FastAPI — Architecture et Code](../../developpement/python/fastapi/code.md#linjection-de-dependances-depends)
 
 Chaîne de dépendances spécifique à l'API zDevOps — 4 niveaux imbriqués :
 
@@ -578,7 +578,7 @@ async def zdevops_handler(request: Request, exc: ZDevOpsError) -> JSONResponse:
     ```
 
 !!! info "Règle async/sync expliquée de zéro"
-    [FastAPI — Architecture et Code : Async vs Sync](../../developpement/python/fastapi/code.md#async-vs-sync-la-règle-dor)
+    [FastAPI — Architecture et Code : Async vs Sync](../../developpement/python/fastapi/code.md#async-vs-sync-la-regle-dor)
 
 ### 5.5 Exception handlers — lien vers la doc générale
 
