@@ -67,6 +67,40 @@ Toutes les fonctions sont accessibles depuis n'importe quel répertoire. La comm
 | `shims` / `tl` | `tl` | Inventaire de tous les outils personnels installés avec statut ✓ / ✗ |
 | `shim_add` | `shim_add alias cmd script proj desc` | Enregistre un nouvel outil dans le registre des shims |
 
+### Registre des shims — fonctionnement et ajout
+
+`shims` (alias `tl`) et `shim_add` s'appuient sur un registre TSV séparé du
+code, à `~/.local/share/alm_tools/shims.tsv` — une ligne par outil, au format
+`alias|commande|script|projet|description`.
+
+**`shims [filtre]`** croise ce registre avec le contenu de `~/.local/bin` et
+affiche un tableau alias / commande / script / projet / statut :
+
+- chaque entrée est marquée `✓ installé` si l'alias existe et est exécutable
+  dans `~/.local/bin`, sinon `✗ manquant`
+- un filtre optionnel restreint l'affichage aux lignes le contenant
+- les **scripts orphelins** — exécutables détectés comme `text`/`script` par
+  `file` dans `~/.local/bin` mais absents du registre — sont signalés en fin
+  de sortie avec une suggestion `shim_add`. Les binaires compilés (ELF) sont
+  ignorés par cette détection.
+
+**`shim_add <alias> <commande> <script> <projet> <description>`** ajoute une
+ligne au registre (création du répertoire si besoin) et refuse les doublons
+d'alias déjà présents.
+
+!!! info "État actuel (2026-06-07)"
+    Le registre `~/.local/share/alm_tools/shims.tsv` n'existe pas encore —
+    `tl` affiche "Aucun registre trouvé" et liste tous les scripts
+    texte/script de `~/.local/bin` comme orphelins :
+
+    | Script | Éligibilité à l'enregistrement |
+    |--------|-------------------------------|
+    | `wnp` | Artefact ancien (shim historique de `new-page.py`) — **à ne pas enregistrer**, voir le `CLAUDE.md` du dépôt `alm_notes` |
+    | `vmforge` | Outil actif et documenté ([vmforge](../alm_tools/outils/vmforge.md)) — candidat légitime à `shim_add` |
+
+    `uv`, `uvx`, `shai` et `mdbook` n'apparaissent pas comme orphelins : ce
+    sont des binaires compilés (ELF), hors du périmètre de la détection.
+
 ---
 
 ## Configuration FZF — `.fzfrc`
