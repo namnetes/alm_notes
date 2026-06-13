@@ -1,5 +1,10 @@
 # Packages et dépôts
 
+Cette page recense l'inventaire complet de ce que `postinstall` installe ou
+retire : dépôts PPA, paquets APT (regroupés par usage), applications Snap et
+outils installés hors APT par des modules dédiés. Chaque liste correspond à un
+fichier de configuration ou à un module, indiqué dans le titre de section.
+
 ---
 
 ## Dépôts PPA — `postinstall/config/ppas.list`

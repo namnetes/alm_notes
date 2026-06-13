@@ -8,11 +8,30 @@
 
 ## Pages
 
-| Page | Description |
-|------|-------------|
-| [Présentation](presentation.md) | Rôle, avantages, liste complète des fichiers gérés |
-| [Installation](installation.md) | Déploiement étape par étape avec GNU Stow |
-| [Environnement shell](environnement-shell.md) | `.bash_env`, alias, fonctions, FZF, zoxide, eza |
-| [Outils et applications](outils-et-applications.md) | Starship, Kitty, Yazi, Zed, Git |
-| [Scripts et utilitaires](scripts-et-utilitaires.md) | Scripts `bin/` et outils Python |
-| [Service MkDocs](service-mkdocs.md) | Service systemd qui démarre le wiki automatiquement au login |
+<div class="grid cards" markdown>
+
+-   :material-information-outline: **[Présentation](presentation.md)**
+
+    Rôle, avantages et liste complète des fichiers gérés.
+
+-   :material-download-box-outline: **[Installation](installation.md)**
+
+    Déploiement étape par étape avec GNU Stow.
+
+-   :material-console: **[Environnement shell](environnement-shell.md)**
+
+    `.bash_env`, alias, fonctions, FZF, zoxide, eza.
+
+-   :material-application-cog-outline: **[Outils et applications](outils-et-applications.md)**
+
+    Starship, Kitty, Yazi, Zed, Git.
+
+-   :material-script-text-outline: **[Scripts et utilitaires](scripts-et-utilitaires.md)**
+
+    Scripts `bin/` et utilitaires Python.
+
+-   :material-cog-sync-outline: **[Service MkDocs](service-mkdocs.md)**
+
+    Service systemd qui démarre le wiki automatiquement à l'ouverture de session.
+
+</div>

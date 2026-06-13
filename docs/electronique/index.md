@@ -9,10 +9,19 @@ qu'aux développeurs habitués au logiciel qui souhaitent s'initier au matériel
 
 ## Outils couverts
 
-| Section | Description |
-|---------|-------------|
-| [PlatformIO](platformio/index.md) | Chaîne de compilation universelle pour microcontrôleurs — CLI et intégration Zed |
-| [pioinit](pioinit/index.md) | Outil d'initialisation de projets PlatformIO — génère la structure complète |
+<div class="grid cards" markdown>
+
+-   :material-chip: **[PlatformIO](platformio/index.md)**
+
+    Chaîne de compilation universelle pour microcontrôleurs — CLI et
+    intégration Zed.
+
+-   :material-rocket-launch-outline: **[pioinit](pioinit/index.md)**
+
+    Outil d'initialisation de projets PlatformIO — génère la structure complète.
+
+</div>
+
 ---
 
 ## Matériel cible

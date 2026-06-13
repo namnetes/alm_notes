@@ -1,5 +1,10 @@
 # Outils et applications
 
+Cette page détaille la configuration de chaque application déployée par
+`alm_dots` : l'invite de commandes, le terminal, le gestionnaire de fichiers,
+l'éditeur, Git et Claude Code. Chaque section indique le fichier source
+versionné et son emplacement cible dans `~`.
+
 ---
 
 ## Starship — `.config/starship.toml`

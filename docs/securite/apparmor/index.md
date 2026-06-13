@@ -138,8 +138,18 @@ et reste le choix par défaut sur les distributions Debian-based.
 
 ## Structure de la documentation
 
-| Page | Contenu |
-|---|---|
-| [Syntaxe des profils](syntaxe.md) | Écrire et lire un profil AppArmor |
-| [Outils et gestion](outils.md) | Créer, modifier, recharger, déboguer des profils |
-| [Exemples et exercices](exemples.md) | Cas pratiques commentés, exercices guidés |
+<div class="grid cards" markdown>
+
+-   :material-file-code-outline: **[Syntaxe des profils](syntaxe.md)**
+
+    Écrire et lire un profil AppArmor.
+
+-   :material-tools: **[Outils et gestion](outils.md)**
+
+    Créer, modifier, recharger, déboguer des profils.
+
+-   :material-school-outline: **[Exemples et exercices](exemples.md)**
+
+    Cas pratiques commentés, exercices guidés.
+
+</div>

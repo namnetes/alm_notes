@@ -4,6 +4,11 @@ Guides et références pour les langages et outils de développement.
 
 ## Langages
 
-| Section | Description |
-|---------|-------------|
-| [Python](python/index.md) | Gestion de projets, environnements virtuels et outils Python |
+<div class="grid cards" markdown>
+
+-   :material-language-python: **[Python](python/index.md)**
+
+    Gestion de projets, environnements virtuels, concurrence, FastAPI et
+    design patterns.
+
+</div>

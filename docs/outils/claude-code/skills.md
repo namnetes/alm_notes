@@ -1,172 +1,218 @@
-# Skills (commandes personnalisées)
+# Skills (Agent Skills)
 
-Les **skills** sont des commandes slash personnalisées (`/ma-commande`) que
-Claude Code exécute à la demande. Chaque skill est un fichier Markdown dont
-le contenu sert d'instruction à Claude.
+Un **skill** (*Agent Skill*) est une compétence que vous décrivez à Claude
+Code et qu'il décide d'utiliser **lui-même**, automatiquement, quand la tâche
+en cours correspond. Contrairement à une commande, vous ne le déclenchez pas à
+la main : c'est le modèle qui le sélectionne en lisant sa `description`.
 
----
+!!! info "Ne pas confondre avec les commandes personnalisées"
+    Les deux mécanismes sont distincts — voir le tableau ci-dessous et la page
+    [Commandes personnalisées](commandes.md).
 
-## Principe
-
-Quand vous tapez `/nom-du-skill` dans Claude Code, il :
-
-1. Trouve le fichier Markdown correspondant
-2. Envoie son contenu comme instruction dans le contexte courant
-3. Exécute la tâche décrite
-
-Les skills peuvent recevoir des **arguments** via le placeholder `$ARGUMENTS`.
-
----
-
-## Emplacements
-
-| Répertoire | Portée |
-|-----------|--------|
-| `~/.claude/commands/` | Global — disponible dans tous les projets |
-| `<projet>/.claude/commands/` | Local — disponible uniquement dans ce projet |
-
-Les skills locaux ont la priorité sur les skills globaux si les noms se chevauchent.
+| | Commande personnalisée | Skill |
+|---|---|---|
+| Fichier | `.claude/commands/x.md` | `.claude/skills/x/SKILL.md` (un dossier) |
+| Invocation | **Manuelle** — vous tapez `/x` | **Automatique** — Claude décide selon la `description` |
+| Rôle | Raccourci de prompt déclenché par vous | Capacité activée par Claude au bon moment |
+| Contenu | Un prompt | Instructions + scripts/ressources éventuels |
 
 ---
 
-## Créer un skill
+## Où placer un skill
 
-### Structure du fichier
+Un skill est un **dossier** contenant au minimum un fichier `SKILL.md`.
 
-```
-~/.claude/commands/<nom>.md
-```
+| Emplacement | Portée |
+|---|---|
+| `~/.claude/skills/<nom>/SKILL.md` | Personnel — tous les projets |
+| `<projet>/.claude/skills/<nom>/SKILL.md` | Projet — versionné avec le dépôt |
 
-Le nom du fichier (sans `.md`) devient la commande slash.
+---
 
-### Format
+## Anatomie d'un `SKILL.md`
 
 ```markdown
-Description courte de ce que fait le skill.
+---
+name: tableau-markdown
+description: À utiliser quand l'utilisateur demande de convertir des données
+  (liste, CSV, texte collé) en tableau Markdown aligné et lisible.
+---
 
-Instructions détaillées pour Claude...
+Convertis les données fournies en un tableau Markdown propre :
 
-$ARGUMENTS
+- Déduis les colonnes depuis la première ligne ou la structure des données.
+- Aligne les séparateurs pour que le tableau soit lisible en texte brut.
+- Si une valeur manque, mets une cellule vide plutôt que d'inventer.
 ```
 
-`$ARGUMENTS` est remplacé par ce que l'utilisateur tape après le nom de la
-commande. Optionnel si le skill ne prend pas d'arguments.
+### Clés du frontmatter
+
+| Clé | Obligatoire | Rôle |
+|---|---|---|
+| `name` | Oui | Identifiant en minuscules-tirets, unique |
+| `description` | Oui | **Le critère de déclenchement** : décrit *ce que fait* le skill et *quand* l'utiliser |
+| `allowed-tools` | Non | Restreint les outils disponibles quand le skill est actif |
+
+!!! tip "La `description` est la partie la plus importante"
+    C'est le seul texte que Claude lit pour décider d'activer le skill. Soyez
+    explicite sur les **déclencheurs** : « À utiliser quand… ». Une description
+    vague (« aide pour les tableaux ») sera rarement sélectionnée au bon moment.
 
 ---
 
-## Tutoriel — skill `git-recap`
+## Divulgation progressive — joindre des ressources
 
-Ce skill affiche un récapitulatif de l'état Git du projet courant : branche,
-derniers commits, fichiers modifiés. Utile en début de session pour se
-remettre dans le contexte.
+Un skill peut embarquer des fichiers dans son dossier (scripts, gabarits,
+références). Claude ne les lit **que s'il en a besoin** — c'est la *divulgation
+progressive*, qui garde le contexte léger.
 
-### Étape 1 — Créer le répertoire
-
-```bash
-mkdir -p ~/.claude/commands
+```text
+~/.claude/skills/rapport-csv/
+├── SKILL.md            # instructions + quand l'utiliser
+├── modele.md           # gabarit de rapport
+└── analyser.py         # script appelé par Claude si nécessaire
 ```
 
-### Étape 2 — Créer le fichier
+Dans `SKILL.md`, il suffit de mentionner ces fichiers : « Utilise le gabarit
+`modele.md` » ou « Lance `analyser.py` sur le fichier fourni ».
+
+---
+
+## Exemple simple et testable — `tableau-markdown`
+
+### Étape 1 — Créer le skill
 
 ```bash
-cat > ~/.claude/commands/git-recap.md << 'EOF'
-Donne-moi un récapitulatif rapide de l'état Git du projet courant.
+mkdir -p ~/.claude/skills/tableau-markdown
+cat > ~/.claude/skills/tableau-markdown/SKILL.md << 'EOF'
+---
+name: tableau-markdown
+description: À utiliser quand l'utilisateur demande de convertir des données
+  (liste, CSV, texte collé) en tableau Markdown aligné et lisible.
+---
 
-Exécute les commandes suivantes et présente les résultats de façon claire :
-1. `git branch --show-current` — branche active
-2. `git log --oneline -5` — les 5 derniers commits
-3. `git status --short` — fichiers modifiés/ajoutés/supprimés
+Convertis les données fournies en un tableau Markdown propre :
 
-Présente le tout en 3 sections courtes avec des titres. Si le répertoire
-courant n'est pas un dépôt Git, dis-le simplement.
+- Déduis les colonnes depuis la première ligne ou la structure des données.
+- Aligne les séparateurs pour que le tableau soit lisible en texte brut.
+- Si une valeur manque, laisse la cellule vide plutôt que d'inventer.
 EOF
 ```
 
-### Étape 3 — Tester
+### Étape 2 — Déclencher (sans le nommer)
 
-Depuis n'importe quel dépôt Git, lancer Claude Code et taper :
+Lancez Claude Code et formulez une demande qui **correspond à la
+description** — sans jamais taper de commande :
 
+```text
+Convertis ces données en tableau :
+nom;age;ville
+Alice;30;Lyon
+Bob;25;Paris
 ```
-/git-recap
-```
-
-Claude exécute les trois commandes et présente le résumé.
 
 ### Résultat attendu
 
-```
-## Branche active
-main
+Claude reconnaît que la demande correspond au skill, l'active seul, et répond :
 
-## Derniers commits
-a1b2c3d docs: update alm_tools documentation
-e4f5g6h feat: add gnome-settings module
-...
-
-## Fichiers modifiés
-M  docs/outils/claude-code/skills.md
-?? docs/outils/claude-code/index.md
+```text
+| nom   | age | ville |
+|-------|-----|-------|
+| Alice | 30  | Lyon  |
+| Bob   | 25  | Paris |
 ```
+
+!!! note "Comment vérifier que le skill a bien servi"
+    Si vous supprimez le dossier du skill puis reposez la même question, Claude
+    produira quand même un tableau — mais sans suivre vos règles précises
+    (cellule vide plutôt qu'invention, alignement…). C'est la différence
+    qu'apporte le skill.
 
 ---
 
-## Skill avec arguments — `chercher`
+## Autres exemples concrets
 
-Skill qui cherche un terme dans tous les fichiers du projet et présente
-les occurrences de façon lisible.
+### `commit-conventionnel` — message de commit normalisé
 
-```bash
-cat > ~/.claude/commands/chercher.md << 'EOF'
-Cherche le terme ou l'expression suivante dans tous les fichiers du projet :
+Déclenché quand vous demandez de rédiger un commit. Il impose le format
+[Conventional Commits](https://www.conventionalcommits.org/).
 
-$ARGUMENTS
-
-Utilise grep ou ripgrep pour trouver toutes les occurrences, puis présente
-les résultats groupés par fichier avec le numéro de ligne et le contexte
-(1 ligne avant et après). Indique le nombre total d'occurrences trouvées.
-EOF
-```
-
-Utilisation :
-
-```
-/chercher SUDO_USER
-/chercher "def install_"
-```
-
+```markdown
+---
+name: commit-conventionnel
+description: À utiliser quand l'utilisateur demande de rédiger ou proposer un
+  message de commit Git.
+allowed-tools: Bash(git diff:*), Bash(git status:*)
 ---
 
-## Skills globaux vs locaux
+Rédige un message de commit au format Conventional Commits.
 
-**Cas d'usage typiques :**
-
-| Type | Exemples |
-|------|---------|
-| Global (`~/.claude/commands/`) | `git-recap`, `chercher`, `todo` — utiles partout |
-| Local (`.claude/commands/`) | `deploy`, `test-integ` — spécifiques au projet |
-
-**Créer un skill local au projet :**
-
-```bash
-mkdir -p .claude/commands
-cat > .claude/commands/deploy.md << 'EOF'
-Lance le déploiement en environnement de staging.
-Exécute `make deploy-staging` et vérifie que les health checks passent.
-Informe-moi du résultat.
-EOF
+1. Inspecte les changements indexés (`git diff --staged`).
+2. Choisis le type : `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
+3. Rédige un sujet impératif de 50 caractères maximum, en anglais.
+4. Ajoute un corps seulement si le « pourquoi » n'est pas évident.
 ```
+
+Déclencheur : *« rédige le message de commit »* — sans taper de commande.
+
+### `revue-bash` — relecture de script shell
+
+```markdown
+---
+name: revue-bash
+description: À utiliser quand l'utilisateur demande de relire, auditer ou
+  améliorer un script Bash.
+---
+
+Relis le script Bash fourni et signale, par ordre de gravité :
+
+- absence de `set -euo pipefail` ;
+- variables non protégées par des guillemets (`"$var"`) ;
+- usage de `[ ]` là où `[[ ]]` serait plus sûr ;
+- commandes destructives sans garde-fou.
+
+Propose une version corrigée à la fin.
+```
+
+Déclencheur : *« relis ce script »* en collant un `.sh`.
+
+### `rapport-csv` — skill avec script embarqué
+
+Illustre la divulgation progressive : le skill délègue le calcul à un script
+Python livré dans son dossier.
+
+```text
+~/.claude/skills/rapport-csv/
+├── SKILL.md
+└── analyser.py     # uv run analyser.py <fichier.csv>
+```
+
+```markdown
+---
+name: rapport-csv
+description: À utiliser quand l'utilisateur demande des statistiques ou un
+  rapport sur un fichier CSV.
+allowed-tools: Bash(uv run:*)
+---
+
+Pour analyser un fichier CSV :
+
+1. Lance `uv run ~/.claude/skills/rapport-csv/analyser.py <fichier>`.
+2. Présente la sortie sous forme de tableau Markdown.
+3. Signale toute colonne au taux de valeurs manquantes supérieur à 10 %.
+```
+
+Déclencheur : *« fais-moi un rapport sur ventes.csv »*. Claude lit `SKILL.md`,
+puis exécute `analyser.py` seulement à ce moment-là.
 
 ---
 
 ## Lister les skills disponibles
 
 ```bash
-# Skills globaux
-ls ~/.claude/commands/
+# Skills personnels
+ls ~/.claude/skills/
 
 # Skills du projet courant
-ls .claude/commands/ 2>/dev/null || echo "Pas de skills locaux"
+ls .claude/skills/ 2>/dev/null || echo "Aucun skill local"
 ```
-
-Dans Claude Code, taper `/` puis ++tab++ affiche les commandes disponibles
-(skills + commandes natives).

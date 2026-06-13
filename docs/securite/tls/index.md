@@ -12,9 +12,22 @@ TLS garantit trois propriétés fondamentales :
 
 ## Pages
 
-| Page | Description |
-|------|-------------|
-| [Fondamentaux](fondamentaux.md) | Versions, algorithmes, suites cryptographiques |
-| [Handshake](handshake.md) | Déroulement détaillé de la négociation TLS 1.2, TLS 1.3 et mTLS |
-| [Débogage CLI](debug.md) | Outils et commandes pour inspecter, tracer et auditer TLS |
-| [Exercices](exercices.md) | Cas pratiques guidés |
+<div class="grid cards" markdown>
+
+-   :material-book-open-variant: **[Fondamentaux](fondamentaux.md)**
+
+    Versions, algorithmes, suites cryptographiques.
+
+-   :material-handshake-outline: **[Handshake](handshake.md)**
+
+    Déroulement détaillé de la négociation TLS 1.2, TLS 1.3 et mTLS.
+
+-   :material-bug-outline: **[Débogage CLI](debug.md)**
+
+    Outils et commandes pour inspecter, tracer et auditer TLS.
+
+-   :material-dumbbell: **[Exercices](exercices.md)**
+
+    Cas pratiques guidés.
+
+</div>

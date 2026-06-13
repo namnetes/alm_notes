@@ -23,26 +23,29 @@ Réinstallation complète d'un TUXEDO depuis une clé USB bootable. Le processus
 
 ## 2. Créer la clé WebFAI
 
-### Avec TUXEDO WebFAI Creator (recommandé)
+=== "TUXEDO WebFAI Creator (recommandé)"
 
-1. Insérez la clé USB
-2. Lancez **TUXEDO WebFAI Creator**
-3. Cliquez sur **`+`** → sélectionnez **TUXEDO WebFAI**
-4. Cliquez sur l'icône disque dur → choisissez votre clé USB
-5. Cliquez sur **Flash!** et attendez la fin du processus
+    1. Insérez la clé USB
+    2. Lancez **TUXEDO WebFAI Creator**
+    3. Cliquez sur **`+`** → sélectionnez **TUXEDO WebFAI**
+    4. Cliquez sur l'icône disque dur → choisissez votre clé USB
+    5. Cliquez sur **Flash!** et attendez la fin du processus
 
-### En ligne de commande
+=== "Ligne de commande"
 
-Réservé aux utilisateurs avancés ou sur instruction du support TUXEDO.
+    Réservé aux utilisateurs avancés ou sur instruction du support TUXEDO.
 
-```bash
-# Remplacez /dev/sdX par le périphérique exact de votre clé USB
-wget https://webfai.tuxedocomputers.com/webfai-current.img
-sudo dd if=webfai-current.img of=/dev/sdX bs=4M status=progress && sync
-```
+    ```bash
+    wget https://webfai.tuxedocomputers.com/webfai-current.img
+    sudo dd if=webfai-current.img of=/dev/sdX bs=4M status=progress && sync  # (1)!
+    ```
 
-!!! warning "Identifier le bon périphérique"
-    Vérifiez avec `lsblk` avant d'exécuter `dd`. Une erreur de cible détruirait un autre disque.
+    1. Remplacez `/dev/sdX` par le périphérique exact de votre clé USB.
+       Vérifiez-le avec `lsblk` **avant** d'exécuter `dd` — une erreur de
+       cible détruirait un autre disque.
+
+    !!! warning "Identifier le bon périphérique"
+        Vérifiez avec `lsblk` avant d'exécuter `dd`. Une erreur de cible détruirait un autre disque.
 
 ---
 

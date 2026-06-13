@@ -26,6 +26,8 @@ uv run ruff check new-page.py --fix   # linter new-page.py (ruff.toml à la raci
 
 > Toujours utiliser `uv run python new-page.py` — PyYAML est disponible comme dépendance transitive de MkDocs dans l'environnement uv. Le shim `wnp` / `install.sh` est un artefact ancien, ne pas s'en servir.
 
+> **Conflit de port** : ce dépôt est aussi servi en permanence par un service systemd utilisateur `mkdocs.service` (défini dans le dépôt `alm_dots`) sur `127.0.0.1:8000` — piloté par les alias `mkr`/`mks`/`mkl`. Lancer `make docs` pendant que le service tourne fait basculer le serveur de dev sur le premier port libre (8001+). Pour servir sur 8000 en dev, arrêter d'abord le service (`mks` pour vérifier l'état).
+
 ## Carte du contenu (`docs/`)
 
 | Répertoire | Onglet nav | Thème |

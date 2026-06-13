@@ -29,12 +29,16 @@ flowchart TD
     style FA fill:#fff3e0,stroke:#e65100
 ```
 
-!!! warning "Les 3 dangers du code couplé" 1. **Tester une règle métier impose de démarrer un serveur web** — un test unitaire
-qui lance une base de données n'est plus unitaire, c'est un test d'intégration
-non intentionnel, lent et fragile. 2. **Changer de base de données = réécrire la logique métier** — PostgreSQL vers
-MongoDB signifie toucher à des fonctions qui n'ont rien à voir avec le stockage. 3. **Lire le code métier oblige à traverser du bruit technique** — un développeur
-cherchant la règle "un utilisateur doit être majeur" la trouve noyée entre du SQL
-et des `HTTPException`.
+!!! warning "Les 3 dangers du code couplé"
+    1. **Tester une règle métier impose de démarrer un serveur web** — un test
+       unitaire qui lance une base de données n'est plus unitaire, c'est un test
+       d'intégration non intentionnel, lent et fragile.
+    2. **Changer de base de données = réécrire la logique métier** — PostgreSQL
+       vers MongoDB signifie toucher à des fonctions qui n'ont rien à voir avec
+       le stockage.
+    3. **Lire le code métier oblige à traverser du bruit technique** — un
+       développeur cherchant la règle "un utilisateur doit être majeur" la
+       trouve noyée entre du SQL et des `HTTPException`.
 
 ### Exemple concret — tout mélangé
 
@@ -153,11 +157,13 @@ flowchart TD
     style PORT_OUT fill:#e1f5fe,stroke:#01579b
 ```
 
-!!! info "Ports entrants vs sortants" - **Ports entrants** (driven _by_ the app) : définissent comment l'extérieur peut
-appeler votre application (ex: `register_user(name, age)`). FastAPI et les tests
-utilisent ces ports. - **Ports sortants** (driving _the_ app) : définissent ce que votre application
-demande à l'extérieur (ex: `save(user)`). La base de données et les services email
-implémentent ces ports.
+!!! info "Ports entrants vs sortants"
+    - **Ports entrants** (driven _by_ the app) : définissent comment l'extérieur
+      peut appeler votre application (ex : `register_user(name, age)`). FastAPI
+      et les tests utilisent ces ports.
+    - **Ports sortants** (driving _the_ app) : définissent ce que votre
+      application demande à l'extérieur (ex : `save(user)`). La base de données
+      et les services email implémentent ces ports.
 
 ---
 
@@ -382,8 +388,8 @@ my_app/
 ```
 
 !!! tip "Règle d'or pour décider où placer du code"
-Posez-vous cette question : _"Si je transforme cette application web en script
-en ligne de commande, cette partie du code survivrait-elle sans modification ?"_
+    Posez-vous cette question : _"Si je transforme cette application web en script
+    en ligne de commande, cette partie du code survivrait-elle sans modification ?"_
 
     - **Oui** → c'est du domaine (`domain/`)
     - **Non** → c'est un adaptateur ou une couche technique
@@ -480,18 +486,22 @@ les règles de gestion, sans traverser du SQL ou des annotations FastAPI.
 ## Pièges courants
 
 !!! danger "Fuites du domaine"
-Le domaine ne doit **jamais** importer FastAPI, SQLAlchemy, Pydantic ou tout autre
-framework. Si vous voyez `from fastapi import ...` dans `domain/services.py`,
-c'est une fuite — le couplage est de retour.
+    Le domaine ne doit **jamais** importer FastAPI, SQLAlchemy, Pydantic ou tout
+    autre framework. Si vous voyez `from fastapi import ...` dans
+    `domain/services.py`, c'est une fuite — le couplage est de retour.
 
 !!! warning "Anémie du domaine"
-Si `UserService` ne fait que déléguer à `UserRepository` sans aucune logique, le
-pattern est mal appliqué. Les règles métier (`age < 18`, unicité de l'email) doivent
-vivre dans le service, pas dans l'adaptateur ni dans FastAPI.
+    Si `UserService` ne fait que déléguer à `UserRepository` sans aucune logique,
+    le pattern est mal appliqué. Les règles métier (`age < 18`, unicité de
+    l'email) doivent vivre dans le service, pas dans l'adaptateur ni dans FastAPI.
 
 !!! tip "Ne pas sur-ingéniérer"
-Pour un script de 50 lignes ou un prototype jetable, Ports & Adapters est
-du surengineering. Ce pattern prend toute sa valeur quand : - L'application a plusieurs "portes d'entrée" (API + CLI + tâche planifiée) - L'équipe a besoin de tests unitaires rapides - Des changements de technologie sont prévisibles
+    Pour un script de 50 lignes ou un prototype jetable, Ports & Adapters est
+    du surengineering. Ce pattern prend toute sa valeur quand :
+
+    - L'application a plusieurs "portes d'entrée" (API + CLI + tâche planifiée)
+    - L'équipe a besoin de tests unitaires rapides
+    - Des changements de technologie sont prévisibles
 
 ---
 
@@ -528,5 +538,5 @@ mindmap
 ```
 
 !!! success "À retenir en une phrase"
-Ports & Adapters impose une règle simple : **le domaine ne sait rien du monde
-extérieur** — c'est toujours le monde extérieur qui s'adapte au domaine.
+    Ports & Adapters impose une règle simple : **le domaine ne sait rien du monde
+    extérieur** — c'est toujours le monde extérieur qui s'adapte au domaine.

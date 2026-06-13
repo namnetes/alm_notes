@@ -78,8 +78,8 @@ ai "afficher les nouvelles lignes de app.log en temps réel avec coloration"
 ```
 
 !!! tip "L'historique bash"
-La commande suggérée est ajoutée à l'historique bash (`history -s`).
-Même si vous annulez avec Ctrl+C, la commande reste accessible avec `↑`.
+    La commande suggérée est ajoutée à l'historique bash (`history -s`).
+    Même si vous annulez avec Ctrl+C, la commande reste accessible avec `↑`.
 
 ---
 

@@ -133,12 +133,39 @@ git --version         # → git version 2.x.x
 
 ## Pages de ce guide
 
-| Page | Contenu |
-|---|---|
-| [Installation](installation.md) | Dépendances système, `uv`, stack complet des plugins recommandés |
-| [Configuration](configuration.md) | Structure de projet, `mkdocs.yml` annoté, `navigation.indexes` |
-| [Contenu Markdown](contenu.md) | Syntaxe de base, liens, images, admonitions, onglets, Mermaid |
-| [Commandes](commandes.md) | `serve`, `build`, mode strict, Makefile avec détection de port |
-| [Script Bash & CI](bash.md) | Automatisation, GitHub Actions, vérification de liens |
-| [Personnalisations](personnalisation.md) | CSS 100% largeur, sidebars, dropdown nav, MathJax, Makefile |
-| [Dépannage](depannage.md) | Erreurs courantes et solutions |
+<div class="grid cards" markdown>
+
+-   :material-download-box-outline: **[Installation](installation.md)**
+
+    Dépendances système, `uv`, stack complet des plugins recommandés.
+
+-   :material-layers-triple-outline: **[Stack de référence](stack.md)**
+
+    Le `mkdocs.yml` complet du wiki, identique au standard `~/.claude` /
+    `mkdocsinit`.
+
+-   :material-cog-outline: **[Configuration](configuration.md)**
+
+    Structure de projet, `mkdocs.yml` annoté, `navigation.indexes`.
+
+-   :material-language-markdown: **[Contenu Markdown](contenu.md)**
+
+    Syntaxe de base, liens, images, admonitions, onglets, Mermaid.
+
+-   :material-console-line: **[Commandes](commandes.md)**
+
+    `serve`, `build`, mode strict, Makefile avec détection de port.
+
+-   :material-source-branch: **[Script Bash & CI](bash.md)**
+
+    Automatisation, GitHub Actions, vérification de liens.
+
+-   :material-palette-outline: **[Personnalisations](personnalisation.md)**
+
+    CSS 100 % largeur, sidebars, dropdown nav, MathJax, Makefile.
+
+-   :material-wrench-outline: **[Dépannage](depannage.md)**
+
+    Erreurs courantes et solutions.
+
+</div>

@@ -66,9 +66,9 @@ généralement pas présents dans la base terminfo d'Alpine par défaut :
 | **xterm**          | `xterm` ou `xterm-256color` | Oui                                    |
 
 !!! info "Alacritty est souvent épargné"
-La plupart des configurations récentes d'Alacritty utilisent
-`xterm-256color` comme valeur de `$TERM`, ce qui est universellement
-reconnu.
+    La plupart des configurations récentes d'Alacritty utilisent
+    `xterm-256color` comme valeur de `$TERM`, ce qui est universellement
+    reconnu.
 
 ---
 
@@ -88,8 +88,8 @@ sudo nano /etc/hostname
 ```
 
 !!! warning "Valable uniquement pour la session en cours"
-Cette variable est réinitialisée à la prochaine connexion SSH.
-C'est une solution de dépannage, pas une solution permanente.
+    Cette variable est réinitialisée à la prochaine connexion SSH.
+    C'est une solution de dépannage, pas une solution permanente.
 
 ---
 
@@ -138,10 +138,10 @@ définitions :
     ```
 
 !!! note "La commande `infocmp`"
-`infocmp` lit la base terminfo locale et exporte la description du
-terminal demandé au format texte lisible. Si cette commande échoue,
-votre terminal n'est pas défini même sur votre propre machine — cas
-rare mais possible.
+    `infocmp` lit la base terminfo locale et exporte la description du
+    terminal demandé au format texte lisible. Si cette commande échoue,
+    votre terminal n'est pas défini même sur votre propre machine — cas
+    rare mais possible.
 
 ### Étape 2 — Transférer le fichier vers la VM
 
@@ -217,9 +217,9 @@ sudo apk add ncurses ncurses-terminfo
     ```
 
 !!! note "La commande `tic`"
-`tic` (terminfo compiler) compile le fichier texte `.terminfo` en une
-version binaire stockée dans `~/.terminfo/`. L'option `-x` inclut les
-extensions non standard utilisées par les terminaux modernes.
+    `tic` (terminfo compiler) compile le fichier texte `.terminfo` en une
+    version binaire stockée dans `~/.terminfo/`. L'option `-x` inclut les
+    extensions non standard utilisées par les terminaux modernes.
 
 ### Étape 4 — Vérifier
 
@@ -233,7 +233,7 @@ nano --version
 Si elle s'ouvre sans erreur, l'installation est réussie.
 
 ??? warning "Avertissement possible lors de `tic`"
-Vous pouvez rencontrer ce message :
+    Vous pouvez rencontrer ce message :
 
     ```
     "xterm-kitty.terminfo", line 2, col 22, terminal 'xterm-kitty':
@@ -263,22 +263,28 @@ Host ma-vm-alpine
 ```
 
 !!! info "Connexion avec l'alias"
-Avec cette configuration, vous pouvez vous connecter via :
-`bash
+    Avec cette configuration, vous pouvez vous connecter via :
+
+    ```bash
     ssh ma-vm-alpine
-    `
-au lieu de `ssh votre-utilisateur@IP-DE-LA-VM`.
+    ```
+
+    au lieu de `ssh votre-utilisateur@IP-DE-LA-VM`.
 
 !!! warning "Nécessite l'accord du serveur"
-Pour que `SetEnv` fonctionne, le serveur SSH doit accepter les variables
-d'environnement entrantes. Sur Alpine, vérifiez que `/etc/ssh/sshd_config`
-contient :
-`     AcceptEnv TERM
-    `
-Si cette ligne est absente, ajoutez-la et redémarrez SSH :
-`bash
+    Pour que `SetEnv` fonctionne, le serveur SSH doit accepter les variables
+    d'environnement entrantes. Sur Alpine, vérifiez que `/etc/ssh/sshd_config`
+    contient :
+
+    ```
+    AcceptEnv TERM
+    ```
+
+    Si cette ligne est absente, ajoutez-la et redémarrez SSH :
+
+    ```bash
     sudo rc-service sshd restart
-    `
+    ```
 
 ---
 

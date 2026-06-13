@@ -42,13 +42,20 @@ SOURCE_DIR="Photos" ~/alm_tools/jobs/backup_googledrive.sh
 
 ## Processus détaillé
 
-```
-1. Vérification des outils (rclone, pv, hashdeep)
-2. Synchronisation rclone → ~/backups/googledrive/
-3. Création d'une archive tar.gz déterministe
-4. Calcul du SHA256 via hashdeep
-5. Déduplication : supprime la nouvelle archive si identique à la précédente
-6. Affichage du résultat
+Le script enchaîne six étapes, de la vérification des outils jusqu'à la
+déduplication finale :
+
+```mermaid
+flowchart TD
+    A([Lancement]) --> B[Vérifier rclone, pv, hashdeep]
+    B --> C["Synchroniser rclone\n→ ~/backups/googledrive/"]
+    C --> D[Créer une archive tar.gz déterministe]
+    D --> E[Calculer le SHA256 via hashdeep]
+    E --> F{Hash identique\nà l'archive précédente ?}
+    F -->|Oui| G[Supprimer la nouvelle archive]
+    F -->|Non| H[Conserver l'archive]
+    G --> I([Afficher le résultat])
+    H --> I
 ```
 
 ---

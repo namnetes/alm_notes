@@ -24,13 +24,45 @@ claude doctor
 
 ## Pages
 
-| Page | Contenu |
-|------|---------|
-| [Installation & Authentification](installation.md) | Abonnement vs API, installation, connexion, script de bascule |
-| [Configuration](configuration.md) | Hiérarchie CLAUDE.md, settings.local.json, déploiement Stow |
-| [Skills](skills.md) | Créer des commandes personnalisées, tutoriel et exemple concret |
-| [Assistant terminal](terminal.md) | `ai`, `explain`, `fix` + kitten Kitty — intégration Warp-like |
-| [Intégration Zed](zed.md) | Provider natif Anthropic et agent ACP dans Zed |
+<div class="grid cards" markdown>
+
+-   :material-download-box-outline: **[Installation & Authentification](installation.md)**
+
+    Abonnement vs API, installation, connexion, script de bascule.
+
+-   :material-cog-outline: **[Configuration](configuration.md)**
+
+    Hiérarchie CLAUDE.md, settings.local.json, déploiement Stow.
+
+-   :material-slash-forward-box: **[Commandes personnalisées](commandes.md)**
+
+    Commandes slash `/x` : frontmatter, arguments, injection `!`/`@`, exemple
+    testable.
+
+-   :material-puzzle-outline: **[Skills](skills.md)**
+
+    Agent Skills auto-invoqués par Claude : `SKILL.md`, divulgation
+    progressive, exemple testable.
+
+-   :material-jira: **[Jira (MCP)](jira-mcp.md)**
+
+    Pas à pas : connecter Jira via MCP Atlassian, `CLAUDE.md` et skill prêts
+    à coller.
+
+-   :material-confluence: **[Confluence (MCP)](confluence-mcp.md)**
+
+    Pas à pas : connecter Confluence via MCP Atlassian, `CLAUDE.md` et skill
+    prêts à coller.
+
+-   :material-console: **[Assistant terminal](terminal.md)**
+
+    `ai`, `explain`, `fix` + kitten Kitty — intégration Warp-like.
+
+-   :material-microsoft-visual-studio-code: **[Intégration Zed](zed.md)**
+
+    Provider natif Anthropic et agent ACP dans Zed.
+
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # Scripts et utilitaires
 
+`alm_dots` embarque deux familles de scripts : des scripts Bash exécutables
+(`.functions/bin/`, directement dans le `PATH`) et des utilitaires Python
+(`.functions/tools/`, appelés via des alias courts). Cette page récapitule
+chacun, son appel et le lien vers sa documentation complète.
+
 ---
 
 ## Scripts exécutables — `.functions/bin/`

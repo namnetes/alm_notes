@@ -6,12 +6,25 @@ données extérieures : réseau, disque, base de données.
 
 ## Pages
 
-| Page | Description |
-|------|-------------|
-| [Python synchrone](sync.md) | Le mode par défaut — exécution ligne par ligne et blocage I/O |
-| [Python asynchrone](async.md) | L'event loop, les coroutines `async/await` et `asyncio` |
-| [Les threads](threads.md) | Parallélisme avec les bibliothèques sync — GIL, race conditions, verrous |
-| [Async vs Sync vs Threads](async-vs-sync.md) | Comparaison avec exemples mesurables et guide de décision |
+<div class="grid cards" markdown>
+
+-   :material-arrow-down-thin: **[Python synchrone](sync.md)**
+
+    Le mode par défaut — exécution ligne par ligne et blocage I/O.
+
+-   :material-sync: **[Python asynchrone](async.md)**
+
+    L'event loop, les coroutines `async/await` et `asyncio`.
+
+-   :material-source-branch: **[Les threads](threads.md)**
+
+    Parallélisme avec les bibliothèques sync — GIL, race conditions, verrous.
+
+-   :material-scale-balance: **[Async vs Sync vs Threads](async-vs-sync.md)**
+
+    Comparaison avec exemples mesurables et guide de décision.
+
+</div>
 
 ## À retenir avant de commencer
 

@@ -25,6 +25,69 @@ est toujours présent, le projet vient compléter :
 
 ---
 
+## Le fichier `AGENTS.md`
+
+`AGENTS.md` est un **format ouvert et standardisé** (voir
+[agents.md](https://agents.md)) : un fichier Markdown placé à la racine d'un
+dépôt qui donne aux agents de code IA les instructions techniques du projet —
+commandes de build et de test, conventions de code, structure, règles de
+commit. C'est en quelque sorte un « README pour les agents », qui garde le
+`README.md` centré sur les humains.
+
+Son intérêt : **un seul fichier** lu par de nombreux outils (Claude, Codex,
+Cursor, GitHub Copilot, Aider, Devin…) au lieu d'un fichier propriétaire par
+outil (`CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`…).
+
+### Sections typiques d'un `AGENTS.md`
+
+```markdown
+# AGENTS.md
+
+## Setup / Build
+Commandes pour installer les dépendances et compiler.
+
+## Tests
+Comment lancer les tests, et lesquels lancer avant un commit.
+
+## Conventions de code
+Style, nommage, formatage.
+
+## Commits / PR
+Format des messages de commit, règles de revue.
+```
+
+Dans un monorepo, on peut placer un `AGENTS.md` par sous-projet : l'agent lit
+**le plus proche** dans l'arborescence.
+
+!!! warning "Claude Code lit `CLAUDE.md`, pas `AGENTS.md`"
+    Claude Code ne lit **pas** `AGENTS.md` directement. Si votre dépôt en
+    possède déjà un (pour d'autres agents), créez un `CLAUDE.md` qui
+    **l'importe** afin que les deux outils partagent les mêmes instructions
+    sans duplication :
+
+    ```markdown
+    @AGENTS.md
+
+    ## Claude Code
+    Instructions spécifiques à Claude ajoutées sous l'import.
+    ```
+
+    Un lien symbolique fonctionne aussi si aucun ajout Claude n'est nécessaire :
+
+    ```bash
+    ln -s AGENTS.md CLAUDE.md
+    ```
+
+    Sous Windows, le symlink exige les droits administrateur — préférez alors
+    l'import `@AGENTS.md`.
+
+!!! tip "`/init` récupère un `AGENTS.md` existant"
+    Lancé dans un dépôt qui contient déjà un `AGENTS.md`, la commande `/init`
+    le lit et intègre les parties pertinentes dans le `CLAUDE.md` généré (elle
+    lit aussi `.cursorrules`, `.windsurfrules`, etc.).
+
+---
+
 ## Architecture avec alm_dots (GNU Stow)
 
 Les fichiers CLAUDE.md sont **versionnés dans `alm_dots`** et déployés via

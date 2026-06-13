@@ -160,12 +160,16 @@ nav:
           - outils/claude-code/index.md
           - Installation & Authentification: outils/claude-code/installation.md
           - Configuration: outils/claude-code/configuration.md
+          - Commandes personnalisées: outils/claude-code/commandes.md
           - Skills: outils/claude-code/skills.md
+          - Jira (MCP): outils/claude-code/jira-mcp.md
+          - Confluence (MCP): outils/claude-code/confluence-mcp.md
           - Assistant terminal: outils/claude-code/terminal.md
           - Intégration Zed: outils/claude-code/zed.md
       - MkDocs:
           - outils/mkdocs/index.md
           - Installation: outils/mkdocs/installation.md
+          - Stack de référence: outils/mkdocs/stack.md
           - Configuration: outils/mkdocs/configuration.md
           - Contenu Markdown: outils/mkdocs/contenu.md
           - Commandes: outils/mkdocs/commandes.md

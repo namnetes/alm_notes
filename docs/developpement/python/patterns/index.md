@@ -5,7 +5,15 @@ récurrents de structuration du code.
 
 ## Patterns disponibles
 
-| Pattern | Description |
-|---------|-------------|
-| [Policy Pattern](policy-pattern.md) | Pipeline de validation — enchaîner des règles indépendantes et testables |
-| [Ports & Adapters](ports-and-adapters.md) | Architecture Hexagonale — isoler la logique métier des frameworks et de la technique |
+<div class="grid cards" markdown>
+
+-   :material-filter-check-outline: **[Policy Pattern](policy-pattern.md)**
+
+    Pipeline de validation — enchaîner des règles indépendantes et testables.
+
+-   :material-hexagon-outline: **[Ports & Adapters](ports-and-adapters.md)**
+
+    Architecture Hexagonale — isoler la logique métier des frameworks et de
+    la technique.
+
+</div>

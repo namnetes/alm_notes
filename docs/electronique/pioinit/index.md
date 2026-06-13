@@ -173,6 +173,10 @@ pioinit mon-projet --board my_custom_board --platform atmelavr
 
 ## Page suivante
 
-| Page | Contenu |
-|------|---------|
-| [Guide d'utilisation](utilisation.md) | Workflow complet, Makefile, Zed, réinstallation |
+<div class="grid cards" markdown>
+
+-   :material-book-open-page-variant-outline: **[Guide d'utilisation](utilisation.md)**
+
+    Workflow complet, Makefile, Zed, réinstallation.
+
+</div>

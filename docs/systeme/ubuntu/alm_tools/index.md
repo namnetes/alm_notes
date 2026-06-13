@@ -23,20 +23,46 @@ cd ~/alm_tools/postinstall
 sudo make all
 ```
 
-| Page | Contenu |
-|------|---------|
-| [postinstall](postinstall/index.md) | Vue d'ensemble et démarrage rapide |
-| [Post-installation](postinstall/post-installation.md) | Makefile : groupes, cibles, scénarios |
-| [Déboguer](postinstall/deboguer.md) | Logs, exécution directe, mode DEBUG |
-| [Personnaliser](postinstall/personnaliser.md) | Paquets, PPAs, Snaps |
-| [Session-checks](postinstall/session-checks.md) | Framework GNOME au démarrage |
-| [Architecture](postinstall/architecture.md) | Modules, common.sh, SUDO_USER |
-| [Packages et dépôts](postinstall/packages-et-depots.md) | Liste des paquets APT |
+<div class="grid cards" markdown>
+
+-   :material-view-dashboard-outline: **[postinstall](postinstall/index.md)**
+
+    Vue d'ensemble et démarrage rapide.
+
+-   :material-make: **[Post-installation](postinstall/post-installation.md)**
+
+    Makefile : groupes, cibles, scénarios.
+
+-   :material-bug-outline: **[Déboguer](postinstall/deboguer.md)**
+
+    Logs, exécution directe, mode DEBUG.
+
+-   :material-tune: **[Personnaliser](postinstall/personnaliser.md)**
+
+    Paquets, PPAs, Snaps.
+
+-   :material-check-decagram-outline: **[Session-checks](postinstall/session-checks.md)**
+
+    Framework de contrôles au démarrage GNOME.
+
+-   :material-sitemap-outline: **[Architecture](postinstall/architecture.md)**
+
+    Modules, `common.sh`, pattern `SUDO_USER`.
+
+-   :material-package-variant: **[Packages et dépôts](postinstall/packages-et-depots.md)**
+
+    Liste complète des paquets APT.
+
+</div>
 
 ---
 
 ## Outils CLI et utilitaires
 
-| Page | Contenu |
-|------|---------|
-| [Outils spécialisés](outils/index.md) | devinit, mkdocsinit, vmforge, runbg, backup Google Drive |
+<div class="grid cards" markdown>
+
+-   :material-toolbox-outline: **[Outils spécialisés](outils/index.md)**
+
+    devinit, mkdocsinit, vmforge, runbg, backup Google Drive.
+
+</div>

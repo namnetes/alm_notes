@@ -18,11 +18,30 @@ sudo make all
 
 ## Pages
 
-| Page | Contenu |
-|------|---------|
-| [Post-installation](post-installation.md) | Makefile : groupes, cibles, scénarios, idempotence |
-| [Déboguer](deboguer.md) | Logs, exécution directe d'un module, mode DEBUG |
-| [Personnaliser](personnaliser.md) | Ajouter des paquets, PPAs, Snaps via les fichiers de config |
-| [Session-checks](session-checks.md) | Framework de contrôles automatiques au démarrage GNOME |
-| [Architecture](architecture.md) | Modules, common.sh, pattern SUDO_USER |
-| [Packages et dépôts](packages-et-depots.md) | Liste complète des paquets APT installés |
+<div class="grid cards" markdown>
+
+-   :material-make: **[Post-installation](post-installation.md)**
+
+    Makefile : groupes, cibles, scénarios, idempotence.
+
+-   :material-bug-outline: **[Déboguer](deboguer.md)**
+
+    Logs, exécution directe d'un module, mode DEBUG.
+
+-   :material-tune: **[Personnaliser](personnaliser.md)**
+
+    Ajouter des paquets, PPAs, Snaps via les fichiers de config.
+
+-   :material-check-decagram-outline: **[Session-checks](session-checks.md)**
+
+    Framework de contrôles automatiques au démarrage GNOME.
+
+-   :material-sitemap-outline: **[Architecture](architecture.md)**
+
+    Modules, `common.sh`, pattern `SUDO_USER`.
+
+-   :material-package-variant: **[Packages et dépôts](packages-et-depots.md)**
+
+    Liste complète des paquets APT installés.
+
+</div>

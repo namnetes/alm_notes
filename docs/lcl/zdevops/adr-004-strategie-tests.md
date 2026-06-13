@@ -1,10 +1,10 @@
 # ADR-004 — Stratégie de tests : pyramide à 4 niveaux sans testcontainers
 
 !!! abstract "Qu'est-ce qu'un ADR ?"
-Un **ADR** (Architecture Decision Record) documente une décision technique :
-pourquoi elle a été prise, quelles alternatives ont été écartées, et dans quelles
-conditions elle devra être réexaminée. Voir [ADR-001](adr-001-next-artifact-number.md)
-pour la définition complète.
+    Un **ADR** (Architecture Decision Record) documente une décision technique :
+    pourquoi elle a été prise, quelles alternatives ont été écartées, et dans quelles
+    conditions elle devra être réexaminée. Voir [ADR-001](adr-001-next-artifact-number.md)
+    pour la définition complète.
 
 ## Statut
 
@@ -25,8 +25,8 @@ Tester cette API pose deux difficultés spécifiques :
    sans infrastructure.
 
 !!! info "Qu'est-ce que la pyramide de tests ?"
-La **pyramide de tests** est un modèle qui organise les tests en couches selon
-leur vitesse, leur coût et leur portée.
+    La **pyramide de tests** est un modèle qui organise les tests en couches selon
+    leur vitesse, leur coût et leur portée.
 
     ```
                ▲
@@ -45,9 +45,9 @@ leur vitesse, leur coût et leur portée.
     et réservés aux chemins critiques.
 
 !!! info "Qu'est-ce qu'un mock ?"
-Un **mock** est un objet factice qui remplace une dépendance réelle pendant un test.
-Il simule le comportement de la dépendance (retourner une valeur, lever une
-exception) sans déclencher les effets de bord réels (appels réseau, écriture disque).
+    Un **mock** est un objet factice qui remplace une dépendance réelle pendant un test.
+    Il simule le comportement de la dépendance (retourner une valeur, lever une
+    exception) sans déclencher les effets de bord réels (appels réseau, écriture disque).
 
     Exemple : au lieu d'appeler le vrai GitLab (réseau, credentials, état du dépôt),
     on passe un mock qui retourne immédiatement `["feature_tva", "master"]` quand
@@ -143,10 +143,10 @@ ce qui permet de tester la logique de désérialisation, de gestion d'erreur et 
 retry de `GitLabService`.
 
 !!! info "Pourquoi `respx` plutôt qu'un mock de la classe ?"
-Mocker `GitLabService` directement (niveau 1) teste la logique du _service_.
-Mocker au niveau du transport HTTP (niveau 2) teste le _code de `GitLabService`
-lui-même_ : est-ce qu'il appelle la bonne URL ? Est-ce qu'il désérialise
-correctement le JSON ? Est-ce qu'il gère les 404 de GitLab ?
+    Mocker `GitLabService` directement (niveau 1) teste la logique du _service_.
+    Mocker au niveau du transport HTTP (niveau 2) teste le _code de `GitLabService`
+    lui-même_ : est-ce qu'il appelle la bonne URL ? Est-ce qu'il désérialise
+    correctement le JSON ? Est-ce qu'il gère les 404 de GitLab ?
 
     `respx` reproduit exactement les réponses HTTP sans exiger de serveur réel.
 
@@ -221,10 +221,10 @@ On peut tester ces opérations **sans serveur GitLab** en utilisant :
 - Un **dépôt bare local** jouant le rôle de "remote GitLab"
 
 !!! info "Qu'est-ce qu'un dépôt bare ?"
-Un dépôt bare (`git init --bare`) est un dépôt git **sans répertoire de travail** —
-il contient uniquement l'historique (les objets git). C'est le format utilisé par
-les serveurs git (GitHub, GitLab…). On peut pousser vers un bare repo exactement
-comme vers un remote réel, sans réseau.
+    Un dépôt bare (`git init --bare`) est un dépôt git **sans répertoire de travail** —
+    il contient uniquement l'historique (les objets git). C'est le format utilisé par
+    les serveurs git (GitHub, GitLab…). On peut pousser vers un bare repo exactement
+    comme vers un remote réel, sans réseau.
 
 ```python
 # tests/integration/test_git_service.py
@@ -297,10 +297,10 @@ async def test_dirty_repo_detected(git_service, bare_remote, tmp_path):
 d'intégration contre une instance réelle.
 
 !!! info "Qu'est-ce que testcontainers ?"
-`testcontainers` est une bibliothèque qui lance des conteneurs Docker
-(base de données, message broker, serveur web…) pendant l'exécution des tests,
-puis les détruit automatiquement. Elle est utilisée pour tester le comportement
-réel d'une dépendance externe sans se connecter à un environnement partagé.
+    `testcontainers` est une bibliothèque qui lance des conteneurs Docker
+    (base de données, message broker, serveur web…) pendant l'exécution des tests,
+    puis les détruit automatiquement. Elle est utilisée pour tester le comportement
+    réel d'une dépendance externe sans se connecter à un environnement partagé.
 
 **Pourquoi écarté pour la V1 :**
 

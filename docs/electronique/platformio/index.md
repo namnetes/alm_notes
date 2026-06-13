@@ -113,7 +113,14 @@ pio platform list
 
 ## Pages suivantes
 
-| Page | Contenu |
-|------|---------|
-| [Premier projet](premier-projet.md) | Créer, compiler, uploader et déboguer un projet pas à pas |
-| [Intégration Zed](zed.md) | Autocomplétion C/C++ et tâches de build dans Zed Editor |
+<div class="grid cards" markdown>
+
+-   :material-play-box-outline: **[Premier projet](premier-projet.md)**
+
+    Créer, compiler, uploader et déboguer un projet pas à pas.
+
+-   :material-microsoft-visual-studio-code: **[Intégration Zed](zed.md)**
+
+    Autocomplétion C/C++ et tâches de build dans Zed Editor.
+
+</div>

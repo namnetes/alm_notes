@@ -121,11 +121,30 @@ plugin/src/fr/lcl/zdevops/idz/plugin/
 
 ## Pages
 
-| Page | Description |
-|---|---|
-| [Gestion des évolutions](fonctions-evolutions.md) | Fonctions 1 à 4 : démarrer, participer, bifurquer, consulter |
-| [Gestion du manifest](fonctions-manifest.md) | Fonctions 5 à 7 : copybooks, composants, dépendances |
-| [Pipelines CI/CD](fonctions-cicd.md) | Fonctions 8 à 10 : build, déploiement, audit qualité |
-| [Déploiement unitaire](fonctions-unitaire.md) | Fonctions 11 et 12 : promote et clean sur un seul composant |
-| [Configuration](configuration.md) | Fonctions 13 et 14 : tokens GitLab et Jenkins |
-| [Infrastructure Jenkins](infrastructure-jenkins.md) | FabCI, pipelines, protocole d'appel REST, paramètres |
+<div class="grid cards" markdown>
+
+-   :material-source-branch: **[Gestion des évolutions](fonctions-evolutions.md)**
+
+    Fonctions 1 à 4 : démarrer, participer, bifurquer, consulter.
+
+-   :material-file-document-edit-outline: **[Gestion du manifest](fonctions-manifest.md)**
+
+    Fonctions 5 à 7 : copybooks, composants, dépendances.
+
+-   :material-pipe: **[Pipelines CI/CD](fonctions-cicd.md)**
+
+    Fonctions 8 à 10 : build, déploiement, audit qualité.
+
+-   :material-package-up: **[Déploiement unitaire](fonctions-unitaire.md)**
+
+    Fonctions 11 et 12 : promote et clean sur un seul composant.
+
+-   :material-key-chain: **[Configuration](configuration.md)**
+
+    Fonctions 13 et 14 : tokens GitLab et Jenkins.
+
+-   :material-server-network: **[Infrastructure Jenkins](infrastructure-jenkins.md)**
+
+    FabCI, pipelines, protocole d'appel REST, paramètres.
+
+</div>

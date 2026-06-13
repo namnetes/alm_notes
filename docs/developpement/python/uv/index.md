@@ -119,8 +119,18 @@ uv self update
 
 ## Structure de la documentation
 
-| Page | Contenu |
-|---|---|
-| [Workflow projet](projet.md) | Initialiser, développer, ajouter des dépendances, exécuter |
-| [Outils CLI](outils.md) | Créer une commande globale, shims, installation, désinstallation |
-| [Référence](reference.md) | Cheat sheet, inventaire des fichiers, erreurs fréquentes |
+<div class="grid cards" markdown>
+
+-   :material-folder-cog-outline: **[Workflow projet](projet.md)**
+
+    Initialiser, développer, ajouter des dépendances, exécuter.
+
+-   :material-console: **[Outils CLI](outils.md)**
+
+    Créer une commande globale, shims, installation, désinstallation.
+
+-   :material-book-open-variant: **[Référence](reference.md)**
+
+    Cheat sheet, inventaire des fichiers, erreurs fréquentes.
+
+</div>
