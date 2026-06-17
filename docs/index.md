@@ -30,9 +30,13 @@ fiche.
 
     Kitty, yt-dlp, Claude Code et MkDocs.
 
--   :material-mainframe: **[LCL](lcl/index.md)**
+-   :material-bank: **[LCL](lcl/index.md)**
 
     Mainframe z/OS : Kafka, CICS et le plugin zDevOps pour IDz.
+
+-   :material-laptop: **[Matériel](materiel.md)**
+
+    TUXEDO InfinityBook Pro 14 Gen10 AMD : configuration et suivi de commande.
 
 -   :material-shield-lock: **[Sécurité](securite/index.md)**
 
