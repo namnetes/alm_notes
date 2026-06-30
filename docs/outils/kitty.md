@@ -133,6 +133,16 @@ kitty @ ls
 kitty @ send-text --match title:btop "q"
 ```
 
+!!! warning "`--match title:QUERY` n'est pas un match littéral"
+    `QUERY` passe par le mini-langage d'expressions booléennes de Kitty :
+    un espace y sépare deux termes combinables (`and`/`or`), et des
+    parenthèses non échappées sont lues comme un groupe regex. Un titre
+    d'onglet contenant un espace ou des parenthèses littérales (ex.
+    `uss-mirror (claude)`) casse donc le matching. Préférer un motif sans
+    espace ni parenthèse, ex. `title:uss-mirror.*claude`. Voir l'exemple
+    concret dans [Environnement shell — workspace
+    openz_uss-mirror](../systeme/ubuntu/alm_dots/environnement-shell.md#workspace-openz_uss-mirror-onglets-kitty-pour-docs-et-claude).
+
 ### Scrollback enrichi
 
 `scrollback_pager less --chop-long-lines --RAW-CONTROL-CHARS +INPUT_LINE_NUMBER`

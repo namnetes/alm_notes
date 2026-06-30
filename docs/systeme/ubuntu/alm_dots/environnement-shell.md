@@ -78,6 +78,113 @@ Toutes les fonctions sont accessibles depuis n'importe quel répertoire. La comm
 | `init_zed` | `init_zed` | Purge les extensions et la base de données Zed, restaure la config via `stow` |
 | `shims` / `tl` | `tl` | Inventaire de tous les outils personnels installés avec statut ✓ / ✗ |
 | `shim_add` | `shim_add alias cmd script proj desc` | Enregistre un nouvel outil dans le registre des shims |
+| `openz` | `openz` | Ouvre (ou rejoint) les onglets docs + Claude du workspace `openz_uss-mirror` dans la fenêtre Kitty courante |
+| `openz-stop` | `openz-stop` | Ferme les onglets docs + Claude du workspace `openz_uss-mirror` (instance courante **et** fenêtre dédiée ouverte par `openz-new`) |
+| `openz-new` | `openz-new` | Ouvre une nouvelle fenêtre Kitty dédiée, via le fichier de session `~/.config/kitty/openz_uss-mirror.session` |
+
+### Workspace `openz_uss-mirror` — onglets Kitty pour docs et Claude
+
+`openz` automatise l'ouverture de l'environnement de travail du projet
+`~/workspaces/openz_uss-mirror` : un onglet `make docs` (serveur MkDocs) et
+un onglet `claude` (session Claude Code), tous deux pilotés via le contrôle
+à distance Kitty (`kitty @ ...`, voir [Kitty — contrôle à
+distance](../../../outils/kitty.md#controle-a-distance-securise)).
+
+```bash
+openz        # ouvre les 2 onglets, ou rejoint ceux déjà ouverts
+openz-stop   # ferme les 2 onglets
+openz-new    # ouvre une nouvelle fenêtre Kitty dédiée (session pré-définie)
+```
+
+La détection « déjà ouvert » de `openz` interroge `kitty @ ls` :
+
+```bash
+kitty @ ls --match-tab "title:uss-mirror" >/dev/null 2>&1
+```
+
+`openz` et `openz-stop` doivent ensuite **cibler** un onglet précis pour
+le focaliser ou le fermer (`kitty @ focus-tab` / `close-tab --match
+title:...`).
+
+!!! warning "Ne jamais `grep` la sortie complète de `kitty @ ls`"
+    La première version de la détection faisait `kitty @ ls | grep -q
+    "uss-mirror"`. Le JSON renvoyé par `kitty @ ls` contient bien plus que
+    les titres d'onglets — notamment le `cwd` de chaque fenêtre. Résultat :
+    **n'importe quel onglet ordinaire** (même titré simplement « bash »)
+    dont le répertoire courant est `~/workspaces/openz_uss-mirror` (par
+    exemple après un `cd` manuel dans le projet) faisait croire à `openz`
+    que les onglets dédiés étaient déjà ouverts, alors qu'ils n'existaient
+    pas — `openz` ne créait alors rien, silencieusement.
+
+    **Solution retenue** : utiliser `kitty @ ls --match-tab
+    "title:uss-mirror"` (voir la doc de l'option `--match-tab` exposée par
+    `kitty @ ls`), qui ne filtre que sur le **titre** des onglets, jamais
+    sur leur `cwd` ou le reste du JSON.
+
+!!! warning "`kitty @ --match title:...` n'est pas un simple match littéral"
+    Le `--match title:QUERY` de Kitty utilise son propre mini-langage
+    d'expressions booléennes : un **espace** dans `QUERY` est interprété
+    comme séparateur entre deux termes combinables (`and`/`or`), et des
+    parenthèses non échappées sont interprétées comme un **groupe regex**.
+    Un titre d'onglet comme `uss-mirror (claude)` (espace + parenthèses
+    littérales) casse donc le matching — Kitty renvoie une erreur du genre
+    `Error: No location specified before claude`, souvent masquée si le
+    `stderr` est redirigé vers `/dev/null`.
+
+    **Solution retenue ici** : utiliser un motif regex sans espace ni
+    parenthèse littérale, par exemple `title:uss-mirror.*claude` plutôt que
+    `title:uss-mirror (claude)`. Le titre affiché à l'écran (`--tab-title`)
+    peut rester inchangé — seul le motif de `--match` doit être adapté.
+
+`openz-new` lance un **second processus Kitty indépendant**
+(`kitty --session ...`) plutôt qu'un onglet de l'instance courante. Sans
+précaution, ce process hérite du terminal de contrôle du shell appelant :
+ses logs internes (avertissements de config, erreurs de parsing du
+protocole clavier…) s'impriment dans le shell d'origine, qui peut aussi
+perdre la main sur son tty. D'où le détachement complet :
+
+```bash
+setsid kitty --session "$HOME/.config/kitty/openz_uss-mirror.session" \
+    </dev/null >/dev/null 2>&1 &
+disown
+```
+
+- `setsid` détache le nouveau process de la session de contrôle du
+  terminal courant.
+- `</dev/null >/dev/null 2>&1` coupe les flux hérités (plus de logs
+  parasites).
+- `disown` retire le job de la table des jobs du shell.
+
+#### `openz-stop` face à la fenêtre dédiée `openz-new`
+
+Une fenêtre ouverte par `openz-new` est un **process Kitty séparé**, avec
+son propre socket de contrôle à distance (`/tmp/kitty-<pid>`, voir
+[Kitty — contrôle à distance](../../../outils/kitty.md#controle-a-distance-securise)).
+La commande `kitty @ close-tab` lancée depuis l'instance courante ne peut
+donc pas atteindre ses onglets — `openz-stop` cherchait initialement à les
+fermer via le socket par défaut et échouait silencieusement.
+
+`openz-stop` repère maintenant ce process dédié via `pgrep`, puis ferme
+tous ses onglets en ciblant explicitement son socket — ce qui éteint
+proprement toute la fenêtre (Kitty quitte de lui-même une fois le dernier
+onglet fermé, sans demande de confirmation bloquante) :
+
+```bash
+local pid
+for pid in $(pgrep -f "^kitty --session.*openz_uss-mirror"); do
+    kitty @ --to "unix:/tmp/kitty-$pid" close-tab --match all 2>/dev/null
+done
+```
+
+!!! tip "Pourquoi `^` en début de motif `pgrep -f`"
+    `pgrep -f` matche sur la ligne de commande complète du process. Sans
+    ancrage `^kitty`, le motif peut matcher n'importe quel process dont
+    la ligne de commande *contient* le texte recherché en argument — par
+    exemple un shell wrapper qui reçoit ce motif comme chaîne littérale
+    (cas vécu en debug avec l'outil Bash de Claude Code, dont chaque appel
+    encapsule la commande dans un `bash -c "..."`). Ancrer sur `^kitty`
+    garantit que seul un process dont la commande **commence** par
+    `kitty --session` est sélectionné.
 
 ### Registre des shims — fonctionnement et ajout
 
