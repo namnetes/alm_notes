@@ -1,9 +1,10 @@
 # Déploiement après installation fraîche
 
 Tutoriel pas à pas pour passer d'une **Ubuntu fraîchement installée** à un
-poste complètement opérationnel, en s'appuyant sur les trois dépôts
+poste complètement opérationnel, en s'appuyant sur les quatre dépôts
 personnels : [alm_tools](alm_tools/index.md) (provisionnement),
-[alm_dots](alm_dots/index.md) (dotfiles) et `alm_notes` (ce wiki).
+[alm_dots](alm_dots/index.md) (dotfiles), `alm_notes` (ce wiki) et
+`alm_dashboard` (dashboard Homer).
 
 !!! info "Prérequis"
     - Une Ubuntu fraîche avec accès Internet — pour réinstaller l'OS
@@ -75,6 +76,7 @@ cd ~
 git clone git@github.com:namnetes/alm_dots.git
 git clone git@github.com:namnetes/alm_tools.git
 git clone git@github.com:namnetes/alm_notes.git
+git clone git@github.com:namnetes/alm_dashboard.git
 ```
 
 Le PIN et un toucher de la YubiKey sont demandés à chaque clone, et SSH
@@ -86,6 +88,7 @@ sont normaux.
 | [namnetes/alm_dots](https://github.com/namnetes/alm_dots) | `~/alm_dots` | Dotfiles (GNU Stow) | [alm_dots](alm_dots/index.md) |
 | [namnetes/alm_tools](https://github.com/namnetes/alm_tools) | `~/alm_tools` | Provisionnement + outils | [alm_tools](alm_tools/index.md) |
 | [namnetes/alm_notes](https://github.com/namnetes/alm_notes) | `~/alm_notes` | Wiki personnel (MkDocs) | — |
+| [namnetes/alm_dashboard](https://github.com/namnetes/alm_dashboard) | `~/alm_dashboard` | Dashboard Homer (bookmarks) + page de démarrage Brave | [alm_dashboard](alm_dashboard.md) |
 
 ---
 
@@ -153,6 +156,12 @@ sudo make all      # provisionnement complet
 Chaque exécution écrit un journal horodaté :
 `/var/log/postinstall_<timestamp>.log`.
 
+!!! note "Brave installé, pas encore configuré"
+    Le module `apps` installe Brave mais ne pousse aucun réglage de
+    confidentialité : Shields, extensions, durcissement réseau… tout
+    est à refaire manuellement. Procédure complète :
+    [Sécurité — Brave, réinstallation du poste](../../securite/brave/reinstallation.md).
+
 !!! tip "Rejouable sans risque"
     Tous les modules sont **idempotents** : en cas d'interruption ou
     d'échec ponctuel, relancer `sudo make all` reprend sans dégât.
@@ -213,6 +222,16 @@ sudo usermod -aG libvirt $USER
 newgrp libvirt
 ```
 
+**Dashboard Homer** (sert de page de démarrage à Brave — voir
+[Sécurité — Brave](../../securite/brave/reinstallation.md) et
+[alm_dashboard](alm_dashboard.md)) :
+
+```bash
+newgrp docker   # si le groupe docker vient d'être ajouté à l'étape 5
+cd ~/alm_dashboard
+make homer-start
+```
+
 **Fonds d'écran** — le timer de l'étape 6 pioche dans :
 
 ```bash
@@ -231,6 +250,7 @@ mkdir -p ~/.config/my_ubuntu/wallpapers
 | YubiKey détectée | `ykman info` | Modèle et firmware affichés |
 | Dépôts tous propres | `gsp` | Aucun dépôt en retard |
 | Wiki accessible | ouvrir `http://127.0.0.1:8000/` | Le wiki s'affiche |
+| Dashboard Homer | ouvrir `http://127.0.0.1:8080` | Le dashboard s'affiche |
 | Alias git | `gst` | Statut git (sans préfixe `git`) |
 | Outils CLI | `tl` | Inventaire des outils installés |
 

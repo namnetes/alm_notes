@@ -34,6 +34,11 @@ Outils et pratiques essentiels pour sécuriser un système Linux.
 
 <div class="grid cards" markdown>
 
+-   :material-incognito: **[Brave](brave/index.md)**
+
+    Navigateur : durcissement sécurité et anonymat, réinstallation
+    du poste.
+
 -   :material-usb-flash-drive-outline: **[YubiKey](yubikey/index.md)**
 
     Clé de sécurité matérielle FIDO2 : passkeys, SSH, sudo et
