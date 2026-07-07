@@ -119,6 +119,7 @@ nav:
               - runbg: systeme/ubuntu/alm_tools/outils/runbg.md
               - Backup Google Drive: systeme/ubuntu/alm_tools/outils/backup-googledrive.md
               - Reset historique Git: systeme/ubuntu/alm_tools/outils/reset-historique-git.md
+      - Dashboard Homer (alm_dashboard): systeme/ubuntu/alm_dashboard.md
   - Alpine:
       - systeme/alpine/index.md
       - Post-Installation: systeme/alpine/post-installation.md
@@ -233,6 +234,10 @@ nav:
       - OpenSSL: securite/openssl.md
       - ecryptfs: securite/ecryptfs.md
       - Proton: securite/proton.md
+      - Rotation des mots de passe: securite/rotation-mots-de-passe.md
+      - Brave:
+          - securite/brave/index.md
+          - Réinstallation du poste: securite/brave/reinstallation.md
       - YubiKey:
           - securite/yubikey/index.md
           - Clé SSH et GitHub: securite/yubikey/ssh-github.md
