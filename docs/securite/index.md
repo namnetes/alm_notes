@@ -23,6 +23,11 @@ Outils et pratiques essentiels pour sécuriser un système Linux.
 
     Suite d'applications de confidentialité (VPN, Mail, Pass).
 
+-   :material-key-change: **[Rotation des mots de passe](rotation-mots-de-passe.md)**
+
+    Procédure de rotation manuelle avec Proton Pass, sans jamais taper un
+    mot de passe.
+
 </div>
 
 ## Sous-sections
