@@ -63,8 +63,8 @@ dans **le même fichier de log**.
 
 ## Le pattern `SUDO_USER`
 
-Plusieurs outils (uv, fnm, node, zed, kitty, devinit, pioinit) s'installent dans
-le HOME de l'utilisateur réel, pas dans celui de root.
+Plusieurs outils (uv, fnm, node, zed, kitty, devinit, pioinit, open-sites)
+s'installent dans le HOME de l'utilisateur réel, pas dans celui de root.
 
 **Pourquoi ?** Ces outils sont des gestionnaires de versions ou des outils
 par utilisateur. Les installer dans `/root/.local/` les rendrait inaccessibles

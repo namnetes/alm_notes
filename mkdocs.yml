@@ -115,6 +115,7 @@ nav:
               - mkdocsinit: systeme/ubuntu/alm_tools/outils/mkdocsinit.md
               - pioinit: electronique/pioinit/index.md
               - vmforge: systeme/ubuntu/alm_tools/outils/vmforge.md
+              - open-sites: systeme/ubuntu/alm_tools/outils/open-sites.md
               - runbg: systeme/ubuntu/alm_tools/outils/runbg.md
               - Backup Google Drive: systeme/ubuntu/alm_tools/outils/backup-googledrive.md
               - Reset historique Git: systeme/ubuntu/alm_tools/outils/reset-historique-git.md

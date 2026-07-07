@@ -1,7 +1,7 @@
 # Post-installation
 
 Cette page décrit, dans l'ordre exact où `sudo make all` les exécute, les
-38 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
+39 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
 entièrement configuré. Objectif : pouvoir suivre — ou relancer — ce
 processus « les yeux fermés », sans jamais être surpris par une dépendance
 manquante.
@@ -60,7 +60,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | Mot-clé | Mécanisme | Exemples |
 |---------|-----------|----------|
 | **`dpkg -s`** | Paquet APT déjà installé (`dpkg -s <paquet> &>/dev/null`) | `pkg-install`, `pkg-remove`, `restricted`, `steam`, `proton`, `gsconnect` |
-| **`command -v` / chemin** | Binaire déjà résolu dans le `PATH`, ou exécutable présent à un chemin connu (`~/.local/bin/…`, `~/.local/kitty.app/…`) | `uv`, `xan`, `eza`, `fzf`, `brave`, `vscode`, `yubikey`, `zed`, `kitty`, `fnm`, `starship`, `devinit`, `pioinit`, `mkdocsinit`, `vmforge` |
+| **`command -v` / chemin** | Binaire déjà résolu dans le `PATH`, ou exécutable présent à un chemin connu (`~/.local/bin/…`, `~/.local/kitty.app/…`) | `uv`, `xan`, `eza`, `fzf`, `brave`, `vscode`, `yubikey`, `zed`, `kitty`, `fnm`, `starship`, `devinit`, `pioinit`, `mkdocsinit`, `vmforge`, `open-sites` |
 | **`snap list`** | Paquet Snap déjà présent (`snap list \| grep`) | `snap-update`, `snap-apps` |
 | **Fichier(s) cible** | Existence du ou des fichiers que le module doit produire | `nautilus-templates` (2 fichiers), `nautilus-terminal` (extension à 2 emplacements possibles) |
 | **Sentinelle** | Fichier témoin dédié, utilisé quand il n'existe pas de commande simple pour lire l'état déjà appliqué | `gnome-settings` (`~/.config/alm_tools/gnome_settings_applied`), `fonts` (fichier échantillon + `fc-list` + `fc-match`, triple vérification) |
@@ -199,7 +199,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `devtools` (étapes 35 à 38)
+## Groupe `devtools` (étapes 35 à 39)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
@@ -207,16 +207,23 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 36 | `pioinit` | `uv tool install --force ~/alm_tools/cli/pioinit` | Chemin (`~/.local/bin/pioinit` exécutable) |
 | 37 | `mkdocsinit` | `uv tool install --force ~/alm_tools/cli/mkdocsinit` | Chemin (`~/.local/bin/mkdocsinit` exécutable) |
 | 38 | `vmforge` | Installe le shim `~/.local/bin/vmforge`, applique la règle AppArmor libvirt-qemu | Chemin (shim) ; l'application AppArmor est toujours rejouée (pas de saut) |
+| 39 | `open-sites` | `uv tool install --force ~/alm_tools/cli/open-sites`, puis génère et source la complétion bash (`~/.bash_completions/open-sites.sh`) | Chemin (`~/.local/bin/open-sites` exécutable) ; complétion regénérée à chaque run, ligne `.bashrc` ajoutée une seule fois |
 
-!!! note "Prérequis explicite : `uv` avant les trois scaffolders"
+!!! note "Prérequis explicite : `uv` avant les quatre scaffolders/outils"
     Déclaré dans le Makefile (`devinit: check-root uv`, idem `pioinit`,
-    `mkdocsinit`). Les trois modules vérifient directement
+    `mkdocsinit`, `open-sites`). Les quatre modules vérifient directement
     `~/.local/bin/uv` et échouent en fatal s'il est absent — utile
     seulement si vous lancez `sudo make devtools` isolément sans être
     passé par `system`/`cli` au préalable (`devtools` ne dépend QUE de
     `uv` dans le Makefile, pas de `system` — voir l'encadré `system` avant
     `cli` plus haut, même logique implicite ici pour les paquets KVM de
     `vmforge`, non bloquante celle-là).
+
+!!! info "open-sites : dépendance fzf déjà couverte"
+    `open-sites` s'appuie sur `fzf` (étape 13, groupe `cli`) pour choisir un
+    site sans en taper le nom exact. Comme `cli` s'exécute avant `devtools`
+    dans `sudo make all`, la dépendance est déjà satisfaite par l'ordre des
+    groupes — aucune déclaration explicite supplémentaire nécessaire.
 
 !!! warning "vmforge : deux étapes non automatisées après l'installation"
     - Si les paquets KVM (`qemu-kvm`, `libvirt-daemon-system`,
@@ -241,6 +248,8 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | `mkdocsinit` (37) | `uv` (9) | ✅ Oui |
 | `uv` (9) | `python3-full`/`python3-venv` de `pkg-install` (5) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
 | `vmforge` (38) | paquets KVM de `pkg-install` (5) | ⚠️ Implicite, non bloquant (avertissement seulement) |
+| `open-sites` (39) | `uv` (9) | ✅ Oui |
+| `open-sites` (39) | `fzf` (13) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
 | `claude-terminal` (17) | CLI `claude` installée manuellement | ❌ Non scriptée du tout — voir l'encadré en tête de page |
 
 ---

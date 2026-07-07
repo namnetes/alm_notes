@@ -319,3 +319,4 @@ différée au premier login — voir
 | `pioinit` | `uv tool install` (local) | Générateur de projets PlatformIO embarqués — Arduino, ESP32, STM32, Raspberry Pi Pico |
 | `mkdocsinit` | `uv tool install` (local) | Configuration MkDocs Material idempotente sur un projet existant — mkdocs.yml, CSS, cibles Makefile |
 | `vmforge` | `bash vmforge/install.sh` | Création et gestion de VMs Alpine Linux KVM avec COW QCOW2 et cloud-init |
+| `open-sites` | `uv tool install` (local) | Lanceur de pages de connexion à des sites via `fzf` — CSV `nom;url`, complétion bash |

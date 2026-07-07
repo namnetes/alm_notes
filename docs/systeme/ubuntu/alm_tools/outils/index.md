@@ -21,6 +21,10 @@ le rôle de l'outil ; sa source dans le dépôt est précisée sur sa page.
 
     Automatisation de VMs KVM (source : `cli/vmforge/`).
 
+-   :material-web: **[open-sites](open-sites.md)**
+
+    Lanceur de pages de connexion à des sites, via `fzf` (source : `cli/open-sites/`).
+
 -   :material-cog-play-outline: **[runbg](runbg.md)**
 
     Lanceur de scripts en arrière-plan (source : `jobs/runbg.sh`).
