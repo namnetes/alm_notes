@@ -76,7 +76,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 1 | `apt-update` | `apt-get update && apt-get dist-upgrade -y` | Toujours rejoué |
 | 2 | `snap-update` | `snap refresh` + installe les snaps de `snap_packages.list` | `snap list` |
 | 3 | `ppas` | Ajoute les PPAs de `ppas.list` | `grep` sur les sources APT existantes (repo déjà présent) |
-| 4 | `pkg-remove` | Purge les paquets de `packages_to_remove.list` | `dpkg -s` |
+| 4 | `pkg-remove` (`cleanup_packages.sh`) | Purge les paquets de `packages_to_remove.list` | `dpkg -s` |
 | 5 | `pkg-install` | Installe les paquets de `packages_to_install.list` | `dpkg -s` |
 | 6 | `restricted` | `ubuntu-restricted-extras` + `-addons`, licence pré-acceptée via `debconf-set-selections` | `dpkg -s` (les deux paquets) |
 | 7 | `cleanup` | `autoremove --purge`, `clean`, `autoclean`, réduction rétention Snap, purge `/tmp` > 7j, vacuum journal | Toujours rejoué |
@@ -134,7 +134,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
-| 18 | `remove-firefox` | Purge le paquet APT `firefox`/`firefox-esr`, épingle `Pin-Priority: -1`, supprime le Snap + résidus utilisateur/système | `dpkg -s` par paquet, `snap list`, existence de fichier par résidu |
+| 18 | `remove-firefox` (`remove_firefox.sh`) | Purge le paquet APT `firefox`/`firefox-esr`, épingle `Pin-Priority: -1`, supprime le Snap + résidus utilisateur/système | `dpkg -s` par paquet, `snap list`, existence de fichier par résidu |
 | 19 | `brave` | Dépôt APT officiel Brave | `command -v` |
 | 20 | `zed` | Script officiel `zed.dev`, installé dans `~/.local/bin` pour l'utilisateur réel | Chemin (`~/.local/bin/zed` exécutable) |
 | 21 | `kitty` | Installeur upstream `sw.kovidgoyal.net` vers `~/.local/kitty.app`, symlinks dans `~/.local/bin`, `.desktop` locaux qui masquent ceux d'apt | Chemin (`~/.local/kitty.app/bin/kitty` exécutable) |
@@ -144,7 +144,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 25 | `proton` | Dépôt `protonvpn-stable-release`, installe Mail + Pass + VPN | `dpkg -s` (les 3 paquets, tout-ou-rien) ; vérifications séparées pour le paquet dépôt et le fichier sources |
 | 26 | `steam` | Active i386 + `multiverse` si nécessaire, installe `steam` | `dpkg -s steam` OU `steam:i386` ; vérifications séparées pour l'architecture et le composant |
 | 27 | `yubikey` | PPA `yubico/stable`, installe `yubikey-manager` | `command -v ykman` ; `find` sur les sources APT pour le PPA |
-| 28 | `snap-apps` | `kolourpaint`, `onlyoffice-desktopeditors` | `snap list` |
+| 28 | `snap-apps` (`install_snap_apps.sh`) | `kolourpaint`, `onlyoffice-desktopeditors` | `snap list` |
 
 !!! warning "Docker : le groupe n'est actif qu'à la prochaine session"
     `usermod -aG docker` s'applique immédiatement en base, mais le jeton de

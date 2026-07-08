@@ -129,6 +129,22 @@ présence de chaque outil avant de l'initialiser.
     pro, clé de signature…). Ce fichier n'est **volontairement pas
     versionné** : le recréer à la main si la machine en a besoin.
 
+!!! note "`system-config/` n'est pas déployé par stow"
+    Le dossier `system-config/` du dépôt (réglages `sysctl`, etc.) est
+    volontairement exclu de `stow` (`.stow-local-ignore`) : ce ne sont pas
+    des dotfiles utilisateur mais des fichiers système, à copier
+    manuellement avec les privilèges root :
+
+    ```bash
+    sudo cp ~/alm_dots/system-config/etc/sysctl.d/99-optimisation-sysctl.conf \
+        /etc/sysctl.d/99-optimisation-sysctl.conf
+    sudo sysctl --system
+    ```
+
+    Applique le tuning mémoire/réseau (swappiness, anti-spoofing, SYN
+    cookies…) prévu pour ce poste. Vérification :
+    `sysctl vm.swappiness` doit répondre `1`.
+
 ---
 
 ## Étape 5 — Provisionnement postinstall
@@ -161,6 +177,13 @@ Chaque exécution écrit un journal horodaté :
     confidentialité : Shields, extensions, durcissement réseau… tout
     est à refaire manuellement. Procédure complète :
     [Sécurité — Brave, réinstallation du poste](../../securite/brave/reinstallation.md).
+
+!!! note "rclone installé, config Google Drive à restaurer"
+    Le module `cli` installe `rclone` mais pas sa configuration : le
+    remote `google_drive` doit être restauré depuis le blob chiffré
+    sauvegardé dans Proton Pass avant de pouvoir relancer les
+    sauvegardes automatiques. Procédure complète :
+    [Backup Google Drive — Sauvegarder la config pour une réinstallation rapide](alm_tools/outils/backup-googledrive.md#sauvegarder-la-config-pour-une-reinstallation-rapide).
 
 !!! tip "Rejouable sans risque"
     Tous les modules sont **idempotents** : en cas d'interruption ou
