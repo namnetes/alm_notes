@@ -22,4 +22,9 @@ Outils et bonnes pratiques pour le développement Python.
 
     Patterns de conception appliqués au Python.
 
+-   :material-key-variant: **[pass-cli — Automatisation](pass-cli-subprocess.md)**
+
+    Scripter Proton Pass en toute sécurité : subprocess, JSON, gestion
+    d'erreurs, et ce qu'il ne faut jamais faire.
+
 </div>

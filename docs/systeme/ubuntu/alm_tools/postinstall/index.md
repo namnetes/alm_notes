@@ -22,7 +22,7 @@ sudo make all
 
 -   :material-make: **[Post-installation](post-installation.md)**
 
-    Les 39 étapes dans l'ordre exact, idempotence et points de rupture.
+    Les 40 étapes dans l'ordre exact, idempotence et points de rupture.
 
 -   :material-hand-back-right-outline: **[Étapes manuelles](etapes-manuelles.md)**
 

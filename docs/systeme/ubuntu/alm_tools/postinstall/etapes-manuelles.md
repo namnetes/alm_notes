@@ -70,7 +70,7 @@ part de l'utilisateur.
     GNOME déjà active (le cas normal), les réglages s'appliquent
     **immédiatement**, sans jamais passer par `session-checks`. Voir le
     cas limite documenté dans
-    [Post-installation — groupe desktop](post-installation.md#groupe-desktop-etapes-29-a-34).
+    [Post-installation — groupe desktop](post-installation.md#groupe-desktop-etapes-30-a-35).
 
 ---
 
@@ -96,10 +96,10 @@ l'action est intrinsèquement humaine (décision, secret, geste physique).
 
 | Étape | Pourquoi ce n'est pas scripté | Où agir |
 |---|---|---|
-| **Installer la CLI Claude Code** (`claude`) | `install_claude_terminal.sh` (étape 17) vérifie sa présence mais ne l'installe jamais — et son absence **arrête tout le pipeline** `make all` dès le groupe `cli`. Voir l'avertissement en tête de [Post-installation](post-installation.md). | `curl -fsSL https://claude.ai/install.sh \| bash` |
+| **Installer la CLI Claude Code** (`claude`) | `install_claude_terminal.sh` (étape 18) vérifie sa présence mais ne l'installe jamais — et son absence **arrête tout le pipeline** `make all` dès le groupe `cli`. Voir l'avertissement en tête de [Post-installation](post-installation.md). | `curl -fsSL https://claude.ai/install.sh \| bash` |
 | **Authentification Claude Code** (`claude` puis `/login`) | Vérifiée (avertissement seulement, non bloquant) mais jamais réalisée par le module | Manuel, dans un terminal |
 | **Appairage GSConnect avec un téléphone** | Handshake de confiance entre deux appareils — aucun script ne peut valider ça à la place de l'utilisateur | App KDE Connect sur le téléphone + confirmation des deux côtés, voir [GSConnect](../../../../outils/gsconnect.md#appairage-avec-un-telephone-android) |
-| **`systemctl restart libvirtd`** après la règle AppArmor de `vmforge` (étape 38) | Loggé comme instruction (`log_info "[NOTE] ..."`), jamais exécuté par le module | `sudo systemctl restart libvirtd` |
+| **`systemctl restart libvirtd`** après la règle AppArmor de `vmforge` (étape 39) | Loggé comme instruction (`log_info "[NOTE] ..."`), jamais exécuté par le module | `sudo systemctl restart libvirtd` |
 | **Paquets KVM manquants** si `devtools` est lancé avant `system` | `install_vmforge.sh` avertit mais n'installe rien (les paquets sont censés déjà venir de `packages_to_install.list`) | `sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients cloud-image-utils acl`, ou relancer dans le bon ordre |
 | **Kitty comme `x-terminal-emulator` système** | `install_kitty.sh` installe les binaires upstream et les `.desktop` locaux, mais ne touche jamais à `update-alternatives` | Voir [Finitions manuelles](../../finitions-manuelles.md#kitty-comme-terminal-par-defaut) |
 | **Thème Catppuccin pour GNOME Terminal** | Hors du périmètre de `postinstall` par choix — script tiers + sélection manuelle du profil | Voir [Finitions manuelles](../../finitions-manuelles.md#theme-catppuccin-pour-gnome-terminal) |
@@ -107,7 +107,7 @@ l'action est intrinsèquement humaine (décision, secret, geste physique).
 | **Fournir les images de fond d'écran** | Le timer `change-wallpaper.timer` et le script de rotation sont déployés par `stow`, mais aucune image n'est fournie par un dépôt | Copier des images dans `~/.config/my_ubuntu/wallpapers/` |
 | **`~/.gitconfig.local`** | Volontairement non versionné (email pro, clé de signature propres à la machine) | Recréer à la main si besoin, voir [Présentation d'alm_dots](../../alm_dots/presentation.md) |
 | **Ubuntu Pro (`pro attach`)** | Nécessite un compte personnel et un token — ne peut pas être scripté à l'avance | Voir [Finitions manuelles](../../finitions-manuelles.md#1-ubuntu-pro-optionnel) |
-| **Liste personnelle `data/open-sites.csv`** (étape 39, `open-sites`) | Fichier gitignoré par choix — révèle l'inventaire de comptes personnels (banques, mutuelle, employeur...), jamais commité donc jamais restauré par le module. Un fichier absent est géré proprement (liste vide, pas de crash) | Restaurer depuis sa propre sauvegarde, ou reconstruire au fil de l'eau avec `open-sites add` |
+| **Liste personnelle `data/open-sites.csv`** (étape 40, `open-sites`) | Fichier gitignoré par choix — révèle l'inventaire de comptes personnels (banques, mutuelle, employeur...), jamais commité donc jamais restauré par le module. Un fichier absent est géré proprement (liste vide, pas de crash) | Restaurer depuis sa propre sauvegarde, ou reconstruire au fil de l'eau avec `open-sites add` |
 | **Clé SSH YubiKey** (`ssh-keygen -K`) | PIN + toucher physique de la clé | Voir [Sécurité — Réinstallation du poste](../../../../securite/yubikey/reinstallation.md) |
 | **`check_updates.sh --apply`** | Détecte les outils upstream en retard mais ne met jamais à jour tout seul, par choix de conception (les `sudo`/`rm` doivent rester un geste volontaire) | `~/alm_tools/postinstall/check_updates.sh --apply` |
 

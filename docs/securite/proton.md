@@ -180,6 +180,35 @@ Proton Pass est disponible en extension pour :
 - Firefox : [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/proton-pass/)
 - Chrome / Chromium / Brave : Chrome Web Store
 
+### pass-cli (CLI)
+
+CLI officielle Proton Pass, pour scripter la gestion des mots de passe
+depuis le terminal. Pas de paquet APT — installée et maintenue à jour
+automatiquement par le module `postinstall`, voir
+[Post-installation — groupe cli](../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-18).
+
+**Authentification** (non gérée par le module d'installation, étape
+manuelle unique après la première installation) :
+
+```bash
+pass-cli login
+```
+
+!!! danger "Deux commandes qui révèlent des secrets sans confirmation"
+    - `pass-cli item view` (sans `--field`) affiche **le mot de passe en
+      clair par défaut**, sans aucune confirmation ni avertissement — ce
+      n'est pas un mode « masqué » à débloquer avec un flag, c'est le
+      comportement par défaut de la commande.
+    - `pass-cli item list --show-secrets --output json` dump le contenu
+      complet (tous les mots de passe inclus) de **tous les items d'un
+      vault en un seul appel**.
+
+    Ne jamais lancer l'une de ces deux commandes dans un terminal partagé,
+    partagé à l'écran, ou dans un script sans confirmation explicite de
+    l'utilisateur au préalable. Pour un usage scripté sûr, préférer
+    `pass-cli item view --field <champ>` (un seul champ, rien d'autre) —
+    voir [Automatiser pass-cli en Python](../developpement/python/pass-cli-subprocess.md).
+
 ??? info "Fonctionnalités Pass Plus"
     L'abonnement Pass Plus débloque :
 

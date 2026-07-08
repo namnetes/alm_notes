@@ -1,19 +1,19 @@
 # Post-installation
 
 Cette page décrit, dans l'ordre exact où `sudo make all` les exécute, les
-39 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
+40 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
 entièrement configuré. Objectif : pouvoir suivre — ou relancer — ce
 processus « les yeux fermés », sans jamais être surpris par une dépendance
 manquante.
 
 !!! danger "À faire AVANT de lancer `sudo make all` : installer la CLI Claude Code"
-    Le dernier module du groupe `cli` (étape 9, `claude-terminal`) **exige**
+    Le dernier module du groupe `cli` (étape 10, `claude-terminal`) **exige**
     que la commande `claude` soit déjà présente — il ne l'installe pas
     lui-même, il ne fait que vérifier l'environnement. S'il ne la trouve
     pas, il retourne une erreur fatale via `handle_script_error`.
 
     Comme chaque cible du Makefile est un **prérequis** de son groupe
-    (`cli: check-root uv xan eza starship fzf fnm node rclone
+    (`cli: check-root uv xan eza starship fzf fnm node rclone pass-cli
     claude-terminal`), un échec à ce stade arrête `make` immédiatement —
     **les groupes `apps`, `desktop` et `devtools` ne s'exécutent jamais**,
     même via `sudo make all`. Ce n'est pas une étape optionnelle qui échoue
@@ -28,15 +28,15 @@ manquante.
 
     Si vous ne voulez pas de Claude Code du tout, sautez la cible en lançant
     les cibles individuellement plutôt que le groupe :
-    `sudo make uv xan eza starship fzf fnm node rclone`, puis directement
+    `sudo make uv xan eza starship fzf fnm node rclone pass-cli`, puis directement
     `sudo make apps desktop devtools`.
 
 !!! note "Autres prérequis avant de commencer"
     - `alm_tools` cloné dans `~/alm_tools` et lancé **depuis**
       `~/alm_tools/postinstall` (chemins relatifs dans le Makefile).
     - `alm_dots` déjà déployé via `stow .` — pas strictement bloquant pour
-      le postinstall lui-même, mais `claude-terminal` (étape 9) et
-      `nautilus-terminal` (étape 27) ne trouveront pas certains fichiers
+      le postinstall lui-même, mais `claude-terminal` (étape 10) et
+      `nautilus-terminal` (étape 32) ne trouveront pas certains fichiers
       sinon (`claude-switch`, le kitten `claude_ask.sh`) et se contentent
       d'un avertissement. Voir
       [Déploiement après installation fraîche](../../deploiement-post-installation.md)
@@ -60,7 +60,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | Mot-clé | Mécanisme | Exemples |
 |---------|-----------|----------|
 | **`dpkg -s`** | Paquet APT déjà installé (`dpkg -s <paquet> &>/dev/null`) | `pkg-install`, `pkg-remove`, `restricted`, `steam`, `proton`, `gsconnect` |
-| **`command -v` / chemin** | Binaire déjà résolu dans le `PATH`, ou exécutable présent à un chemin connu (`~/.local/bin/…`, `~/.local/kitty.app/…`) | `uv`, `xan`, `eza`, `fzf`, `brave`, `vscode`, `yubikey`, `zed`, `kitty`, `fnm`, `starship`, `devinit`, `pioinit`, `mkdocsinit`, `vmforge`, `open-sites` |
+| **`command -v` / chemin** | Binaire déjà résolu dans le `PATH`, ou exécutable présent à un chemin connu (`~/.local/bin/…`, `~/.local/kitty.app/…`) | `uv`, `xan`, `eza`, `fzf`, `brave`, `vscode`, `yubikey`, `zed`, `kitty`, `fnm`, `starship`, `devinit`, `pioinit`, `mkdocsinit`, `vmforge`, `open-sites`, `pass-cli` |
 | **`snap list`** | Paquet Snap déjà présent (`snap list \| grep`) | `snap-update`, `snap-apps` |
 | **Fichier(s) cible** | Existence du ou des fichiers que le module doit produire | `nautilus-templates` (2 fichiers), `nautilus-terminal` (extension à 2 emplacements possibles) |
 | **Sentinelle** | Fichier témoin dédié, utilisé quand il n'existe pas de commande simple pour lire l'état déjà appliqué | `gnome-settings` (`~/.config/alm_tools/gnome_settings_applied`), `fonts` (fichier échantillon + `fc-list` + `fc-match`, triple vérification) |
@@ -94,7 +94,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `cli` (étapes 9 à 17)
+## Groupe `cli` (étapes 9 à 18)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
@@ -106,7 +106,8 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 14 | `fnm` | Script officiel `fnm.vercel.app`, sauvegarde/restaure `.bashrc` autour de l'installation | Chemin (`~/.local/bin/fnm` exécutable) |
 | 15 | `node` | Installe et active la LTS Node.js via `fnm` | Toujours rejoué (les commandes `fnm install/default/use` sont elles-mêmes idempotentes) |
 | 16 | `rclone` | Script officiel `rclone.org` vers `/usr/bin/rclone` | **Version amont** — se réinstalle si la version installée diffère de la dernière publiée |
-| 17 | `claude-terminal` | Vérifie (ne les installe pas) : CLI `claude`, identifiants OAuth, `claude-switch`, permissions de `api.env`, kitten `claude_ask.sh`, crée `~/.claude/commands/` | Contrôles multiples, voir le détail ci-dessous |
+| 17 | `pass-cli` | Script officiel `proton.me` vers `~/.local/bin/pass-cli` ; si déjà présent, délègue à `pass-cli update --yes` (auto-update natif) | Chemin (`~/.local/bin/pass-cli` exécutable), puis délégation à `pass-cli update --yes` — idempotent en interne (« Already up to date » si à jour) |
+| 18 | `claude-terminal` | Vérifie (ne les installe pas) : CLI `claude`, identifiants OAuth, `claude-switch`, permissions de `api.env`, kitten `claude_ask.sh`, crée `~/.claude/commands/` | Contrôles multiples, voir le détail ci-dessous |
 
 !!! note "Prérequis explicite : `fnm` avant `install_node.sh`"
     Déclaré dans le Makefile (`node: check-root fnm`). `install_node.sh`
@@ -114,7 +115,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
     s'il est absent — utile seulement si vous lancez `sudo make node`
     isolément sans être passé par `sudo make cli` ou `all`.
 
-!!! danger "Étape 17 : trois vérifications, une seule vraiment bloquante"
+!!! danger "Étape 18 : trois vérifications, une seule vraiment bloquante"
     `install_claude_terminal.sh` ne fait qu'auditer l'état, sans jamais
     installer quoi que ce soit lui-même :
 
@@ -130,21 +131,21 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `apps` (étapes 18 à 28)
+## Groupe `apps` (étapes 19 à 29)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
-| 18 | `remove-firefox` (`remove_firefox.sh`) | Purge le paquet APT `firefox`/`firefox-esr`, épingle `Pin-Priority: -1`, supprime le Snap + résidus utilisateur/système | `dpkg -s` par paquet, `snap list`, existence de fichier par résidu |
-| 19 | `brave` | Dépôt APT officiel Brave | `command -v` |
-| 20 | `zed` | Script officiel `zed.dev`, installé dans `~/.local/bin` pour l'utilisateur réel | Chemin (`~/.local/bin/zed` exécutable) |
-| 21 | `kitty` | Installeur upstream `sw.kovidgoyal.net` vers `~/.local/kitty.app`, symlinks dans `~/.local/bin`, `.desktop` locaux qui masquent ceux d'apt | Chemin (`~/.local/kitty.app/bin/kitty` exécutable) |
-| 22 | `bruno` | Dépôt APT officiel, puis pré-remplit `preferences.json` (`downloadUpdates: false`) pour désactiver l'auto-updater Electron interne avant le premier lancement | `command -v` pour le paquet ; existence de `preferences.json` pour ne pas écraser une config utilisateur |
-| 23 | `docker` | Dépôt APT officiel Docker CE, ajoute l'utilisateur réel au groupe `docker` | `command -v docker` pour le paquet ; `groups \| grep -qw docker` pour l'appartenance au groupe |
-| 24 | `vscode` | Dépôt APT officiel Microsoft | `command -v` |
-| 25 | `proton` | Dépôt `protonvpn-stable-release`, installe Mail + Pass + VPN | `dpkg -s` (les 3 paquets, tout-ou-rien) ; vérifications séparées pour le paquet dépôt et le fichier sources |
-| 26 | `steam` | Active i386 + `multiverse` si nécessaire, installe `steam` | `dpkg -s steam` OU `steam:i386` ; vérifications séparées pour l'architecture et le composant |
-| 27 | `yubikey` | PPA `yubico/stable`, installe `yubikey-manager` | `command -v ykman` ; `find` sur les sources APT pour le PPA |
-| 28 | `snap-apps` (`install_snap_apps.sh`) | `kolourpaint`, `onlyoffice-desktopeditors` | `snap list` |
+| 19 | `remove-firefox` (`remove_firefox.sh`) | Purge le paquet APT `firefox`/`firefox-esr`, épingle `Pin-Priority: -1`, supprime le Snap + résidus utilisateur/système | `dpkg -s` par paquet, `snap list`, existence de fichier par résidu |
+| 20 | `brave` | Dépôt APT officiel Brave | `command -v` |
+| 21 | `zed` | Script officiel `zed.dev`, installé dans `~/.local/bin` pour l'utilisateur réel | Chemin (`~/.local/bin/zed` exécutable) |
+| 22 | `kitty` | Installeur upstream `sw.kovidgoyal.net` vers `~/.local/kitty.app`, symlinks dans `~/.local/bin`, `.desktop` locaux qui masquent ceux d'apt | Chemin (`~/.local/kitty.app/bin/kitty` exécutable) |
+| 23 | `bruno` | Dépôt APT officiel, puis pré-remplit `preferences.json` (`downloadUpdates: false`) pour désactiver l'auto-updater Electron interne avant le premier lancement | `command -v` pour le paquet ; existence de `preferences.json` pour ne pas écraser une config utilisateur |
+| 24 | `docker` | Dépôt APT officiel Docker CE, ajoute l'utilisateur réel au groupe `docker` | `command -v docker` pour le paquet ; `groups \| grep -qw docker` pour l'appartenance au groupe |
+| 25 | `vscode` | Dépôt APT officiel Microsoft | `command -v` |
+| 26 | `proton` | Dépôt `protonvpn-stable-release`, installe Mail + Pass + VPN | `dpkg -s` (les 3 paquets, tout-ou-rien) ; vérifications séparées pour le paquet dépôt et le fichier sources |
+| 27 | `steam` | Active i386 + `multiverse` si nécessaire, installe `steam` | `dpkg -s steam` OU `steam:i386` ; vérifications séparées pour l'architecture et le composant |
+| 28 | `yubikey` | PPA `yubico/stable`, installe `yubikey-manager` | `command -v ykman` ; `find` sur les sources APT pour le PPA |
+| 29 | `snap-apps` (`install_snap_apps.sh`) | `kolourpaint`, `onlyoffice-desktopeditors` | `snap list` |
 
 !!! warning "Docker : le groupe n'est actif qu'à la prochaine session"
     `usermod -aG docker` s'applique immédiatement en base, mais le jeton de
@@ -153,61 +154,61 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `desktop` (étapes 29 à 34)
+## Groupe `desktop` (étapes 30 à 35)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
-| 29 | `gnome-settings` | Réglages `gsettings` (interface, dock) + profil d'énergie `performance` | **Sentinelle** (`~/.config/alm_tools/gnome_settings_applied`) |
-| 30 | `fonts` | FiraCode Nerd Font, JetBrains Mono, Cascadia Code vers `/usr/local/share/fonts` | **Sentinelle** + `fc-list` + `fc-match` (triple vérification par police) |
-| 31 | `nautilus-terminal` | Installe l'extension `nautilus-open-any-terminal` (pip, `--user --break-system-packages`) pour l'utilisateur réel | Fichier(s) cible (extension présente à l'un des deux emplacements possibles) |
-| 32 | `nautilus-templates` | Crée deux fichiers vides dans `~/Modèles` (texte, ODT) | Fichier(s) cible (les deux fichiers) |
-| 33 | `gsconnect` | `apt install gnome-shell-extension-gsconnect sshfs python3-nautilus` + règles ufw `1716/tcp+udp` | `dpkg -s` par paquet |
-| 34 | `session-checks` | Installe `run-session-checks`, les contrôles statiques (`10-nautilus-terminal`, `20-gsconnect`), le déclencheur GNOME `/etc/xdg/autostart/session-checks.desktop` | Toujours rejoué (recopie de fichiers, sans effet si identiques) |
+| 30 | `gnome-settings` | Réglages `gsettings` (interface, dock) + profil d'énergie `performance` | **Sentinelle** (`~/.config/alm_tools/gnome_settings_applied`) |
+| 31 | `fonts` | FiraCode Nerd Font, JetBrains Mono, Cascadia Code vers `/usr/local/share/fonts` | **Sentinelle** + `fc-list` + `fc-match` (triple vérification par police) |
+| 32 | `nautilus-terminal` | Installe l'extension `nautilus-open-any-terminal` (pip, `--user --break-system-packages`) pour l'utilisateur réel | Fichier(s) cible (extension présente à l'un des deux emplacements possibles) |
+| 33 | `nautilus-templates` | Crée deux fichiers vides dans `~/Modèles` (texte, ODT) | Fichier(s) cible (les deux fichiers) |
+| 34 | `gsconnect` | `apt install gnome-shell-extension-gsconnect sshfs python3-nautilus` + règles ufw `1716/tcp+udp` | `dpkg -s` par paquet |
+| 35 | `session-checks` | Installe `run-session-checks`, les contrôles statiques (`10-nautilus-terminal`, `20-gsconnect`), le déclencheur GNOME `/etc/xdg/autostart/session-checks.desktop` | Toujours rejoué (recopie de fichiers, sans effet si identiques) |
 
-!!! warning "Étapes 29, 31 et 33 : nécessitent une session D-Bus active — différées via session-checks"
+!!! warning "Étapes 30, 32 et 34 : nécessitent une session D-Bus active — différées via session-checks"
     `gsettings`, l'activation GSConnect et la configuration Nautilus→kitty
     ont besoin d'un bus D-Bus **utilisateur** live. Pendant le
     provisionnement (root, éventuellement sans session graphique
     utilisateur ouverte), ce n'est pas garanti. Chaque module gère ça
     différemment :
 
-    - **Étape 29 (`gnome-settings`)** — teste directement
+    - **Étape 30 (`gnome-settings`)** — teste directement
       `/run/user/<uid>/bus` : si le socket existe (cas normal, terminal
       ouvert dans une session GNOME déjà active), les réglages
       s'appliquent **immédiatement**, sans rien différer. Sinon, le module
       **génère lui-même** un contrôle `20-gnome-settings` dans
       `/usr/local/lib/session-checks/`, qui s'exécutera au prochain login
       (sentinelle incluse, un seul passage).
-    - **Étape 31 (`nautilus-terminal`)** — installe toujours l'extension
+    - **Étape 32 (`nautilus-terminal`)** — installe toujours l'extension
       Python pendant le provisionnement, mais la commande `gsettings set
       ... terminal kitty` est **systématiquement** différée au contrôle
-      statique `10-nautilus-terminal` (étape 34), qui demande confirmation
+      statique `10-nautilus-terminal` (étape 35), qui demande confirmation
       via `zenity` avant d'agir — pas silencieux comme les deux autres.
-    - **Étape 33 (`gsconnect`)** — installe les paquets et ouvre le port
+    - **Étape 34 (`gsconnect`)** — installe les paquets et ouvre le port
       ufw pendant le provisionnement, mais `gnome-extensions enable` et la
       vérification du port `1716` sont **systématiquement** différés au
-      contrôle statique `20-gsconnect` (étape 34), silencieux (pas de
+      contrôle statique `20-gsconnect` (étape 35), silencieux (pas de
       `zenity` : la décision d'installer a déjà été prise par
       l'administrateur via `sudo make gsconnect`).
 
 !!! bug "Bug connu, non corrigé : ordre inversé au sein du groupe `desktop`"
-    `gnome-settings` (étape 29) s'exécute avant `session-checks`
-    (étape 34), qui crée le répertoire dont le premier a parfois besoin.
+    `gnome-settings` (étape 30) s'exécute avant `session-checks`
+    (étape 35), qui crée le répertoire dont le premier a parfois besoin.
     Détail du symptôme, des scénarios de déclenchement réels et du
     correctif identifié :
     [Architecture — Bugs connus, non corrigés](architecture.md#bugs-connus-non-corriges).
 
 ---
 
-## Groupe `devtools` (étapes 35 à 39)
+## Groupe `devtools` (étapes 36 à 40)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
-| 35 | `devinit` | `uv tool install --force ~/alm_tools/cli/devinit` | Chemin (`~/.local/bin/devinit` exécutable) |
-| 36 | `pioinit` | `uv tool install --force ~/alm_tools/cli/pioinit` | Chemin (`~/.local/bin/pioinit` exécutable) |
-| 37 | `mkdocsinit` | `uv tool install --force ~/alm_tools/cli/mkdocsinit` | Chemin (`~/.local/bin/mkdocsinit` exécutable) |
-| 38 | `vmforge` | Installe le shim `~/.local/bin/vmforge`, applique la règle AppArmor libvirt-qemu | Chemin (shim) ; l'application AppArmor est toujours rejouée (pas de saut) |
-| 39 | `open-sites` | `uv tool install --force ~/alm_tools/cli/open-sites`, puis génère et source la complétion bash (`~/.bash_completions/open-sites.sh`) | Chemin (`~/.local/bin/open-sites` exécutable) ; complétion regénérée à chaque run, ligne `.bashrc` ajoutée une seule fois |
+| 36 | `devinit` | `uv tool install --force ~/alm_tools/cli/devinit` | Chemin (`~/.local/bin/devinit` exécutable) |
+| 37 | `pioinit` | `uv tool install --force ~/alm_tools/cli/pioinit` | Chemin (`~/.local/bin/pioinit` exécutable) |
+| 38 | `mkdocsinit` | `uv tool install --force ~/alm_tools/cli/mkdocsinit` | Chemin (`~/.local/bin/mkdocsinit` exécutable) |
+| 39 | `vmforge` | Installe le shim `~/.local/bin/vmforge`, applique la règle AppArmor libvirt-qemu | Chemin (shim) ; l'application AppArmor est toujours rejouée (pas de saut) |
+| 40 | `open-sites` | `uv tool install --force ~/alm_tools/cli/open-sites`, puis génère et source la complétion bash (`~/.bash_completions/open-sites.sh`) | Chemin (`~/.local/bin/open-sites` exécutable) ; complétion regénérée à chaque run, ligne `.bashrc` ajoutée une seule fois |
 
 !!! note "Prérequis explicite : `uv` avant les quatre scaffolders/outils"
     Déclaré dans le Makefile (`devinit: check-root uv`, idem `pioinit`,
@@ -243,14 +244,14 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | Cible | Dépend de | Déclaré dans le Makefile ? |
 |-------|-----------|------------------------------|
 | `node` (15) | `fnm` (14) | ✅ Oui |
-| `devinit` (35) | `uv` (9) | ✅ Oui |
-| `pioinit` (36) | `uv` (9) | ✅ Oui |
-| `mkdocsinit` (37) | `uv` (9) | ✅ Oui |
+| `devinit` (36) | `uv` (9) | ✅ Oui |
+| `pioinit` (37) | `uv` (9) | ✅ Oui |
+| `mkdocsinit` (38) | `uv` (9) | ✅ Oui |
 | `uv` (9) | `python3-full`/`python3-venv` de `pkg-install` (5) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
-| `vmforge` (38) | paquets KVM de `pkg-install` (5) | ⚠️ Implicite, non bloquant (avertissement seulement) |
-| `open-sites` (39) | `uv` (9) | ✅ Oui |
-| `open-sites` (39) | `fzf` (13) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
-| `claude-terminal` (17) | CLI `claude` installée manuellement | ❌ Non scriptée du tout — voir l'encadré en tête de page |
+| `vmforge` (39) | paquets KVM de `pkg-install` (5) | ⚠️ Implicite, non bloquant (avertissement seulement) |
+| `open-sites` (40) | `uv` (9) | ✅ Oui |
+| `open-sites` (40) | `fzf` (13) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
+| `claude-terminal` (18) | CLI `claude` installée manuellement | ❌ Non scriptée du tout — voir l'encadré en tête de page |
 
 ---
 

@@ -152,6 +152,7 @@ nav:
               - developpement/python/patterns/index.md
               - Policy Pattern: developpement/python/patterns/policy-pattern.md
               - Ports & Adapters: developpement/python/patterns/ports-and-adapters.md
+          - pass-cli — Automatisation Python: developpement/python/pass-cli-subprocess.md
   - Électronique:
       - electronique/index.md
       - PlatformIO:
