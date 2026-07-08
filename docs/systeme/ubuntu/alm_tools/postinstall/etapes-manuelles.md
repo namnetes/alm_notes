@@ -109,7 +109,7 @@ l'action est intrinsèquement humaine (décision, secret, geste physique).
 | **Ubuntu Pro (`pro attach`)** | Nécessite un compte personnel et un token — ne peut pas être scripté à l'avance | Voir [Finitions manuelles](../../finitions-manuelles.md#1-ubuntu-pro-optionnel) |
 | **Liste personnelle `data/open-sites.csv`** (étape 40, `open-sites`) | Fichier gitignoré par choix — révèle l'inventaire de comptes personnels (banques, mutuelle, employeur...), jamais commité donc jamais restauré par le module. Un fichier absent est géré proprement (liste vide, pas de crash) | Restaurer depuis sa propre sauvegarde, ou reconstruire au fil de l'eau avec `open-sites add` |
 | **Clé SSH YubiKey** (`ssh-keygen -K`) | PIN + toucher physique de la clé | Voir [Sécurité — Réinstallation du poste](../../../../securite/yubikey/reinstallation.md) |
-| **`check_updates.sh --apply`** | Détecte les outils upstream en retard mais ne met jamais à jour tout seul, par choix de conception (les `sudo`/`rm` doivent rester un geste volontaire) | `~/alm_tools/postinstall/check_updates.sh --apply` |
+| **`check_updates.sh --apply`** | Détecte les outils upstream en retard mais ne met jamais à jour tout seul, par choix de conception (les `sudo`/`rm` doivent rester un geste volontaire) | `check_updates.sh --apply` (symlink `~/.local/bin`, étape 41) ou `~/alm_tools/postinstall/check_updates.sh --apply` |
 
 ---
 

@@ -60,7 +60,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | Mot-clé | Mécanisme | Exemples |
 |---------|-----------|----------|
 | **`dpkg -s`** | Paquet APT déjà installé (`dpkg -s <paquet> &>/dev/null`) | `pkg-install`, `pkg-remove`, `restricted`, `steam`, `proton`, `gsconnect` |
-| **`command -v` / chemin** | Binaire déjà résolu dans le `PATH`, ou exécutable présent à un chemin connu (`~/.local/bin/…`, `~/.local/kitty.app/…`) | `uv`, `xan`, `eza`, `fzf`, `brave`, `vscode`, `yubikey`, `zed`, `kitty`, `fnm`, `starship`, `devinit`, `pioinit`, `mkdocsinit`, `vmforge`, `open-sites`, `pass-cli` |
+| **`command -v` / chemin** | Binaire déjà résolu dans le `PATH`, ou exécutable présent à un chemin connu (`~/.local/bin/…`, `~/.local/kitty.app/…`) | `uv`, `xan`, `eza`, `fzf`, `brave`, `vscode`, `yubikey`, `zed`, `kitty`, `fnm`, `starship`, `devinit`, `pioinit`, `mkdocsinit`, `vmforge`, `open-sites`, `pass-cli`, `check-updates` |
 | **`snap list`** | Paquet Snap déjà présent (`snap list \| grep`) | `snap-update`, `snap-apps` |
 | **Fichier(s) cible** | Existence du ou des fichiers que le module doit produire | `nautilus-templates` (2 fichiers), `nautilus-terminal` (extension à 2 emplacements possibles) |
 | **Sentinelle** | Fichier témoin dédié, utilisé quand il n'existe pas de commande simple pour lire l'état déjà appliqué | `gnome-settings` (`~/.config/alm_tools/gnome_settings_applied`), `fonts` (fichier échantillon + `fc-list` + `fc-match`, triple vérification) |
@@ -200,7 +200,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `devtools` (étapes 36 à 40)
+## Groupe `devtools` (étapes 36 à 41)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
@@ -209,6 +209,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 38 | `mkdocsinit` | `uv tool install --force ~/alm_tools/cli/mkdocsinit` | Chemin (`~/.local/bin/mkdocsinit` exécutable) |
 | 39 | `vmforge` | Installe le shim `~/.local/bin/vmforge`, applique la règle AppArmor libvirt-qemu | Chemin (shim) ; l'application AppArmor est toujours rejouée (pas de saut) |
 | 40 | `open-sites` | `uv tool install --force ~/alm_tools/cli/open-sites`, puis génère et source la complétion bash (`~/.bash_completions/open-sites.sh`) | Chemin (`~/.local/bin/open-sites` exécutable) ; complétion regénérée à chaque run, ligne `.bashrc` ajoutée une seule fois |
+| 41 | `check-updates` | Crée le symlink `~/.local/bin/check_updates.sh` → `~/alm_tools/postinstall/check_updates.sh` | Chemin (symlink déjà présent et pointant vers la bonne source) |
 
 !!! note "Prérequis explicite : `uv` avant les quatre scaffolders/outils"
     Déclaré dans le Makefile (`devinit: check-root uv`, idem `pioinit`,
@@ -268,12 +269,21 @@ amont. `zed` est volontairement exclu : il gère son propre auto-update.
 ~/alm_tools/postinstall/check_updates.sh --apply      # rafraîchit puis propose, outil par outil, o/n/a/q
 ```
 
-Câblé dans `alm_dots/.bash_env`, appelé à chaque ouverture de shell. Le
-chemin sans argument ne fait qu'un `cat` du fichier de cache
-(`~/.cache/alm-tools-updates`) — aucun appel réseau, donc jamais de
+Câblé dans `alm_dots/.bash_env` par chemin complet, appelé à chaque
+ouverture de shell. Le chemin sans argument ne fait qu'un `cat` du fichier
+de cache (`~/.cache/alm-tools-updates`) — aucun appel réseau, donc jamais de
 ralentissement au démarrage d'un terminal. Une fois par jour (fichier
 témoin `~/.cache/alm-tools-update-check`), il relance lui-même `--refresh`
 en tâche de fond pour que le *shell suivant* voie un résultat frais.
+
+Depuis l'étape 41 (`check-updates`, groupe `devtools`), le script est aussi
+disponible directement sur le `$PATH` via un symlink
+`~/.local/bin/check_updates.sh` — plus besoin du chemin complet pour le
+lancer à la main :
+
+```bash
+check_updates.sh --apply
+```
 
 !!! note "`--apply` n'est jamais automatique, par choix"
     `--apply` demande confirmation outil par outil (`o`/`n`/`a`/`q`) et
