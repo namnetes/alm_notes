@@ -198,6 +198,43 @@ manuelle unique après la première installation) :
 pass-cli login
 ```
 
+#### Authentification : `pass-cli login` vs Personal Access Token (PAT)
+
+`pass-cli` propose deux modes d'authentification, pas interchangeables
+selon le contexte :
+
+- **`pass-cli login` (web login, par défaut)** — ouvre le navigateur, crée
+  une session complète liée au compte utilisateur. **Seul mode supporté**
+  si le compte est protégé par SSO ou par une clé matérielle (YubiKey) :
+  impossible de créer une session initiale autrement dans ce cas.
+- **Personal Access Token (PAT)** — identifiant scopé, créé via
+  `pass-cli pat create` (ou directement depuis
+  [pass.proton.me](https://pass.proton.me), sans passer par le CLI).
+  Restreint explicitement à des vaults/items précis, expiration
+  **obligatoire**, révocable indépendamment de la session principale. Ne
+  peut effectuer aucune opération d'administration de vault — protection
+  native, pas une convention à respecter soi-même.
+
+!!! tip "Choix sur ce poste : `pass-cli login`"
+    Le compte est protégé par une clé matérielle (YubiKey) — la
+    documentation officielle Proton est explicite : c'est le **seul** flux
+    d'authentification supporté dans ce cas, un PAT ne permet pas de
+    contourner cette exigence pour l'authentification initiale. Raison
+    secondaire : usage interactif quotidien (`pass-cli` directement ou via
+    [pass-tool](../systeme/ubuntu/alm_tools/outils/pass-tool.md))
+    nécessitant l'accès à l'ensemble des vaults — un PAT à scope restreint
+    serait de toute façon inadapté à cet usage.
+
+!!! note "Un PAT serait préférable pour : tout script non interactif"
+    Récupération d'un secret dans un script de dotfiles, un cron, une CI —
+    tout contexte où une session complète serait disproportionnée par
+    rapport au besoin. Le PAT limite le rayon de compromission (accès
+    restreint aux seuls vaults nécessaires, expiration forcée)
+    contrairement à une session complète. Non mis en œuvre à ce jour sur
+    ce poste. Nécessite quand même une authentification complète préalable
+    du compte pour créer le token (via `pass-cli pat create` ou
+    directement sur pass.proton.me).
+
 !!! danger "Deux commandes qui révèlent des secrets sans confirmation"
     - `pass-cli item view` (sans `--field`) affiche **le mot de passe en
       clair par défaut**, sans aucune confirmation ni avertissement — ce
