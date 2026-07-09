@@ -187,6 +187,10 @@ depuis le terminal. Pas de paquet APT — installée et maintenue à jour
 automatiquement par le module `postinstall`, voir
 [Post-installation — groupe cli](../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-18).
 
+Pour un usage quotidien plus ergonomique (tableaux Rich, recherche
+cross-vaults, mode interactif), voir
+[pass-tool](../systeme/ubuntu/alm_tools/outils/pass-tool.md).
+
 **Authentification** (non gérée par le module d'installation, étape
 manuelle unique après la première installation) :
 

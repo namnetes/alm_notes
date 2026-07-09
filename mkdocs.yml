@@ -116,6 +116,7 @@ nav:
               - pioinit: electronique/pioinit/index.md
               - vmforge: systeme/ubuntu/alm_tools/outils/vmforge.md
               - open-sites: systeme/ubuntu/alm_tools/outils/open-sites.md
+              - pass-tool: systeme/ubuntu/alm_tools/outils/pass-tool.md
               - runbg: systeme/ubuntu/alm_tools/outils/runbg.md
               - Backup Google Drive: systeme/ubuntu/alm_tools/outils/backup-googledrive.md
               - Reset historique Git: systeme/ubuntu/alm_tools/outils/reset-historique-git.md

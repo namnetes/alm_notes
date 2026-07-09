@@ -1,7 +1,7 @@
 # Post-installation
 
 Cette page décrit, dans l'ordre exact où `sudo make all` les exécute, les
-40 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
+42 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
 entièrement configuré. Objectif : pouvoir suivre — ou relancer — ce
 processus « les yeux fermés », sans jamais être surpris par une dépendance
 manquante.
@@ -200,7 +200,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `devtools` (étapes 36 à 41)
+## Groupe `devtools` (étapes 36 à 42)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
@@ -209,7 +209,8 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 38 | `mkdocsinit` | `uv tool install --force ~/alm_tools/cli/mkdocsinit` | Chemin (`~/.local/bin/mkdocsinit` exécutable) |
 | 39 | `vmforge` | Installe le shim `~/.local/bin/vmforge`, applique la règle AppArmor libvirt-qemu | Chemin (shim) ; l'application AppArmor est toujours rejouée (pas de saut) |
 | 40 | `open-sites` | `uv tool install --force ~/alm_tools/cli/open-sites`, puis génère et source la complétion bash (`~/.bash_completions/open-sites.sh`) | Chemin (`~/.local/bin/open-sites` exécutable) ; complétion regénérée à chaque run, ligne `.bashrc` ajoutée une seule fois |
-| 41 | `check-updates` | Crée le symlink `~/.local/bin/check_updates.sh` → `~/alm_tools/postinstall/check_updates.sh` | Chemin (symlink déjà présent et pointant vers la bonne source) |
+| 41 | `pass-tool` | `uv tool install --force ~/alm_tools/cli/pass-tool` | Chemin (`~/.local/bin/pass-tool` exécutable) |
+| 42 | `check-updates` | Crée le symlink `~/.local/bin/check_updates.sh` → `~/alm_tools/postinstall/check_updates.sh` | Chemin (symlink déjà présent et pointant vers la bonne source) |
 
 !!! note "Prérequis explicite : `uv` avant les quatre scaffolders/outils"
     Déclaré dans le Makefile (`devinit: check-root uv`, idem `pioinit`,
@@ -276,7 +277,7 @@ ralentissement au démarrage d'un terminal. Une fois par jour (fichier
 témoin `~/.cache/alm-tools-update-check`), il relance lui-même `--refresh`
 en tâche de fond pour que le *shell suivant* voie un résultat frais.
 
-Depuis l'étape 41 (`check-updates`, groupe `devtools`), le script est aussi
+Depuis l'étape 42 (`check-updates`, groupe `devtools`), le script est aussi
 disponible directement sur le `$PATH` via un symlink
 `~/.local/bin/check_updates.sh` — plus besoin du chemin complet pour le
 lancer à la main :
