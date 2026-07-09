@@ -183,7 +183,7 @@ Chaque exécution écrit un journal horodaté :
     remote `google_drive` doit être restauré depuis le blob chiffré
     sauvegardé dans Proton Pass avant de pouvoir relancer les
     sauvegardes automatiques. Procédure complète :
-    [Backup Google Drive — Sauvegarder la config pour une réinstallation rapide](alm_tools/outils/backup-googledrive.md#sauvegarder-la-config-pour-une-reinstallation-rapide).
+    [Backup Google Drive — Sauvegarde et restauration de la config](alm_tools/outils/backup-googledrive.md#sauvegarde-et-restauration-de-la-config).
 
 !!! tip "Rejouable sans risque"
     Tous les modules sont **idempotents** : en cas d'interruption ou

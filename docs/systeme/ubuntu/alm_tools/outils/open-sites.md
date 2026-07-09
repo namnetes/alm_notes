@@ -115,6 +115,76 @@ open-sites list --file /chemin/vers/autre.csv
 (banques, mutuelle, employeur...). Une réinstallation du poste réinstalle
 l'outil mais **pas** ce fichier — à restaurer depuis sa propre sauvegarde.
 
+### Sauvegarde et restauration du fichier
+
+Chemin réel par défaut : `~/alm_tools/cli/open-sites/data/open-sites.csv`
+— chemin absolu **fixe dans le code** (pas dérivé de l'emplacement du
+script), pour continuer à fonctionner à l'identique que l'outil soit
+lancé depuis les sources (`uv run open-sites`) ou installé globalement
+(`uv tool install`), qui ne livre que le paquet, jamais le dossier
+`data/` du dépôt.
+
+#### Sauvegarde
+
+```bash
+# 1. Chiffrer le fichier avec un mot de passe
+gpgtool
+# 1 (Chiffrer), chemin : ~/alm_tools/cli/open-sites/data/open-sites.csv
+
+# 2. Encoder en base64 pour pouvoir le coller dans une note texte
+base64 -w0 ~/alm_tools/cli/open-sites/data/open-sites.csv.gpg \
+  > ~/alm_tools/cli/open-sites/data/open-sites.csv.gpg.b64
+
+# 3. Copier dans le presse-papiers
+wl-copy < ~/alm_tools/cli/open-sites/data/open-sites.csv.gpg.b64
+# (Xorg/XWayland : xclip -selection clipboard < ...)
+
+# 4. Nettoyer le fichier temporaire une fois collé dans Proton Pass
+rm ~/alm_tools/cli/open-sites/data/open-sites.csv.gpg.b64
+```
+
+| Commutateur | Rôle |
+|--------------|------|
+| `base64 -w0` | Désactive le retour à la ligne automatique tous les 76 caractères — le blob doit tenir sur une seule ligne collable dans un champ de note. |
+| `wl-copy` / `xclip -selection clipboard` | Copie dans le presse-papiers "standard" (`Ctrl+V`) — respectivement Wayland et Xorg/XWayland. |
+
+Créer une nouvelle **note sécurisée** Proton Pass titrée `open-sites.csv
+— Comptes suivis`, et répartir le résultat dans deux emplacements
+séparés :
+
+| Emplacement | Contenu |
+|-------------|---------|
+| Corps de la note | Contenu de `open-sites.csv.gpg.b64` |
+| Champ caché `Mot de passe GPG` (`+ Ajouter un champ` → type `Caché`) | Le mot de passe saisi à l'étape 1 |
+
+!!! danger "Jamais les deux dans le même champ"
+    Le blob seul ou le mot de passe seul ne permettent pas de retrouver
+    le secret — c'est cette séparation qui protège le fichier (le base64
+    n'est qu'un encodage, pas un chiffrement : il ne protège rien à lui
+    seul). Détail du principe dans le runbook générique [Sauvegarde et
+    restauration d'un secret](../../../../securite/proton/sauvegarde-restauration.md).
+
+#### Restauration
+
+```bash
+cd ~/alm_tools && uv tool install ./cli/open-sites   # réinstalle l'outil
+
+# Récupérer le blob base64 depuis la note Proton Pass, puis :
+echo "<blob collé depuis Proton Pass>" \
+  | base64 -d > ~/alm_tools/cli/open-sites/data/open-sites.csv.gpg
+
+gpgtool
+# 2 (Déchiffrer), chemin : ~/alm_tools/cli/open-sites/data/open-sites.csv.gpg
+# mot de passe : celui stocké dans le champ caché de la note
+
+open-sites list    # doit afficher la liste des sites restaurée
+```
+
+!!! tip "Note Proton Pass existante mal nommée"
+    Si votre note s'appelle encore `Pass Tool (csv.file)`, renommez-la en
+    `open-sites.csv — Comptes suivis` : le fichier sauvegardé appartient
+    à `open-sites`, pas à `pass-tool` (qui n'a pas de fichier de données).
+
 ---
 
 ## Raccourci clavier (kitty)

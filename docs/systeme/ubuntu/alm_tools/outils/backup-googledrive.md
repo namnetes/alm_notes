@@ -35,29 +35,78 @@ rclone config
     underscore). Vérifier avec `rclone listremotes` — un nom différent
     provoque l'erreur `didn't find section in config file`.
 
-### Sauvegarder la config pour une réinstallation rapide
+### Sauvegarde et restauration de la config
 
-`rclone config` demande un consentement OAuth interactif dans le
-navigateur — c'est une contrainte de sécurité Google, impossible à
-scripter pour un compte Google personnel. Le token obtenu est stocké dans
-`~/.config/rclone/rclone.conf` (`refresh_token`, permet un accès
-indéfini sans repasser par le navigateur). **Sauvegarder ce fichier
-avant une réinstallation évite de refaire l'authentification.**
+`rclone` ne persiste jamais sa configuration à travers une réinstallation
+du poste : le module postinstall `cli` réinstalle uniquement le binaire
+`rclone`, jamais `~/.config/rclone/rclone.conf`. Sans sauvegarde
+préalable, `rclone config` doit être intégralement refait après chaque
+réinstallation — y compris l'authentification OAuth interactive dans le
+navigateur, une contrainte de sécurité Google impossible à scripter pour
+un compte personnel.
+
+Le token OAuth obtenu est stocké dans `~/.config/rclone/rclone.conf`
+(`refresh_token`, accès indéfini sans repasser par le navigateur) — c'est
+ce fichier qu'il faut sauvegarder.
 
 Config actuelle de référence : remote `google_drive`, type `drive`,
 scope `drive.readonly` (lecture seule — suffisant pour un backup).
 
-La procédure de chiffrement/stockage/restauration suit le runbook
-générique [Sauvegarde et restauration d'un secret
-(Proton Pass)](../../../../securite/proton/sauvegarde-restauration.md).
-Éléments spécifiques à ce secret :
+#### Sauvegarde
 
-| Paramètre | Valeur |
-|-----------|--------|
-| Fichier à sauvegarder | `~/.config/rclone/rclone.conf` |
-| Titre de la note Proton Pass | `rclone.conf — Google Drive backup` |
-| Réinstallation préalable | `cd ~/alm_tools/postinstall && sudo make rclone` |
-| Vérification après restauration | `rclone listremotes` doit afficher `google_drive:` |
+```bash
+# 1. Chiffrer rclone.conf avec un mot de passe
+gpgtool
+# 1 (Chiffrer), chemin : ~/.config/rclone/rclone.conf
+
+# 2. Encoder en base64 pour pouvoir le coller dans une note texte
+base64 -w0 ~/.config/rclone/rclone.conf.gpg \
+  > ~/.config/rclone/rclone.conf.gpg.b64
+
+# 3. Copier dans le presse-papiers
+wl-copy < ~/.config/rclone/rclone.conf.gpg.b64
+# (Xorg/XWayland : xclip -selection clipboard < ...)
+
+# 4. Nettoyer le fichier temporaire une fois collé dans Proton Pass
+rm ~/.config/rclone/rclone.conf.gpg.b64
+```
+
+| Commutateur | Rôle |
+|--------------|------|
+| `base64 -w0` | Désactive le retour à la ligne automatique tous les 76 caractères — le blob doit tenir sur une seule ligne collable dans un champ de note. |
+| `wl-copy` / `xclip -selection clipboard` | Copie dans le presse-papiers "standard" (`Ctrl+V`) — respectivement Wayland et Xorg/XWayland. |
+
+Créer une nouvelle **note sécurisée** Proton Pass titrée `rclone.conf —
+Google Drive backup`, et répartir le résultat dans deux emplacements
+séparés :
+
+| Emplacement | Contenu |
+|-------------|---------|
+| Corps de la note | Contenu de `rclone.conf.gpg.b64` |
+| Champ caché `Mot de passe GPG` (`+ Ajouter un champ` → type `Caché`) | Le mot de passe saisi à l'étape 1 |
+
+!!! danger "Jamais les deux dans le même champ"
+    Le blob seul ou le mot de passe seul ne permettent pas de retrouver
+    le secret — c'est cette séparation qui protège la config (le base64
+    n'est qu'un encodage, pas un chiffrement : il ne protège rien à lui
+    seul). Détail du principe dans le runbook générique [Sauvegarde et
+    restauration d'un secret](../../../../securite/proton/sauvegarde-restauration.md).
+
+#### Restauration
+
+```bash
+cd ~/alm_tools/postinstall && sudo make rclone   # réinstalle le binaire
+
+# Récupérer le blob base64 depuis la note Proton Pass, puis :
+echo "<blob collé depuis Proton Pass>" \
+  | base64 -d > ~/.config/rclone/rclone.conf.gpg
+
+gpgtool
+# 2 (Déchiffrer), chemin : ~/.config/rclone/rclone.conf.gpg
+# mot de passe : celui stocké dans le champ caché de la note
+
+rclone listremotes    # doit afficher : google_drive:
+```
 
 ---
 
