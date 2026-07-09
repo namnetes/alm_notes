@@ -235,7 +235,10 @@ nav:
       - Certificats: securite/certificats.md
       - OpenSSL: securite/openssl.md
       - ecryptfs: securite/ecryptfs.md
-      - Proton: securite/proton.md
+      - Proton:
+          - securite/proton/index.md
+          - Écosystème et usage: securite/proton/ecosysteme.md
+          - Sauvegarde et restauration d'un secret: securite/proton/sauvegarde-restauration.md
       - Rotation des mots de passe: securite/rotation-mots-de-passe.md
       - Brave:
           - securite/brave/index.md

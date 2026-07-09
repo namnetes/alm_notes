@@ -66,8 +66,8 @@ sont ces six-là qui changent vraiment la donne si le temps manque.
   joue ce rôle et sert de page de démarrage. Les favoris présents sur
   le Brave mobile sont indépendants de ce profil desktop (pas de Brave
   Sync connecté entre les deux) : hors scope de cette procédure.
-- **Mots de passe** : gérés par [Proton Pass](../proton.md), 0 stocké
-  dans Brave.
+- **Mots de passe** : gérés par [Proton Pass](../proton/ecosysteme.md), 0
+  stocké dans Brave.
 
 !!! info "Libellés vérifiés par capture d'écran le 2026-07-07"
     Les Étapes 2, 3 et 4 ci-dessous reprennent les libellés exacts de
@@ -80,7 +80,7 @@ sont ces six-là qui changent vraiment la donne si le temps manque.
 !!! info "Prérequis"
     - Brave installé (module `apps` de
       [alm_tools/postinstall](../../systeme/ubuntu/alm_tools/postinstall/index.md))
-    - [Proton Pass](../proton.md) déjà accessible, pour se reconnecter
+    - [Proton Pass](../proton/ecosysteme.md) déjà accessible, pour se reconnecter
       à l'extension
     - Les URLs `brave://settings/...` ci-dessous sont stables d'une
       version mineure à l'autre : viser une version exacte de Brave

@@ -11,7 +11,7 @@ cross-vaults), sans jamais réimplémenter ce que `pass-cli` fait déjà.
 
 ## Prérequis
 
-[`pass-cli`](../../../../securite/proton.md#pass-cli-cli) installé et
+[`pass-cli`](../../../../securite/proton/ecosysteme.md#pass-cli-cli) installé et
 authentifié (`pass-cli login`) — requis par `vault list` et `entry list`,
 pas par `gen` (génération 100 % locale, jamais d'appel à `pass-cli`).
 Installation automatique via le module postinstall, voir
@@ -110,7 +110,7 @@ pass-tool
 - `pass-cli` lui-même expose deux commandes qui révèlent des secrets sans
   confirmation (`item view` sans `--field`, `item list --show-secrets`) —
   `pass-tool` ne les appelle jamais. Voir
-  [Sécurité — Proton, pass-cli](../../../../securite/proton.md#pass-cli-cli)
+  [Sécurité — Proton, pass-cli](../../../../securite/proton/ecosysteme.md#pass-cli-cli)
   pour le détail de ces commandes natives à risque.
 
 ---

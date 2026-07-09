@@ -19,10 +19,6 @@ Outils et pratiques essentiels pour sécuriser un système Linux.
 
     Chiffrement transparent du répertoire personnel.
 
--   :material-shield-account-outline: **[Proton](proton.md)**
-
-    Suite d'applications de confidentialité (VPN, Mail, Pass).
-
 -   :material-key-change: **[Rotation des mots de passe](rotation-mots-de-passe.md)**
 
     Procédure de rotation manuelle avec Proton Pass, sans jamais taper un
@@ -33,6 +29,11 @@ Outils et pratiques essentiels pour sécuriser un système Linux.
 ## Sous-sections
 
 <div class="grid cards" markdown>
+
+-   :material-shield-account-outline: **[Proton](proton/index.md)**
+
+    Écosystème de confidentialité (VPN, Mail, Pass), usage de `pass-cli`,
+    et runbook de sauvegarde/restauration des secrets.
 
 -   :material-incognito: **[Brave](brave/index.md)**
 

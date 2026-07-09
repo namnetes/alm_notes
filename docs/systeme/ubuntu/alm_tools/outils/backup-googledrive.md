@@ -47,46 +47,17 @@ avant une réinstallation évite de refaire l'authentification.**
 Config actuelle de référence : remote `google_drive`, type `drive`,
 scope `drive.readonly` (lecture seule — suffisant pour un backup).
 
-**Sauvegarde (à faire dès que le remote fonctionne) :**
+La procédure de chiffrement/stockage/restauration suit le runbook
+générique [Sauvegarde et restauration d'un secret
+(Proton Pass)](../../../../securite/proton/sauvegarde-restauration.md).
+Éléments spécifiques à ce secret :
 
-```bash
-# 1. Chiffrer rclone.conf avec un mot de passe
-gpgtool
-# 1 (Chiffrer), chemin : /home/galan/.config/rclone/rclone.conf
-
-# 2. Encoder en base64 pour pouvoir le coller dans une note texte
-base64 -w0 ~/.config/rclone/rclone.conf.gpg \
-  > ~/.config/rclone/rclone.conf.gpg.b64
-
-# 3. Copier dans le presse-papiers
-wl-copy < ~/.config/rclone/rclone.conf.gpg.b64
-# (Xorg/XWayland : xclip -selection clipboard < ...)
-
-# 4. Nettoyer le fichier temporaire une fois collé dans Proton Pass
-rm ~/.config/rclone/rclone.conf.gpg.b64
-```
-
-Coller le blob dans une **note sécurisée Proton Pass** (titre :
-`rclone.conf — Google Drive backup`), et le mot de passe GPG dans un
-**champ caché séparé** de la même note (`+ Ajouter un champ` → type
-`Caché`). Le fichier `.gpg` local peut rester sur le disque — il est
-déjà chiffré, sans risque.
-
-**Restauration après réinstallation du poste :**
-
-```bash
-cd ~/alm_tools/postinstall && sudo make rclone   # installe rclone
-
-# Récupérer le blob base64 depuis la note Proton Pass, puis :
-echo "<blob collé depuis Proton Pass>" \
-  | base64 -d > ~/.config/rclone/rclone.conf.gpg
-
-gpgtool
-# 2 (Déchiffrer), chemin : /home/galan/.config/rclone/rclone.conf.gpg
-# mot de passe : celui stocké dans le champ caché de la note
-
-rclone listremotes    # doit afficher : google_drive:
-```
+| Paramètre | Valeur |
+|-----------|--------|
+| Fichier à sauvegarder | `~/.config/rclone/rclone.conf` |
+| Titre de la note Proton Pass | `rclone.conf — Google Drive backup` |
+| Réinstallation préalable | `cd ~/alm_tools/postinstall && sudo make rclone` |
+| Vérification après restauration | `rclone listremotes` doit afficher `google_drive:` |
 
 ---
 

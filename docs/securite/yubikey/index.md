@@ -119,7 +119,7 @@ sur une machine neuve.
     déblocage possible est `ykman fido reset` — qui **efface tous les
     credentials** de la clé. Conserver le PIN dans un gestionnaire de
     mots de passe (Proton Pass, voir la page
-    [Proton](../proton.md)).
+    [Proton](../proton/ecosysteme.md)).
 
 ---
 

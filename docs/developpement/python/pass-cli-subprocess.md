@@ -9,7 +9,7 @@ secret par accident.
 
 !!! info "Prérequis"
     `pass-cli` installé et authentifié (`pass-cli login`) — voir
-    [Sécurité — Proton, pass-cli](../../securite/proton.md#pass-cli-cli).
+    [Sécurité — Proton, pass-cli](../../securite/proton/ecosysteme.md#pass-cli-cli).
     Tous les exemples supposent un `PATH` où `pass-cli` est résolu.
 
 ---
@@ -317,5 +317,5 @@ if __name__ == "__main__":
 
 ## Voir aussi
 
-- [Sécurité — Proton, pass-cli](../../securite/proton.md#pass-cli-cli)
+- [Sécurité — Proton, pass-cli](../../securite/proton/ecosysteme.md#pass-cli-cli)
 - [Post-installation — module pass-cli](../../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-18)

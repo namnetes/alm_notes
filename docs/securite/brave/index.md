@@ -32,7 +32,7 @@ sécurité et l'anonymat.
 | Profil | `Default`, non connecté à un compte Google/Brave |
 | Télémétrie (P3A/UMA) | Désactivée |
 | Politique d'entreprise (MDM) | Aucune — poste personnel non managé |
-| Mots de passe stockés dans Brave | 0 (délégué à [Proton Pass](../proton.md)) |
+| Mots de passe stockés dans Brave | 0 (délégué à [Proton Pass](../proton/ecosysteme.md)) |
 | Brave Sync | Non connecté |
 | Permissions caméra / micro / géoloc / notifications | Aucune accordée à aucun site |
 

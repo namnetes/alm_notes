@@ -185,11 +185,11 @@ Proton Pass est disponible en extension pour :
 CLI officielle Proton Pass, pour scripter la gestion des mots de passe
 depuis le terminal. Pas de paquet APT — installée et maintenue à jour
 automatiquement par le module `postinstall`, voir
-[Post-installation — groupe cli](../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-18).
+[Post-installation — groupe cli](../../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-18).
 
 Pour un usage quotidien plus ergonomique (tableaux Rich, recherche
 cross-vaults, mode interactif), voir
-[pass-tool](../systeme/ubuntu/alm_tools/outils/pass-tool.md).
+[pass-tool](../../systeme/ubuntu/alm_tools/outils/pass-tool.md).
 
 **Authentification** (non gérée par le module d'installation, étape
 manuelle unique après la première installation) :
@@ -221,7 +221,7 @@ selon le contexte :
     d'authentification supporté dans ce cas, un PAT ne permet pas de
     contourner cette exigence pour l'authentification initiale. Raison
     secondaire : usage interactif quotidien (`pass-cli` directement ou via
-    [pass-tool](../systeme/ubuntu/alm_tools/outils/pass-tool.md))
+    [pass-tool](../../systeme/ubuntu/alm_tools/outils/pass-tool.md))
     nécessitant l'accès à l'ensemble des vaults — un PAT à scope restreint
     serait de toute façon inadapté à cet usage.
 
@@ -248,7 +248,7 @@ selon le contexte :
     partagé à l'écran, ou dans un script sans confirmation explicite de
     l'utilisateur au préalable. Pour un usage scripté sûr, préférer
     `pass-cli item view --field <champ>` (un seul champ, rien d'autre) —
-    voir [Automatiser pass-cli en Python](../developpement/python/pass-cli-subprocess.md).
+    voir [Automatiser pass-cli en Python](../../developpement/python/pass-cli-subprocess.md).
 
 ??? info "Fonctionnalités Pass Plus"
     L'abonnement Pass Plus débloque :

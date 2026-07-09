@@ -111,7 +111,7 @@ par exemple) par catégorie de comptes est le plus simple.
 ## Bonnes pratiques associées
 
 - Toujours activer la **2FA** en complément (voir [Proton →
-  Authentification à deux facteurs](proton.md#authentification-à-deux-facteurs-2fa))
+  Authentification à deux facteurs](proton/ecosysteme.md#authentification-a-deux-facteurs-2fa))
   quand le service le permet.
 - Ne jamais réutiliser un mot de passe entre deux comptes, même après
   rotation.
