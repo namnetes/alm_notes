@@ -116,3 +116,7 @@ pass-tool
 ---
 
 Documentation complète : [cli/pass-tool/README.md](https://github.com/namnetes/alm_tools/blob/main/cli/pass-tool/README.md)
+
+Envie de contribuer au code de pass-tool plutôt que de l'utiliser ? Voir
+[Prise en main d'un projet Python pour y contribuer](../../../../developpement/python/prise-en-main-projet-python/index.md)
+— une méthode complète, illustrée avec ce projet.

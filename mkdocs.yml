@@ -130,6 +130,7 @@ nav:
       - Compatibilité des terminaux: systeme/alpine/compatibilite-terminal.md
   - Développement:
       - developpement/index.md
+      - Glossaire: developpement/glossaire.md
       - Python:
           - developpement/python/index.md
           - uv — Gestionnaire de projets:
@@ -153,6 +154,18 @@ nav:
               - developpement/python/patterns/index.md
               - Policy Pattern: developpement/python/patterns/policy-pattern.md
               - Ports & Adapters: developpement/python/patterns/ports-and-adapters.md
+          - Prise en main d'un projet Python:
+              - developpement/python/prise-en-main-projet-python/index.md
+              - 1. Mise en route technique: developpement/python/prise-en-main-projet-python/mise-en-route.md
+              - 2. Lire le code section par section: developpement/python/prise-en-main-projet-python/lecture-du-code.md
+              - 3. Patterns avancés: developpement/python/prise-en-main-projet-python/patterns-avances.md
+              - 4. Lire et comprendre les tests: developpement/python/prise-en-main-projet-python/tests.md
+              - 5. Workflow et exercice: developpement/python/prise-en-main-projet-python/workflow-et-exercice.md
+              - 6. Où trouver quoi: developpement/python/prise-en-main-projet-python/reference.md
+          - CLI Python — Typer & Click:
+              - developpement/python/cli/index.md
+              - L'objet app, callbacks et sous-commandes: developpement/python/cli/typer-app.md
+              - Le pattern décorateur + registre: developpement/python/cli/decorateurs-registry.md
           - pass-cli — Automatisation Python: developpement/python/pass-cli-subprocess.md
   - Électronique:
       - electronique/index.md

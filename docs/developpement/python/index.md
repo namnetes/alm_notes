@@ -22,6 +22,16 @@ Outils et bonnes pratiques pour le développement Python.
 
     Patterns de conception appliqués au Python.
 
+-   :material-map-marker-path: **[Prise en main d'un projet Python](prise-en-main-projet-python/index.md)**
+
+    Méthode pour se repérer dans un petit projet inconnu et y contribuer,
+    illustrée avec pass-tool.
+
+-   :material-console-line: **[CLI Python — Typer & Click](cli/index.md)**
+
+    L'objet applicatif central, les callbacks, et le pattern décorateur +
+    registre qui structure la plupart des frameworks Python.
+
 -   :material-key-variant: **[pass-cli — Automatisation](pass-cli-subprocess.md)**
 
     Scripter Proton Pass en toute sécurité : subprocess, JSON, gestion

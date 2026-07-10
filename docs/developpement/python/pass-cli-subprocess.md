@@ -1,15 +1,25 @@
 # pass-cli en Python — subprocess et JSON
 
-Il n'existe pas de SDK Python officiel pour Proton Pass (confirmé :
-aucune bibliothèque `protonpass`/`pass-sdk` publiée par Proton). La seule
-façon de scripter Proton Pass depuis Python est d'appeler le binaire
-`pass-cli` via `subprocess` et de parser sa sortie `--output json`. Cette
-page couvre le strict nécessaire pour le faire sans jamais exposer un
-secret par accident.
+`pass-cli` est le **CLI officiel de Proton Pass**, publié et maintenu par
+Proton — voir l'[annonce officielle](https://proton.me/fr/blog/proton-pass-cli)
+et la [documentation du CLI](https://protonpass.github.io/pass-cli). Ce qui
+n'existe pas, en revanche, c'est un **SDK Python officiel** (confirmé :
+aucune bibliothèque `protonpass`/`pass-sdk` publiée par Proton, ni
+mentionnée dans l'annonce ci-dessus). La seule façon de scripter Proton
+Pass depuis Python est donc d'appeler le binaire `pass-cli` via
+`subprocess` et de parser sa sortie `--output json` — le CLI est officiel,
+l'intégration Python, elle, reste artisanale. Cette page couvre le strict
+nécessaire pour le faire sans jamais exposer un secret par accident.
 
 !!! info "Prérequis"
     `pass-cli` installé et authentifié (`pass-cli login`) — voir
     [Sécurité — Proton, pass-cli](../../securite/proton/ecosysteme.md#pass-cli-cli).
+
+!!! tip "pass-tool : un cas d'usage complet de ces patterns"
+    Le wrapper [pass-tool](../../systeme/ubuntu/alm_tools/outils/pass-tool.md)
+    applique tous les patterns de cette page en conditions réelles. Pour
+    apprendre à lire et modifier son code, voir
+    [Prise en main d'un projet Python pour y contribuer](prise-en-main-projet-python/index.md).
     Tous les exemples supposent un `PATH` où `pass-cli` est résolu.
 
 ---

@@ -215,6 +215,7 @@ pour changer de fichier, ++q++ pour quitter.
 
 | Raccourci | Effet |
 |-----------|-------|
+| ++ctrl+shift+alt+t++ | Renommer l'onglet courant |
 | ++ctrl+shift+u++ | Insérer un caractère Unicode (recherche par nom : `arrow`, `check`…) |
 | ++ctrl+shift+f5++ | **Recharger `kitty.conf`** sans fermer le terminal |
 | ++ctrl+shift+f11++ | Onglet `btop` |

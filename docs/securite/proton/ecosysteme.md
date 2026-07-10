@@ -250,6 +250,52 @@ selon le contexte :
     `pass-cli item view --field <champ>` (un seul champ, rien d'autre) —
     voir [Automatiser pass-cli en Python](../../developpement/python/pass-cli-subprocess.md).
 
+#### Exemples de commandes courantes
+
+Référence exhaustive : [Commands Reference](https://protonpass.github.io/pass-cli/commands/login/).
+
+!!! note "Syntaxe non re-testée sur ce poste"
+    Les exemples ci-dessous viennent de la documentation officielle du CLI,
+    pas d'une exécution vérifiée ici (contrairement aux exemples de
+    [Automatiser pass-cli en Python](../../developpement/python/pass-cli-subprocess.md),
+    testés en conditions réelles). `pass-cli` étant en développement actif,
+    vérifier avec `pass-cli <commande> --help` en cas de doute.
+
+**Session**
+
+```bash
+pass-cli login                          # Connexion interactive (ouvre le navigateur)
+pass-cli logout                         # Ferme la session, purge les données locales
+pass-cli logout --force                 # Déconnexion forcée si la révocation distante échoue
+```
+
+**Vaults**
+
+```bash
+pass-cli vault list --output json                    # Lister les vaults, sortie JSON
+pass-cli vault create --name "Perso"                  # Créer un nouveau vault
+```
+
+**Items**
+
+```bash
+pass-cli item list Perso --output json                                       # Lister les items d'un vault
+pass-cli item view --vault-name Perso --item-title Netflix --field password  # Révéler UN champ, jamais l'item entier
+pass-cli item create login --vault-name Perso --title Netflix \
+  --username moi@example.com --generate-password                            # Créer un identifiant, mot de passe généré
+pass-cli item update --vault-name Perso --item-title Netflix \
+  --field password=NouveauMotDePasse                                        # Modifier un champ existant
+pass-cli item delete --share-id <SHARE_ID> --item-id <ITEM_ID>               # Supprimer un item (irréversible)
+pass-cli item totp --vault-name Perso --item-title GitHub                    # Générer le code TOTP courant
+```
+
+**Mots de passe**
+
+```bash
+pass-cli password generate random --length 24 --symbols true   # Générer un mot de passe fort
+pass-cli password score "MonMotDePasse123!"                    # Évaluer la robustesse d'un mot de passe
+```
+
 ??? info "Fonctionnalités Pass Plus"
     L'abonnement Pass Plus débloque :
 
