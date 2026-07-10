@@ -85,7 +85,7 @@ fichier configure chaque outil CLI dans l'ordre suivant :
 | 7 | **ripgrep** | Recherche rapide — config `RIPGREP_CONFIG_PATH` + alias `rgf`, `rgdot`, `rgc`, `rgt`, `rgx`, `rgu`, `rgl` — voir [la page dédiée](../../../outils/cli/ripgrep.md) |
 | 8 | **zoxide** | Remplacement intelligent de `cd` via `zoxide init --cmd cd` (mémorise les répertoires fréquents) — voir [la page dédiée](../../../outils/cli/zoxide.md) |
 | 9 | **fnm** | Gestionnaire de versions Node.js avec auto-switch par répertoire — init **après zoxide** (enchaînement des hooks `cd`) — voir [la page dédiée](../../../outils/cli/fnm.md) |
-| 10 | **Alerte MAJ upstream** | Affiche le cache de `check_updates.sh` (alm_tools) : fzf, xan, starship, fnm, uv, rclone, kitty + Node LTS — aucun appel réseau à l'ouverture du shell |
+| 10 | **Alerte MAJ upstream** | Affiche le cache de `check_updates.sh` (alm_tools) : fzf, xan, starship, fnm, uv, rclone, kitty, pass-cli + Node LTS — aucun appel réseau à l'ouverture du shell |
 | 11 | **eza** | Remplacement de `ls` avec informations Git intégrées — voir [la page dédiée](../../../outils/cli/eza.md) |
 | 12 | **uv** | Gestionnaire de paquets Python |
 | 13 | **SDKMAN** | Gestionnaire de versions Java/Groovy |

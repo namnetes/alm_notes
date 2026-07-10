@@ -260,9 +260,18 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 ## Vérification des mises à jour upstream
 
 `check_updates.sh` (à la racine de `postinstall/`) compare la version
-installée de `fzf`, `xan`, `starship`, `fnm`, `uv`, `rclone` et `kitty` —
-plus la LTS Node.js active via `fnm` — à la dernière version publiée en
-amont. `zed` est volontairement exclu : il gère son propre auto-update.
+installée de `fzf`, `xan`, `starship`, `fnm`, `uv`, `rclone`, `kitty` et
+`pass-cli` — plus la LTS Node.js active via `fnm` — à la dernière version
+publiée en amont. `zed` est volontairement exclu : il gère son propre
+auto-update.
+
+`pass-cli` publie sa dernière version sur un manifeste JSON dédié
+(`https://proton.me/download/pass-cli/versions.json`, le même que celui
+utilisé par son script d'installation officiel), pas via l'API GitHub —
+binaire propriétaire proton.me, pas de dépôt public. `pass-cli` affiche
+déjà spontanément une alerte de MAJ à chaque lancement (`New update
+available: vX -> vY`) ; `check_updates.sh` la rend seulement visible sans
+avoir à invoquer la commande.
 
 ```bash
 ~/alm_tools/postinstall/check_updates.sh --refresh   # exécute les checks, écrit le cache

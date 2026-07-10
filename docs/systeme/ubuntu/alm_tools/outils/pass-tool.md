@@ -17,6 +17,15 @@ pas par `gen` (génération 100 % locale, jamais d'appel à `pass-cli`).
 Installation automatique via le module postinstall, voir
 [Post-installation — groupe cli](../postinstall/post-installation.md#groupe-cli-etapes-9-a-18).
 
+!!! note "Mise à jour de `pass-cli`"
+    `pass-cli` n'est pas un paquet APT — il gère son propre self-update
+    (`pass-cli update --yes`), déjà utilisé par le module postinstall, et
+    l'affiche même spontanément au lancement (`New update available: vX ->
+    vY`). Il est aussi suivi par
+    [`check_updates.sh`](../postinstall/post-installation.md#verification-des-mises-a-jour-upstream),
+    pour une alerte visible à l'ouverture du shell sans avoir à invoquer
+    `pass-cli` soi-même.
+
 ---
 
 ## Installation
