@@ -42,7 +42,7 @@ Proton VPN chiffre l'intégralité du trafic réseau et masque l'adresse IP. Il 
 
 **Liens :**
 
-- [Télécharger Proton VPN (Linux)](https://protonvpn.com/download/linux)
+- [Télécharger Proton VPN (Linux)](https://protonvpn.com/download-linux)
 - [Guide d'installation Linux](https://protonvpn.com/support/linux-vpn-setup/)
 - [Code source (GitHub)](https://github.com/ProtonVPN)
 
@@ -390,8 +390,8 @@ Permet également d'envoyer des bitcoins à une adresse e-mail Proton Mail (Bitc
 - [Présentation officielle](https://proton.me/wallet)
 - [Application Android / iOS](https://proton.me/wallet/download)
 
-!!! warning "Disponibilité"
-    Proton Wallet est progressivement déployé. L'accès peut nécessiter une liste d'attente selon le plan souscrit.
+!!! info "Disponibilité"
+    Proton Wallet est en disponibilité générale, sans liste d'attente ni restriction d'accès.
 
 ---
 
@@ -416,7 +416,7 @@ sauvegarde](runbooks-recuperation.md).
 | Compte Proton | [account.proton.me](https://account.proton.me) |
 | Tarifs | [proton.me/pricing](https://proton.me/pricing) |
 | Centre d'aide | [proton.me/support](https://proton.me/support) |
-| État des services | [proton.me/support/proton-status](https://proton.me/support/proton-status) |
+| État des services | [status.proton.me](https://status.proton.me) |
 | Blog (nouveautés) | [proton.me/blog](https://proton.me/blog) |
 | Transparence | [proton.me/legal/transparency](https://proton.me/legal/transparency) |
 | Code source | [github.com/ProtonMail](https://github.com/ProtonMail) |
