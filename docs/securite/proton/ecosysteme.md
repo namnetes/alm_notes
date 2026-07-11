@@ -345,19 +345,9 @@ Programme de protection renforcée pour les comptes à risque élevé (journalis
 
 Activation : **Paramètres → Sécurité → Proton Sentinel**
 
-### Authentification à deux facteurs (2FA)
-
-Proton supporte :
-
-- **TOTP** (Google Authenticator, Proton Pass, Aegis…)
-- **Clés de sécurité physiques** (YubiKey, FIDO2)
-
-Activation : **Paramètres → Sécurité → Authentification à deux facteurs**
-
-### Codes de récupération
-
-!!! danger "À sauvegarder impérativement"
-    En cas de perte d'accès au 2FA, les codes de récupération sont le seul moyen de retrouver l'accès au compte. Sauvegardez-les dans Proton Pass ou sur papier dans un endroit sûr.
+2FA, phrase/fichier de récupération, connexion par QR code : voir les
+procédures pas à pas dans [Runbooks connexion et
+sauvegarde](runbooks-recuperation.md).
 
 ---
 

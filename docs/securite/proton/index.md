@@ -19,4 +19,10 @@ chiffrement de bout en bout.
     Runbook générique : chiffrer un secret local, le stocker dans une note
     sécurisée Proton Pass, et le restaurer après réinstallation.
 
+-   :material-format-list-numbered: **[Runbooks connexion et sauvegarde](runbooks-recuperation.md)**
+
+    Procédures pas à pas pour débutant·e : QR code, phrase de
+    récupération, code de secours 2FA, sauvegarde/restauration Pass et
+    Authenticator sur média externe.
+
 </div>
