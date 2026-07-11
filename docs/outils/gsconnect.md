@@ -28,6 +28,12 @@ Android sur le même réseau local, sans passer par le cloud.
     et
     [session-checks — 20-gsconnect](../systeme/ubuntu/alm_tools/postinstall/session-checks.md#le-controle-20-gsconnect).
 
+    Cette cible fait partie du groupe `desktop`, lui-même inclus dans
+    `sudo make all` — sur un poste déjà provisionné en entier (ou via `sudo
+    make desktop`), GSConnect est donc **déjà installé**. La commande
+    individuelle ci-dessus n'est utile que pour une (ré)installation ciblée
+    de ce seul module.
+
 === "Manuelle"
     ```bash
     sudo apt install gnome-shell-extension-gsconnect sshfs python3-nautilus
@@ -56,6 +62,11 @@ Android sur le même réseau local, sans passer par le cloud.
     Voir la section [Dépannage](#depannage) ci-dessous — la cause la plus
     fréquente sur cette installation est une extension GNOME Shell
     installée mais pas réellement activée.
+
+Autant en profiter pour cocher directement les deux cases de
+synchronisation du presse-papiers (**Vers l'appareil** / **Depuis
+l'appareil**) à ce moment-là, plutôt que de les découvrir en cherchant plus
+tard — voir [Presse-papier partagé](#presse-papier-partage).
 
 ---
 
