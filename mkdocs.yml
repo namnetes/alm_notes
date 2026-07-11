@@ -253,6 +253,7 @@ nav:
           - Écosystème et usage: securite/proton/ecosysteme.md
           - Sauvegarde et restauration d'un secret: securite/proton/sauvegarde-restauration.md
           - Runbooks connexion et sauvegarde: securite/proton/runbooks-recuperation.md
+          - Configuration Android: securite/proton/configuration-android.md
       - Rotation des mots de passe: securite/rotation-mots-de-passe.md
       - Brave:
           - securite/brave/index.md

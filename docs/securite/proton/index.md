@@ -25,4 +25,10 @@ chiffrement de bout en bout.
     récupération, code de secours 2FA, sauvegarde/restauration Pass et
     Authenticator sur média externe.
 
+-   :material-android: **[Configuration Android](configuration-android.md)**
+
+    VPN, Pass, Mail, Drive sur Android — protocoles, autofill,
+    fonctionnalités avancées, plus une section dédiée aux spécificités
+    Samsung/One UI (battery optimization, Secure Folder).
+
 </div>
