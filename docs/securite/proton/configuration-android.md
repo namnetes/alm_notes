@@ -113,62 +113,13 @@ scan direct n'est pas utilisable. Repli : le fallback **« Saisir le code
 manuellement »** du Runbook 1 (voir l'astuce correspondante), en tapant sur
 Ubuntu le code court affiché sur le téléphone.
 
-Si GSConnect est déjà appairé entre ce poste et le téléphone, il permet
-d'éviter même cette recopie manuelle :
-
-1. Sur le S26 Ultra, une fois le code court affiché, sélectionnez-le et
-   copiez-le (**Copier**).
-2. Depuis le volet de réglages rapides (glisser vers le bas depuis le haut
-   de l'écran), appuyez sur la tuile **Envoyer le presse-papiers** (voir
-   encadré ci-dessous si la tuile n'est pas encore ajoutée).
-3. Sur Ubuntu, collez (`Ctrl+V`) dans le champ « Saisir le code
-   manuellement » de Proton Pass desktop.
-
-La synchronisation automatique téléphone → Ubuntu est connue pour être peu
-fiable dans GSConnect ; l'appui sur cette tuile est le déclencheur manuel
-fiable.
-
-!!! info "Ajouter la tuile « Envoyer le presse-papiers » (une seule fois)"
-    Sur Android 14+ (ce téléphone), ce bouton n'existe **pas** dans l'écran
-    principal de l'app KDE Connect — c'est une tuile de réglages rapides à
-    ajouter manuellement :
-
-    1. Glissez vers le bas depuis le haut de l'écran pour ouvrir les
-       réglages rapides.
-    2. Appuyez sur l'icône crayon/**Modifier** (mode édition des tuiles).
-    3. Repérez **« Envoyer le presse-papiers »** dans la liste des tuiles
-       disponibles et glissez-la dans la zone active.
-
-    Sur Android 10 à 13 (non applicable ici, mentionné pour référence),
-    cette action se présente différemment : un bouton dans la notification
-    persistante de KDE Connect plutôt qu'une tuile de réglages rapides.
-
-!!! info "Prérequis GSConnect"
-    Dans les préférences GSConnect sur Ubuntu, **Partage → Synchronisation
-    du presse-papiers**, les **deux cases** doivent être cochées : **« Vers
-    l'appareil »** et **« Depuis l'appareil »** — une seule case cochée ne
-    suffit pas, la synchro échoue silencieusement dans le sens manquant.
-    Appairage déjà en place sur ce poste.
-
-#### Test de la synchronisation
-
-Vérifiez les deux sens séparément avant d'en dépendre lors d'une vraie
-réinstallation :
-
-- **Téléphone → Ubuntu** : copiez un texte quelconque sur le S26 Ultra,
-  appuyez sur la tuile **Envoyer le presse-papiers** (réglages rapides),
-  puis `Ctrl+V` sur Ubuntu — le texte doit apparaître.
-- **Ubuntu → téléphone** : `Ctrl+C` sur Ubuntu, puis appui long sur un champ
-  de saisie du téléphone → **Coller** — fonctionne automatiquement, sans
-  action d'envoi équivalente à effectuer côté Ubuntu.
-
-!!! success "✅ Testé le 2026-07-11"
-    Les deux sens confirmés fonctionnels sur ce poste — Ubuntu 24.04,
-    GSConnect version 57 (visible dans « À propos » de l'extension),
-    Galaxy S26 Ultra — une fois les deux cases de synchronisation cochées
-    côté GSConnect. Si le comportement diverge sur une autre version de
-    GSConnect, cette référence permet de savoir si la cause est un
-    changement de version avant de tout redéboguer depuis zéro.
+Si GSConnect est déjà appairé entre ce poste et le téléphone, la
+synchronisation de presse-papiers permet d'éviter même cette recopie
+manuelle : copiez le code court sur le téléphone, déclenchez l'envoi vers le
+PC, puis collez (`Ctrl+V`) dans le champ « Saisir le code manuellement » de
+Proton Pass desktop. Mécanisme, prérequis et procédure détaillée (les deux
+sens ne se comportent pas pareil) : voir [GSConnect — Presse-papier
+partagé](../../outils/gsconnect.md#presse-papier-partage).
 
 !!! note "Ce qui transite réellement dans le presse-papiers"
     Le code synchronisé via GSConnect est un **code de session éphémère à
@@ -182,16 +133,12 @@ réinstallation :
 ```mermaid
 sequenceDiagram
     participant Tel as S26 Ultra (appareil B)
-    participant QS as Tuile réglages rapides (Android)
     participant GSC as GSConnect (Ubuntu)
     participant Pass as Proton Pass desktop (appareil A)
 
     Note over Tel,Pass: Solution de repli uniquement — webcam indisponible
     Tel->>Tel: Affiche le code court (fallback QR)
-    Tel->>Tel: Sélectionner + Copier
-    Tel->>QS: Appui sur la tuile "Envoyer le presse-papiers"
-    QS->>GSC: Code court (canal TLS appairé)
-    GSC->>GSC: Presse-papiers Ubuntu mis à jour
+    Tel->>GSC: Copie + envoi presse-papiers (voir GSConnect)
     Note over Pass: Utilisateur colle (Ctrl+V)
     GSC-->>Pass: Code disponible au collage
     Pass->>Pass: Valide le code → connexion confirmée

@@ -82,16 +82,62 @@ téléphone dans l'app KDE Connect.
 
 ---
 
+## Presse-papier partagé
+
+Copier sur l'un des deux appareils, coller sur l'autre — mais les deux sens
+ne se comportent pas de la même façon.
+
+**Prérequis** : dans les préférences de l'appareil associé, onglet
+**Partage → Synchronisation du presse-papiers**, les **deux cases** doivent
+être cochées : **« Vers l'appareil »** et **« Depuis l'appareil »** — une
+seule case cochée ne suffit pas, la synchro échoue silencieusement dans le
+sens manquant.
+
+### Du PC vers le téléphone
+
+Automatique une fois les deux cases cochées : `Ctrl+C` sur le PC, puis appui
+long sur un champ de saisie du téléphone → **Coller**.
+
+### Du téléphone vers le PC
+
+Ce sens ne se déclenche pas automatiquement de façon fiable — un geste
+manuel côté Android est nécessaire :
+
+=== "Android 14+"
+    1. Copier le texte sur le téléphone.
+    2. Glisser vers le bas depuis le haut de l'écran pour ouvrir les
+       réglages rapides.
+    3. Appuyer sur la tuile **Envoyer le presse-papiers** — si elle n'est
+       pas encore présente, l'ajouter une seule fois : icône
+       crayon/**Modifier** → repérer la tuile dans la liste → la glisser
+       dans la zone active.
+    4. Coller (`Ctrl+V`) côté PC.
+
+=== "Android 10 à 13"
+    Pas de tuile de réglages rapides sur ces versions : le déclenchement se
+    fait via un bouton dans la **notification persistante** de KDE Connect
+    plutôt que dans le volet de réglages rapides.
+
+!!! info "Sur cette installation"
+    Les deux sens confirmés fonctionnels — Ubuntu 24.04, GSConnect version
+    57 (visible dans « À propos » de l'extension), Galaxy S26 Ultra (Android
+    14+), testé le 2026-07-11 — une fois les deux cases de synchronisation
+    cochées. Exemple d'application concrète (connexion Proton par code
+    manuel sans webcam) : [Configuration Android — solution de
+    repli](../securite/proton/configuration-android.md#solution-de-repli-webcam-indisponible).
+
+---
+
 ## Autres usages
 
 | Fonction | Description |
 |----------|-------------|
 | **Notifications partagées** | Les notifications Android (SMS, appels, WhatsApp…) s'affichent sur le PC, avec possibilité de les rejeter depuis GNOME |
-| **Presse-papier partagé** | Copier sur l'un, coller sur l'autre — activable/désactivable dans les paramètres de l'appareil |
+| **Presse-papier partagé** | Copier sur l'un, coller sur l'autre — [voir le détail](#presse-papier-partage) (le sens téléphone → PC demande un geste manuel) |
 | **Répondre aux SMS** | Lecture et envoi de SMS depuis l'app GSConnect desktop (accès aux contacts du téléphone) |
 | **Trouver le téléphone** | Déclenche une sonnerie sur le téléphone depuis le PC, même en mode silencieux |
 | **Contrôle du volume média** | Le téléphone sert de télécommande (lecture/pause/suivant) pour ce qui joue sur le PC |
-| **Souris/clavier virtuels** | Utiliser l'écran du téléphone comme trackpad pour contrôler le PC |
+| **Souris/clavier virtuels** | Le téléphone devient un trackpad virtuel pour le PC — glisser déplace le curseur, tap court fait un clic (gauche/droit/milieu selon la zone), appui long maintient le clic. Plugin indépendant du presse-papiers, activé séparément dans les préférences de l'appareil |
 | **Exécution de commandes** | Déclencher un script/une commande sur le PC depuis le téléphone (ex. verrouiller l'écran) |
 | **Verrouillage à distance** | Verrouiller l'écran du PC depuis le téléphone |
 
@@ -99,6 +145,15 @@ Chaque fonction se configure individuellement dans les paramètres de
 l'appareil associé (icône GSConnect dans le tiroir des extensions, ou
 `gnome-extensions-app`). Certaines (SMS, notifications) demandent
 d'accorder des permissions supplémentaires côté Android.
+
+!!! info "Sur cette installation"
+    Le plugin *Remote Input* (souris/clavier virtuels) nécessite une
+    session **X11**, ou une session **Wayland avec support Pipewire** — non
+    pris en charge sous Wayland historiquement (mentionné jusqu'à Ubuntu
+    20.04 sur le wiki GSConnect). Testé le 2026-07-11 sur ce poste (Ubuntu
+    24.04, GSConnect 57, **session Wayland**) avec un Galaxy S26 Ultra :
+    **confirmé fonctionnel** malgré la limitation historique — le curseur
+    Ubuntu répond bien au glissement du doigt sur le téléphone.
 
 ---
 
@@ -168,6 +223,18 @@ nautilus -q
 Nautilus doit redémarrer pour charger l'intégration `python3-nautilus`. Si
 l'option reste absente après redémarrage, vérifier que le paquet est bien
 installé (`dpkg -s python3-nautilus`).
+
+### Le presse-papiers ne fonctionne que dans un sens
+
+Cause la plus fréquente : une seule des deux cases **« Vers l'appareil »** /
+**« Depuis l'appareil »** est cochée dans **Partage → Synchronisation du
+presse-papiers** (préférences de l'appareil associé) — la synchro échoue
+silencieusement dans le sens de la case manquante, sans message d'erreur.
+Cocher les deux cases résout le problème dans la quasi-totalité des cas.
+
+Si le sens téléphone → PC ne fonctionne toujours pas une fois les deux cases
+cochées : ce sens ne se déclenche pas automatiquement, voir la procédure
+manuelle dans [Presse-papier partagé](#presse-papier-partage).
 
 ---
 
