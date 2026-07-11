@@ -93,4 +93,9 @@ flowchart LR
     Progression dans les pipes : `dd`, `tar`, compression, limitation de
     débit, suivi d'un processus déjà lancé.
 
+-   :material-qrcode-scan: **[zbar](zbar.md)**
+
+    Décoder codes-barres et QR codes en CLI : `zbarimg` (image), `zbarcam`
+    (webcam) — Wi-Fi, TOTP, connexion Proton, cas générique.
+
 </div>

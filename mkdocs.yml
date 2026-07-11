@@ -189,6 +189,7 @@ nav:
           - starship: outils/cli/starship.md
           - hashdeep: outils/cli/hashdeep.md
           - pv: outils/cli/pv.md
+          - zbar: outils/cli/zbar.md
       - Kitty:
           - outils/kitty/index.md
           - Tirer le meilleur parti: outils/kitty/guide.md
