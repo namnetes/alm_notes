@@ -84,8 +84,66 @@ Proton VPN chiffre l'intégralité du trafic réseau et masque l'adresse IP. Il 
     | Protocole | Caractéristiques |
     |-----------|-----------------|
     | **WireGuard** | Rapide, moderne, recommandé par défaut |
-    | **OpenVPN** | Mature, très compatible, légèrement plus lent |
+    | **OpenVPN** | Mature, très compatible, légèrement plus lent — disponible uniquement sur le client **Linux (GUI)**, absent des apps mobiles |
     | **Stealth** | Obfusqué — contourne la censure réseau |
+
+### Fonctionnalités avancées
+
+Fonctionnalités transversales à toutes les plateformes Proton VPN
+(nécessitent un plan payant VPN Plus ou Unlimited, sauf mention contraire) :
+
+**Kill Switch** — coupe *tout accès Internet* si le tunnel VPN tombe, pour
+éviter une fuite de trafic en clair.
+
+- **Standard** (activé par défaut) : protège en cas de coupure accidentelle
+  du tunnel.
+- **Advanced** : bloque tout accès Internet tant que le VPN n'est pas
+  explicitement reconnecté — y compris au redémarrage de l'appareil.
+
+!!! danger "Kill Switch Advanced peut vous couper l'accès à vos propres procédures de récupération"
+    Si le Kill Switch **Advanced** est actif et que le tunnel VPN tombe (ou
+    n'est pas encore établi au démarrage), **tout accès réseau est bloqué sur
+    cet appareil** — y compris l'accès nécessaire pour effectuer une
+    connexion par [QR code](runbooks-recuperation.md#runbook-1-se-connecter-avec-un-qr-code)
+    ou consulter `account.proton.me` depuis ce même appareil. Se retrouver
+    bloqué au moment précis où l'on cherche à récupérer l'accès à son compte
+    est le pire moment pour découvrir cette interaction.
+
+    Avant d'entamer une procédure de connexion ou de récupération (voir
+    [Runbooks connexion et sauvegarde](runbooks-recuperation.md)) depuis un
+    appareil où le Kill Switch Advanced est actif, désactivez-le
+    temporairement ou utilisez un second appareil non soumis à cette
+    restriction.
+
+**Split Tunneling** — exclut ou inclut certaines apps du tunnel VPN (utile
+pour une app bancaire qui bloque les IP VPN, par exemple). Deux modes :
+*Exclude* (tout passe par le VPN sauf les apps listées) ou *Include* (rien ne
+passe par le VPN sauf les apps listées). Un changement nécessite de
+reconnecter le VPN pour être pris en compte.
+
+!!! warning "Incompatibilité connue avec le Kill Switch"
+    Kill Switch et Split Tunneling **ne sont pas compatibles simultanément**
+    sur la plupart des plateformes. Activer l'un désactive l'autre — c'est
+    une limitation connue du produit, sans date de résolution confirmée à ce
+    jour.
+
+**NetShield** — filtrage DNS côté serveur VPN (pas un DNS custom classique) :
+bloque malwares, publicités et trackers directement dans le tunnel. Trois
+niveaux : désactivé / bloquer malware seul / bloquer malware + pub +
+trackers.
+
+!!! note "Cohabitation avec un DNS privé configuré au niveau OS"
+    Un DNS privé/personnalisé configuré au niveau du système (Android, par
+    exemple) entre en conflit avec NetShield sur la résolution DNS. Pour
+    garantir que c'est bien le tunnel Proton qui gère la résolution, repasser
+    ce réglage sur *Automatique* (ou le désactiver) plutôt que de forcer un
+    fournisseur DNS tiers quand le VPN Proton est actif.
+
+**Secure Core** (plan payant supérieur) — achemine le trafic via un serveur
+intermédiaire dans un pays à forte protection de la vie privée (Suisse,
+Islande, Suède) avant le serveur de sortie. Utile en cas de modèle de menace
+élevé (journalisme, dissidence) ; coût en latence non négligeable, à réserver
+aux cas d'usage le justifiant.
 
 ---
 
