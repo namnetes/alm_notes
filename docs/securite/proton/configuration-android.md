@@ -80,6 +80,86 @@ flowchart TB
 
 ---
 
+## Connexion initiale sans ressaisir le mot de passe (QR code)
+
+Cas d'usage concret et récurrent : réinstaller les apps Proton sur ce
+Galaxy S26 Ultra sans jamais taper le mot de passe maître (64 caractères)
+sur le clavier tactile du téléphone.
+
+Le mécanisme générique (appareil A déjà connecté / appareil B à connecter,
+scan ou saisie manuelle du code) est décrit en détail dans [Runbook 1 — Se
+connecter avec un QR
+code](runbooks-recuperation.md#runbook-1-se-connecter-avec-un-qr-code). Ici,
+uniquement le mapping concret pour ce poste.
+
+**Mapping concret :**
+
+- **Appareil A** (déjà connecté, scanne le QR code) : ce poste Ubuntu, via
+  **Proton Pass desktop** et sa webcam.
+- **Appareil B** (à connecter, affiche le QR code) : le Galaxy S26 Ultra,
+  sur l'app Proton fraîchement réinstallée (Mail, Drive, VPN… n'importe
+  laquelle affiche le même écran de connexion par QR code, l'authentification
+  étant mutualisée au niveau du compte).
+
+**Procédure (cas normal) :** suivez le Runbook 1 tel quel avec ce mapping —
+Étape 1 sur le S26 Ultra pour afficher le QR code, Étape 2 sur Ubuntu/Proton
+Pass desktop pour le scanner via la webcam du poste.
+
+### Solution de repli — webcam indisponible
+
+Si la webcam de ce poste est désactivée dans le BIOS, physiquement
+obstruée, ou en panne (souci de pilote) au moment où vous en avez besoin, le
+scan direct n'est pas utilisable. Repli : le fallback **« Saisir le code
+manuellement »** du Runbook 1 (voir l'astuce correspondante), en tapant sur
+Ubuntu le code court affiché sur le téléphone.
+
+Si GSConnect est déjà appairé entre ce poste et le téléphone, il permet
+d'éviter même cette recopie manuelle :
+
+1. Sur le S26 Ultra, une fois le code court affiché, sélectionnez-le et
+   copiez-le (**Copier**).
+2. Ouvrez l'app **KDE Connect** sur le téléphone et appuyez sur **Envoyer
+   le presse-papiers** (*Send Clipboard*) — la synchronisation automatique
+   téléphone → PC est connue pour être peu fiable dans GSConnect, ce geste
+   manuel est le déclencheur fiable.
+3. Sur Ubuntu, collez (`Ctrl+V`) dans le champ « Saisir le code
+   manuellement » de Proton Pass desktop.
+
+!!! info "Prérequis GSConnect"
+    Dans les préférences GSConnect sur Ubuntu, **Partage → Synchronisation
+    du presse-papiers** doit avoir la direction **« Depuis l'appareil »**
+    activée, en plus du curseur général de synchronisation. Appairage déjà
+    en place sur ce poste.
+
+!!! note "Ce qui transite réellement dans le presse-papiers"
+    Le code synchronisé via GSConnect est un **code de session éphémère à
+    usage unique**, généré pour cette seule tentative de connexion et
+    expirant rapidement — **jamais le mot de passe maître Proton**. Le
+    canal GSConnect est lui-même chiffré (TLS 1.2, certificat échangé lors
+    de l'appairage), mais la distinction importe indépendamment de ce
+    chiffrement : un code de session intercepté ne donne accès qu'à cette
+    seule tentative de connexion, pas au compte dans son ensemble.
+
+```mermaid
+sequenceDiagram
+    participant Tel as S26 Ultra (appareil B)
+    participant KDEC as KDE Connect (Android)
+    participant GSC as GSConnect (Ubuntu)
+    participant Pass as Proton Pass desktop (appareil A)
+
+    Note over Tel,Pass: Solution de repli uniquement — webcam indisponible
+    Tel->>Tel: Affiche le code court (fallback QR)
+    Tel->>Tel: Sélectionner + Copier
+    Tel->>KDEC: Envoyer le presse-papiers (manuel)
+    KDEC->>GSC: Code court (canal TLS appairé)
+    GSC->>GSC: Presse-papiers Ubuntu mis à jour
+    Note over Pass: Utilisateur colle (Ctrl+V)
+    GSC-->>Pass: Code disponible au collage
+    Pass->>Pass: Valide le code → connexion confirmée
+```
+
+---
+
 ## Proton VPN
 
 ### Installation et choix du protocole

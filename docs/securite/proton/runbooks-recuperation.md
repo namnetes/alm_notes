@@ -61,6 +61,13 @@ appareil déjà connecté à Proton à portée de main.
     manually*) à la place de scanner, et recopiez le code affiché sur
     l'appareil B.
 
+!!! example "Exemple concret : réinstallation Android via Ubuntu"
+    Cas d'usage détaillé — appareil A = poste Ubuntu (Proton Pass desktop,
+    scan via webcam), appareil B = smartphone Android, avec solution de
+    repli GSConnect si la webcam est indisponible : voir [Configuration
+    Android — Connexion initiale sans ressaisir le mot de
+    passe](configuration-android.md#connexion-initiale-sans-ressaisir-le-mot-de-passe-qr-code).
+
 !!! info "Et le mot de passe, dans tout ça ?"
     Une fois connecté via QR code, si vous avez oublié votre mot de
     passe, utilisez la réinitialisation **depuis un appareil déjà
