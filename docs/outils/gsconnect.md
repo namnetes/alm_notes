@@ -98,7 +98,7 @@ téléphone dans l'app KDE Connect.
 Copier sur l'un des deux appareils, coller sur l'autre — mais les deux sens
 ne se comportent pas de la même façon.
 
-**Prérequis** : dans les préférences de l'appareil associé, onglet
+**Prérequis** : dans les préférences de l'extension GSConnect sur le PC, onglet
 **Partage → Synchronisation du presse-papiers**, les **deux cases** doivent
 être cochées : **« Vers l'appareil »** et **« Depuis l'appareil »** — une
 seule case cochée ne suffit pas, la synchro échoue silencieusement dans le
