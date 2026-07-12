@@ -261,6 +261,143 @@ composant `multiverse` à `sources.list`. Ces opérations sont idempotentes
 `install_docker.sh` ajoute `$SUDO_USER` au groupe `docker`. Ce changement
 ne prend effet qu'à la **prochaine session** (déconnexion/reconnexion requise).
 
+### Audit d'intégration complet (2026-07-12) — méthodologie et 5 bugs trouvés
+
+Premier test réel de `sudo make all` de bout en bout, jamais fait
+jusque-là malgré la richesse de cette documentation : VM
+[isoforge](../outils/isoforge.md) dédiée (Ubuntu Desktop fraîche, pas un
+poste déjà provisionné), snapshot juste après le clone du dépôt (avant
+tout postinstall), cycle complet rejoué **deux fois** depuis ce même
+snapshot pour confirmer que chaque point d'arrêt trouvé était bien
+reproductible et non un artefact ponctuel de la VM. Validation finale :
+un troisième cycle, sur VM authentiquement neuve, sans aucune
+intervention hormis les deux prérequis documentés (`make`, CLI `claude`)
+— `EXIT_CODE:0` de bout en bout, les 5 bugs ci-dessous confirmés corrigés
+simultanément.
+
+5 bugs mécaniques trouvés et corrigés ce jour-là (un sixième,
+`proton-mail`/`proton-pass` absents du dépôt APT ProtonVPN, a nécessité
+une réécriture complète plutôt qu'un correctif ponctuel — détaillé à
+part ci-dessous). Un septième point, un comportement de `pass-cli` après
+reboot VM, reste documenté comme hors périmètre de ce dépôt dans
+`postinstall/BACKLOG.md` (binaire tiers, pas un défaut de ce code).
+
+#### claude-terminal introuvable sous `sudo` même correctement installé
+
+**Symptôme exact** : `install_claude_terminal.sh` vérifiait `command -v
+claude`. Sous `sudo`, `PATH` est réinitialisé par `secure_path`
+(`/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin`)
+— `~/.local/bin`, où l'installeur officiel
+(`curl -fsSL https://claude.ai/install.sh | bash`) place le binaire,
+n'y figure jamais. La CLI pouvait donc être installée et parfaitement
+fonctionnelle pour l'utilisateur réel sans jamais être détectée par ce
+module, qui échouait en fatal (voir l'encadré en tête de
+[Post-installation](post-installation.md) — l'échec de l'étape 18 arrête
+tout le pipeline, `apps`/`desktop`/`devtools` ne s'exécutent jamais).
+
+**Correctif appliqué** : résolution directe du chemin
+`${original_user_home}/.local/bin/claude` (même pattern que `zed_bin`/
+`pass_cli_bin` dans les modules voisins), sans dépendre du `PATH` de root.
+Validé en conditions réelles : `sudo make all` passe cette étape sans
+aucun contournement (pas de symlink `/usr/local/bin/claude`), sur une VM
+où `claude` venait d'être installé normalement pour l'utilisateur.
+
+#### `install_zed.sh` exécutait `zed --version` en root sur la branche "installation fraîche"
+
+**Symptôme exact** : la branche "déjà installé" de `install_zed.sh`
+exécute correctement `zed --version` via `sudo -u "${original_user}"`,
+avec un commentaire explicite ("Zed (GUI app) exits non-zero when invoked
+as root"). Mais la branche "installation fraîche", juste après le
+téléchargement, appelait `"${zed_bin}" --version` **directement en
+root** — exactement le cas que le commentaire de la première branche
+prévenait. Résultat : `make all` échouait systématiquement sur la toute
+première installation de Zed sur une machine neuve, alors que le binaire
+était en réalité installé correctement (seule la vérification échouait).
+
+**Correctif appliqué** : même wrapper `sudo -u "${original_user}" HOME=
+"${original_user_home}"` appliqué aux deux branches.
+
+#### proton : fichier sources dupliqué (`.list` vs `.sources`)
+
+**Symptôme exact** : le module vérifiait
+`/etc/apt/sources.list.d/protonvpn-stable.list` avant de (re)créer le
+fichier sources APT du dépôt ProtonVPN. Mais le postinst du paquet
+`protonvpn-stable-release` écrit en réalité un fichier au format deb822,
+`protonvpn-stable.sources` — jamais reconnu par ce check. Le module
+recréait donc un `.list` dupliquant le `.sources` à **chaque** run,
+produisant des warnings `apt-get update` ("configured multiple times")
+dès la deuxième exécution.
+
+**Correctif appliqué** : vérification des deux formats de fichier avant
+d'en écrire un.
+
+#### `fonts` — course `fc-cache` / `fc-list` systématique
+
+**Symptôme exact** : `install_fonts.sh` appelle `fc-cache -fv` puis
+vérifie immédiatement `fc-list | grep -qi "${font_name}"`. Sur un
+répertoire de polices fraîchement créé (première installation de la
+famille dans `/usr/local/share/fonts/<Famille>/`), `fc-cache` réussit
+mais le cache que lit `fc-list` juste après ne reflète pas encore le
+résultat — reproduit **6 fois sur 6** en conditions réelles (FiraCode
+Nerd Font, JetBrains Mono, Cascadia Code, sur deux cycles de test
+complets), alors que les fichiers `.ttf` étaient bel et bien copiés et
+que `fc-list` les retrouvait correctement dès l'appel suivant.
+
+**Correctif appliqué** : vérification directe de l'existence du fichier
+sentinelle déjà copié (`sample_file`), au lieu de dépendre de `fc-list`
+immédiatement après `fc-cache` — preuve immédiate et indépendante du
+délai de rafraîchissement du cache fontconfig.
+
+#### proton : `proton-mail`/`proton-pass` n'ont jamais été distribués via le dépôt APT ProtonVPN
+
+**Symptôme exact** : `install_proton.sh` installait les trois paquets
+(`proton-mail`, `proton-pass`, `proton-vpn-gnome-desktop`) via
+`apt-get install` depuis `repo.protonvpn.com/debian`. Vérifié en direct
+contre l'index APT réel : ce dépôt n'a jamais distribué que des paquets
+liés à **ProtonVPN** — `apt-get install -y proton-mail proton-pass`
+échouait systématiquement (`E: Unable to locate package`), quel que soit
+l'état du reste du module.
+
+Un second bug, purement mécanique celui-là, masquait le premier : le
+`grep -A5 'Package: protonvpn-stable-release' ...` utilisé pour extraire
+le champ `Filename:` de l'index ne trouvait jamais rien (l'index actuel a
+11 lignes entre `Package:` et `Filename:`, contre 5 supposées à
+l'écriture du script). Corriger uniquement ce `grep` n'aurait rien
+débloqué : même un index correctement parsé ne contient pas
+`proton-mail`/`proton-pass`.
+
+**Correctif appliqué** : réécriture du module — ProtonVPN reste installé
+via le dépôt APT (`grep -A5` remplacé par un parseur `awk` par stanza,
+robuste au nombre de champs). Proton Mail et Proton Pass sont désormais
+installés depuis leur `.deb` versionné officiel, téléchargé et vérifié
+contre le SHA512 publié dans le manifeste `version.json` de Proton
+(`proton.me/mail/download`, `proton.me/pass/download/linux`) — méthode
+que Proton documente lui-même
+(`sudo apt install ./ProtonMail-desktop-beta.deb`), pas un mécanisme
+inventé pour l'occasion. Sélection explicite de la release
+`"CategoryName": "Stable"` (jamais par position dans le JSON — l'ordre
+Beta/EarlyAccess n'est pas garanti). Vérification **fail-closed** : un
+`.deb` dont le hash ne correspond pas est supprimé immédiatement, jamais
+laissé sur disque pour qu'un run ultérieur l'accepte silencieusement.
+
+!!! bug "Bug additionnel trouvé en testant le correctif : mauvaise version ProtonVPN sélectionnée"
+    Le nouveau parseur `awk` du dépôt ProtonVPN, testé une première fois,
+    prenait la **première** stanza `Package: protonvpn-stable-release`
+    trouvée dans l'index — la plus **ancienne** version listée
+    (`1.0.3-2`), dont la clé GPG ne correspond plus à la signature
+    actuelle du dépôt (`NO_PUBKEY`, `apt-get update` en échec). Corrigé
+    en triant explicitement toutes les stanzas par version (`sort -V`)
+    pour ne garder que la plus récente, plutôt que de supposer un ordre
+    quelconque dans le fichier. Trouvé uniquement parce que le correctif a
+    été testé sur VM fraîche plutôt que revu sur le seul code — l'index
+    réel liste les versions dans un ordre qui n'a rien d'évident à la
+    lecture.
+
+Détail complet des 6 bugs (avec preuve, ligne de code, et le septième
+point hors périmètre) : `postinstall/BACKLOG.md` dans le dépôt — vidé au
+fur et à mesure des corrections, son historique git conserve chaque
+entrée résolue.
+
 ---
 
 ## Bugs connus, non corrigés
