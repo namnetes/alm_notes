@@ -115,6 +115,7 @@ nav:
               - mkdocsinit: systeme/ubuntu/alm_tools/outils/mkdocsinit.md
               - pioinit: electronique/pioinit/index.md
               - vmforge: systeme/ubuntu/alm_tools/outils/vmforge.md
+              - isoforge: systeme/ubuntu/alm_tools/outils/isoforge.md
               - open-sites: systeme/ubuntu/alm_tools/outils/open-sites.md
               - pass-tool: systeme/ubuntu/alm_tools/outils/pass-tool.md
               - runbg: systeme/ubuntu/alm_tools/outils/runbg.md

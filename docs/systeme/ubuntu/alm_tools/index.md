@@ -7,7 +7,7 @@
 ```
 alm_tools/
 ├── postinstall/   ← configuration complète d'un poste Ubuntu (Makefile)
-├── cli/           ← outils CLI : devinit, mkdocsinit, pioinit, vmforge, open-sites
+├── cli/           ← outils CLI : devinit, mkdocsinit, pioinit, vmforge, isoforge, open-sites
 ├── jobs/          ← scripts planifiables : runbg, backup Google Drive
 ├── lib/           ← bibliothèque commune (common.sh)
 ```
@@ -63,6 +63,6 @@ sudo make all
 
 -   :material-toolbox-outline: **[Outils spécialisés](outils/index.md)**
 
-    devinit, mkdocsinit, vmforge, open-sites, runbg, backup Google Drive.
+    devinit, mkdocsinit, vmforge, isoforge, open-sites, runbg, backup Google Drive.
 
 </div>

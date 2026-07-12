@@ -19,7 +19,11 @@ le rôle de l'outil ; sa source dans le dépôt est précisée sur sa page.
 
 -   :material-server: **[vmforge](vmforge.md)**
 
-    Automatisation de VMs KVM (source : `cli/vmforge/`).
+    Automatisation de VMs KVM Alpine (source : `cli/vmforge/`).
+
+-   :material-desktop-classic: **[isoforge](isoforge.md)**
+
+    Automatisation de VMs KVM Ubuntu Desktop via autoinstall (source : `cli/isoforge/`).
 
 -   :material-web: **[open-sites](open-sites.md)**
 
