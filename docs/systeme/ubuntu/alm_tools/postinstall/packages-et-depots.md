@@ -308,7 +308,8 @@ différée au premier login — voir
 | kitty | Installeur officiel `sw.kovidgoyal.net` | Terminal GPU — binaires upstream dans `~/.local/kitty.app` (le paquet apt Noble est figé en 0.32.x) |
 | Docker CE | Dépôt APT officiel Docker | Moteur de containers — `docker`, `docker compose`, buildx |
 | VS Code | Dépôt APT officiel Microsoft | Éditeur de code extensible avec débogueur, terminal intégré et marketplace |
-| Suite Proton | Dépôt APT officiel Proton | Proton Mail (client), Proton Pass (gestionnaire de mots de passe), Proton VPN |
+| Proton VPN | Dépôt APT officiel `protonvpn-stable-release` | Client VPN Proton, intégration GNOME |
+| Proton Mail, Proton Pass | `.deb` signé (SHA512, `version.json` officiel), hors dépôt APT | Client mail, gestionnaire de mots de passe — jamais distribués via un dépôt APT, voir [Architecture — Cas particuliers notables](architecture.md#audit-dintegration-complet-2026-07-12-methodologie-et-5-bugs-trouves) |
 | Steam | Dépôt Valve (multiverse i386) | Plateforme de jeux Valve — bibliothèque, Proton pour jeux Windows |
 | YubiKey Manager | PPA `ppa:yubico/stable` | Gestion des YubiKeys — FIDO2, OTP, PIV, OpenPGP |
 | Bruno | Dépôt APT officiel (GPG) | Client REST/GraphQL orienté fichiers — remplace Postman, collections versionnées dans Git |

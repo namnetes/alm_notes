@@ -142,7 +142,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 23 | `bruno` | Dépôt APT officiel, puis pré-remplit `preferences.json` (`downloadUpdates: false`) pour désactiver l'auto-updater Electron interne avant le premier lancement | `command -v` pour le paquet ; existence de `preferences.json` pour ne pas écraser une config utilisateur |
 | 24 | `docker` | Dépôt APT officiel Docker CE, ajoute l'utilisateur réel au groupe `docker` | `command -v docker` pour le paquet ; `groups \| grep -qw docker` pour l'appartenance au groupe |
 | 25 | `vscode` | Dépôt APT officiel Microsoft | `command -v` |
-| 26 | `proton` | Dépôt `protonvpn-stable-release`, installe Mail + Pass + VPN | `dpkg -s` (les 3 paquets, tout-ou-rien) ; vérifications séparées pour le paquet dépôt et le fichier sources |
+| 26 | `proton` | VPN via dépôt `protonvpn-stable-release` ; Mail et Pass via `.deb` officiel signé (SHA512), **hors dépôt APT** — jamais distribués via `repo.protonvpn.com` (voir [Architecture](architecture.md#audit-dintegration-complet-2026-07-12-methodologie-et-5-bugs-trouves)) | `dpkg -s` (les 3 paquets, tout-ou-rien) ; vérifications séparées pour le dépôt VPN (paquet + fichier sources) et pour chaque `.deb` (SHA512 fail-closed) |
 | 27 | `steam` | Active i386 + `multiverse` si nécessaire, installe `steam` | `dpkg -s steam` OU `steam:i386` ; vérifications séparées pour l'architecture et le composant |
 | 28 | `yubikey` | PPA `yubico/stable`, installe `yubikey-manager` | `command -v ykman` ; `find` sur les sources APT pour le PPA |
 | 29 | `snap-apps` (`install_snap_apps.sh`) | `kolourpaint`, `onlyoffice-desktopeditors` | `snap list` |
