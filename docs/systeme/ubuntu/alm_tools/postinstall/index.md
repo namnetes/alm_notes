@@ -48,4 +48,8 @@ sudo make all
 
     Liste complète des paquets APT installés.
 
+-   :material-clipboard-check-outline: **[Runbook : tester avec isoforge](tester-avec-isoforge.md)**
+
+    Procédure pas à pas pour valider `sudo make all` sur VM jetable.
+
 </div>

@@ -6,6 +6,11 @@ desktop complet plutôt qu'un serveur Alpine minimal.
 
 **Source :** `~/alm_tools/cli/isoforge`
 
+!!! tip "Cas d'usage principal : tester le postinstall"
+    Pour la procédure complète pas à pas (création de VM, snapshot
+    pristine, cycle `sudo make all`, vérifications, idempotence,
+    reproductibilité), voir le [runbook dédié](../postinstall/tester-avec-isoforge.md).
+
 !!! info "isoforge vs vmforge"
     Même famille d'outils, même style de commandes, mais deux cas d'usage
     différents : vmforge crée des VMs Alpine légères en quelques secondes

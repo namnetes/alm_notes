@@ -269,7 +269,10 @@ jusque-là malgré la richesse de cette documentation : VM
 poste déjà provisionné), snapshot juste après le clone du dépôt (avant
 tout postinstall), cycle complet rejoué **deux fois** depuis ce même
 snapshot pour confirmer que chaque point d'arrêt trouvé était bien
-reproductible et non un artefact ponctuel de la VM. Validation finale :
+reproductible et non un artefact ponctuel de la VM. Méthodologie
+formalisée comme procédure autonome, à rejouer telle quelle la prochaine
+fois : [runbook — tester avec isoforge](tester-avec-isoforge.md). Validation
+finale :
 un troisième cycle, sur VM authentiquement neuve, sans aucune
 intervention hormis les deux prérequis documentés (`make`, CLI `claude`)
 — `EXIT_CODE:0` de bout en bout, les 5 bugs ci-dessous confirmés corrigés

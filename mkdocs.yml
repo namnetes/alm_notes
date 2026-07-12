@@ -109,6 +109,7 @@ nav:
               - Session-checks: systeme/ubuntu/alm_tools/postinstall/session-checks.md
               - Architecture: systeme/ubuntu/alm_tools/postinstall/architecture.md
               - Packages et dépôts: systeme/ubuntu/alm_tools/postinstall/packages-et-depots.md
+              - "Runbook : tester avec isoforge": systeme/ubuntu/alm_tools/postinstall/tester-avec-isoforge.md
           - Outils spécialisés:
               - systeme/ubuntu/alm_tools/outils/index.md
               - devinit: systeme/ubuntu/alm_tools/outils/devinit.md
