@@ -140,6 +140,27 @@ sudo make all 2>&1 | tee /tmp/postinstall-test.log
     sudo make all 2>&1 | tee -a /tmp/postinstall-test.log
     ```
 
+!!! tip "Variante testée le 2026-07-19 : continuer sans installer `claude`"
+    Si le but du cycle est de valider `apps`/`desktop`/`devtools` et que
+    l'intégration Claude Code n'est pas ce qu'on cherche à tester cette
+    fois, inutile d'installer la CLI : `apps`, `desktop` et `devtools` sont
+    des cibles Make indépendantes de `cli` (qui contient `claude-terminal`).
+    Les enchaîner directement saute `claude-terminal` sans toucher au reste
+    du pipeline :
+
+    ```bash
+    sudo make apps 2>&1 | tee -a /tmp/postinstall-test.log
+    sudo make desktop 2>&1 | tee -a /tmp/postinstall-test.log
+    sudo make devtools 2>&1 | tee -a /tmp/postinstall-test.log
+    ```
+
+    Les cibles `cli` déjà passées avant le blocage (uv, xan, eza, starship,
+    fzf, fnm, node, rclone, pass-cli) restent en place — seul
+    `claude-terminal` manque au tableau final. À réserver aux cycles où
+    l'intégration Claude Code n'est justement pas ce qu'on audite ; pour un
+    test `sudo make all` de bout en bout, la voie ci-dessus (installer
+    `claude` puis relancer `all`) reste la référence.
+
 !!! danger "Si le cycle s'arrête ailleurs — ne corrigez rien à la volée"
     Notez précisément **la cible** (la ligne `▶  <cible>` juste avant
     l'erreur) et **le message d'erreur exact**. Ajoutez l'entrée dans
@@ -161,6 +182,14 @@ sudo make all 2>&1 | tee /tmp/postinstall-test.log
     → cycle rejoué avec le correctif en place, sans aucun contournement
     manuel cette fois. Seul ce second cycle, sur VM neuve, constitue une
     preuve que le correctif fonctionne — pas la poursuite du test initial.
+
+### Récupérer la log sur l'hôte
+
+Depuis l'hôte, pas depuis la VM — copier/coller direct :
+
+```bash
+scp -i ~/.ssh/vm-automation_ed25519 galan@<IP_DE_LA_VM>:/tmp/postinstall-test.log ~/postinstall-test.log
+```
 
 ---
 
@@ -293,6 +322,7 @@ isoforge delete postinstall-test
 | Snapshot pristine | `isoforge snapshot create <nom> pristine` |
 | Lister les snapshots (reprise après pause/panne) | `isoforge snapshot list <nom>` |
 | Lancer le cycle | `sudo make all 2>&1 \| tee /tmp/postinstall-test.log` |
+| Récupérer la log sur l'hôte | `scp -i ~/.ssh/vm-automation_ed25519 galan@<IP>:/tmp/postinstall-test.log ~/postinstall-test.log` |
 | Vérifier zbar-tools | `zbarimg --version` |
 | Vérifier ufw | `sudo ufw show added` |
 | Débloquer le zenity bloquant | `pkill -f 'zenity --question.*Extension Nautilus manquante'` |
