@@ -78,9 +78,8 @@ Une fois la dernière vis retirée, le panneau inférieur se soulève
 simplement sur la plupart des modèles. Sur certains modèles, il peut être
 nécessaire de le décrocher de ses ancrages plastiques : utiliser dans ce
 cas un objet fin et non métallique, comme une spatule en plastique ou un
-médiator de guitare électrique. Pour plus de détails, voir les
-[instructions d'ouverture de l'appareil](https://www.tuxedocomputers.com/en/Infos/Help-Support/Frequently-asked-questions/Instructions-for-opening-the-device.tuxedo)
-(TUXEDO, en anglais).
+médiator de guitare électrique. Pour plus de détails, voir
+[Instructions pour ouvrir le boîtier](ouverture-boitier.md).
 
 ## Mise à niveau de la RAM
 

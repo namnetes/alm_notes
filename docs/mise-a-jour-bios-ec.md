@@ -3,7 +3,8 @@
 !!! info "Prérequis"
     - Une clé USB vide, formatée en FAT32 (partition de 32 Go maximum).
     - Un compte client sur le site TUXEDO, pour télécharger le bon paquet
-      de mise à jour pour le modèle exact de la machine.
+      de mise à jour pour le modèle exact de la machine — voir
+      [Où trouver les mises à jour ?](#ou-trouver-les-mises-a-jour-acceder-aux-fichiers-depuis-le-compte-client).
     - Le secteur connecté (pas un simple chargeur USB-C) et la batterie
       chargée à au moins 30 %.
     - Voir aussi la page [Matériel](materiel.md) pour le détail de la
@@ -24,11 +25,55 @@ Une mise à jour de l'un ou l'autre peut être nécessaire pour corriger un
 bug ou améliorer la compatibilité matérielle. La procédure de mise à jour
 est quasiment identique pour les deux composants.
 
-!!! tip "Où trouver les mises à jour ?"
-    Dans l'espace client TUXEDO, rubrique *Downloads for your TUXEDO*. Un
-    [article dédié](https://www.tuxedocomputers.com/en/Infos/Help-Support/Instructions/Updating-EFI-BIOS-EC.tuxedo)
-    détaille le fonctionnement des mises à jour EC/BIOS ; TUXEDO communique
-    aussi sur les nouvelles versions disponibles via sa newsletter.
+## Où trouver les mises à jour ? Accéder aux fichiers depuis le compte client
+
+Si la machine tourne sous TUXEDO OS, aucun pilote n'a besoin d'être installé
+séparément. En revanche, pour une mise à jour du BIOS/EC — ou pour installer
+Windows par la suite — tous les téléchargements correspondant aux appareils
+achetés se trouvent dans l'espace client TUXEDO.
+
+Traduction du guide officiel
+[BIOS files in your customer account](https://www.tuxedocomputers.com/en/Infos/Help-Support/Instructions/BIOS-files-in-your-customer-account.tuxedo).
+
+1. Se connecter à son compte client depuis la page d'accueil TUXEDO.
+
+    ![Connexion au compte client depuis la page d'accueil TUXEDO](assets/images/biosupdate_compte_1.png)
+
+    *En tant que client, un compte existe généralement déjà.*
+
+    ![Formulaire de connexion au compte client](assets/images/biosupdate_compte_2.png)
+
+2. Une fois connecté, cliquer sur les trois points verticaux dans la barre
+   de menu supérieure du site pour ouvrir le menu utilisateur, puis
+   sélectionner **Downloads** (Téléchargements) — cette rubrique liste les
+   commandes, les offres en cours et les téléchargements correspondant aux
+   appareils achetés chez TUXEDO Computers.
+
+    ![Ouvrir le menu utilisateur et accéder à la rubrique Téléchargements](assets/images/biosupdate_compte_3.png)
+
+    *Après connexion, rouvrir le menu et aller dans Téléchargements.*
+
+3. La liste de tous les téléchargements correspondant aux achats effectués
+   s'affiche. Cliquer sur **Download** pour récupérer le pilote ou le
+   fichier BIOS/EC concerné sous forme d'archive ZIP.
+
+    ![Liste des fichiers BIOS et pilotes disponibles pour les appareils achetés](assets/images/biosupdate_compte_4.png)
+
+    *En fonction des achats précédents, les mises à jour BIOS et pilotes
+    correspondants apparaissent ici.*
+
+4. Extraire l'archive ZIP puis suivre la procédure de mise à jour du BIOS
+   décrite plus bas sur cette page.
+
+!!! note "Achat non effectué directement chez TUXEDO"
+    Si l'appareil n'a pas été acheté directement auprès de TUXEDO, il faut
+    d'abord créer un compte, puis envoyer un e-mail au support pour
+    demander l'accès aux téléchargements — l'équipe support recontacte
+    ensuite pour récupérer les informations nécessaires.
+
+!!! tip "Autre source d'information"
+    TUXEDO communique aussi sur les nouvelles versions disponibles via sa
+    newsletter.
 
 ## Vue d'ensemble de la procédure
 
