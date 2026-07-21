@@ -83,6 +83,8 @@ nav:
       - index.md
       - Matériel: materiel.md
       - Mise à jour BIOS/EC: mise-a-jour-bios-ec.md
+      - FAQ InfinityBook Pro 14 Gen10 AMD: faq-tuxedo-infinitybook-pro-14.md
+      - Entretien et mise à niveau: entretien-et-mise-a-niveau.md
   - Ubuntu:
       - systeme/ubuntu/index.md
       - Réinstallation WebFAI: systeme/ubuntu/webfai.md
