@@ -11,6 +11,9 @@ Android sur le même réseau local, sans passer par le cloud.
     intégrée directement dans GNOME Shell au lieu d'être une application à
     part.
 
+Pour l'usage inverse — piloter l'**écran du téléphone** depuis le PC (à la
+souris et au clavier) — voir [scrcpy](scrcpy.md).
+
 ---
 
 ## Installation

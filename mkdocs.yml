@@ -201,6 +201,7 @@ nav:
           - outils/kitty/index.md
           - Tirer le meilleur parti: outils/kitty/guide.md
       - GSConnect: outils/gsconnect.md
+      - scrcpy: outils/scrcpy.md
       - yt-dlp: outils/yt-dlp.md
       - Claude Code:
           - outils/claude-code/index.md

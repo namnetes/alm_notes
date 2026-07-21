@@ -26,6 +26,12 @@ Outils en ligne de commande pour la gestion de fichiers, de médias et de dépô
     KDE Connect pour GNOME Shell : transfert de fichiers, notifications et
     presse-papier partagés avec un smartphone Android.
 
+-   :material-cellphone-screenshot: **[scrcpy](scrcpy.md)**
+
+    Afficher et contrôler l'écran du téléphone Android depuis le PC, à la
+    souris et au clavier — installation, prise en main et exercice pas à
+    pas pour débutant.
+
 -   :material-download: **[yt-dlp](yt-dlp.md)**
 
     Télécharger vidéos et audios depuis YouTube, Vimeo et d'autres plateformes.
