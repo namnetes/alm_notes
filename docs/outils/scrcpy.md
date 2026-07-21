@@ -22,9 +22,37 @@ qui.
 
 ## Installation (Ubuntu)
 
-```bash
-sudo apt install scrcpy adb
-```
+=== "Via snap (recommandé)"
+    ```bash
+    sudo apt install adb
+    sudo snap install scrcpy
+    ```
+
+    `adb` n'existe pas en tant que snap séparé — il reste installé via apt.
+    Seul `scrcpy` a besoin du snap : le paquet apt d'Ubuntu 24.04 (`universe`)
+    est figé en version **1.25** (2021) — trop ancien pour dialoguer avec
+    les versions récentes d'Android (voir [Dépannage](#depannage)). Le snap
+    suit les sorties upstream et est nettement plus à jour (3.3.x au moment
+    de la rédaction).
+
+    !!! note "Connexions content snap"
+        Le snap `scrcpy` déclare plusieurs interfaces de type *content*
+        (bibliothèques GPU/thème partagées entre snaps confinés) qui ne se
+        connectent pas toujours automatiquement à l'installation. Si
+        `scrcpy` refuse de démarrer avec une erreur du type `Content snap
+        command-chain for .../gpu-2404/... not found`, voir
+        [Dépannage](#depannage).
+
+=== "Via apt (déconseillé)"
+    ```bash
+    sudo apt install scrcpy adb
+    ```
+
+    Fonctionne uniquement avec d'anciennes versions d'Android — la version
+    packagée pour Ubuntu 24.04 plante sur Android 15/16 avec des erreurs
+    `NoSuchMethodException` (API internes Android disparues entre-temps).
+    À réserver aux appareils Android plus anciens, ou à défaut de pouvoir
+    installer un snap.
 
 `adb` (*Android Debug Bridge*) est l'outil qui établit la connexion avec le
 téléphone — `scrcpy` s'appuie dessus.
@@ -50,6 +78,15 @@ Cette manipulation ne se fait qu'**une seule fois**.
     options une par une. Le débogage USB seul ne permet que la connexion
     avec un ordinateur — il peut être redésactivé à tout moment une fois
     l'utilisation terminée.
+
+!!! warning "Samsung : désactiver Auto Blocker au préalable"
+    Sur les Galaxy récents (One UI 6+), la fonction de sécurité **Auto
+    Blocker** grise le menu développeur et bloque toute commande USB
+    (y compris ADB) tant qu'elle est active. **Paramètres** → **Sécurité et
+    confidentialité** → **Auto Blocker** → désactiver, effectuer les étapes
+    ci-dessus, puis réactiver Auto Blocker après usage si souhaité. Sans
+    cette étape, `adb devices` renvoie une liste vide alors même que
+    `lsusb` détecte bien le téléphone côté Linux.
 
 ---
 
@@ -139,27 +176,94 @@ demande **« Autoriser le débogage USB ? »**.
 
 ### Rien ne se passe, commande introuvable
 
-Vérifier que les deux paquets sont bien installés :
+Vérifier que les paquets sont bien installés :
 
 ```bash
-dpkg -s scrcpy adb
+dpkg -s adb            # adb (toujours via apt)
+snap list scrcpy       # scrcpy (via snap, voir Installation)
 ```
 
-### Le téléphone n'apparaît dans aucune liste (`adb devices` vide)
+### `adb devices` vide alors que le téléphone est bien branché
 
 ```bash
-adb devices
+adb devices -l
+lsusb                  # le téléphone apparaît-il au niveau USB ?
 ```
 
-Si la liste est vide :
+- Si `lsusb` **ne voit pas** le téléphone : essayer un **autre câble USB**
+  — certains câbles ne transmettent que la charge, pas les données.
+- Si `lsusb` **voit** le téléphone (souvent en mode *MTP*) mais `adb
+  devices` reste vide : le débogage USB n'est probablement pas activé côté
+  téléphone — voir [Prérequis](#prerequis-activer-le-debogage-usb-sur-le-telephone),
+  et sur Samsung en particulier vérifier qu'**Auto Blocker** est bien
+  désactivé (cause la plus fréquente sur les Galaxy récents).
+- Si le débogage USB est bien activé et que ça ne fonctionne toujours pas :
+  redébrancher/rebrancher le câble — l'activation en cours de session n'est
+  pas toujours prise en compte à chaud.
 
-- Essayer un **autre câble USB** — certains câbles ne transmettent que la
-  charge, pas les données.
-- Vérifier que le mode de connexion USB du téléphone est bien réglé sur
-  **Transfert de fichiers** (et non *Charge uniquement*) dans la
-  notification USB qui apparaît lors du branchement.
-- Redébrancher/rebrancher après avoir activé le débogage USB si
-  l'activation a eu lieu pendant que le câble était déjà branché.
+### Erreur `NoSuchMethodException` / `AssertionError` au lancement
+
+```text
+[server] ERROR: Could not invoke method
+java.lang.NoSuchMethodException: android.content.IClipboard$Stub$Proxy...
+```
+
+Le paquet **apt** de scrcpy (figé en version 1.25) utilise des méthodes
+internes Android qui n'existent plus sur les versions récentes d'Android
+(observé avec Android 16). Passer à l'installation **snap**, voir
+[Installation](#installation-ubuntu).
+
+### `Content snap command-chain for .../gpu-2404/... not found`
+
+Le snap `scrcpy` a besoin de trois snaps de contenu (bibliothèques
+GPU/thème partagées, sans risque pour le reste du système — voir
+[Installation](#installation-ubuntu)) :
+
+```bash
+sudo snap install mesa-2404
+sudo snap install gnome-46-2404
+sudo snap install gtk-common-themes
+sudo snap connect scrcpy:gpu-2404 mesa-2404:gpu-2404
+sudo snap connect scrcpy:gnome-46-2404 gnome-46-2404:gnome-46-2404
+sudo snap connect scrcpy:gtk-3-themes gtk-common-themes:gtk-3-themes
+sudo snap connect scrcpy:icon-themes gtk-common-themes:icon-themes
+sudo snap connect scrcpy:sound-themes gtk-common-themes:sound-themes
+```
+
+Si les 3 snaps sont déjà installés (message « déjà installé, voir snap
+help refresh »), il ne manque en général que les 5 commandes `snap
+connect` — vérifier avec `snap connections scrcpy` : la colonne *Prise*
+doit être renseignée pour chaque ligne `content[...]`.
+
+### Une fenêtre « Notice » s'affiche au premier lancement au lieu de l'écran du téléphone
+
+Message ponctuel d'un mainteneur du snap (changement de packaging), sans
+rapport avec un dysfonctionnement. Cliquer dans la fenêtre puis appuyer sur
+**Entrée** pour valider — la vraie fenêtre scrcpy s'ouvre juste après. Pour
+ne plus la revoir :
+
+```bash
+echo 'export SNAP_LAUNCHER_NOTICE_ENABLED=false' >> ~/.bashrc
+```
+
+!!! info "Sur cette installation"
+    Chaîne de blocages rencontrée dans l'ordre sur ce poste — Ubuntu 24.04,
+    TUXEDO InfinityBook Pro 14 Gen10 AMD, Galaxy S26 Ultra (Android 16),
+    testé le 2026-07-21 :
+
+    1. `adb devices` vide malgré `lsusb` détectant le téléphone → **Auto
+       Blocker** activé sur le Galaxy S26 Ultra, bloquant le débogage USB.
+    2. Une fois débloqué, `scrcpy` (apt, 1.25) plantait avec
+       `NoSuchMethodException` / `AssertionError` → Android 16 trop récent
+       pour cette version, migration vers le **snap**.
+    3. Le snap refusait de démarrer (`Content snap command-chain ... not
+       found`) → connexions `content` manquantes (`gpu-2404`,
+       `gnome-46-2404`, `gtk-3-themes`, `icon-themes`, `sound-themes`),
+       résolu en installant les 3 snaps fournisseurs et en les connectant.
+    4. Une fenêtre *Notice* du nouveau mainteneur du snap s'affichait au
+       lancement, à valider une fois (`Entrée`).
+
+    Après ces quatre étapes : fonctionnel, miroir d'écran confirmé.
 
 ---
 
@@ -167,9 +271,11 @@ Si la liste est vide :
 
 | Besoin | Commande |
 |---|---|
-| Installer | `sudo apt install scrcpy adb` |
+| Installer (snap, recommandé) | `sudo apt install adb` puis `sudo snap install scrcpy` |
 | Lancer scrcpy | `scrcpy` |
-| Vérifier que le téléphone est détecté | `adb devices` |
+| Vérifier que le téléphone est détecté | `adb devices -l` |
+| Vérifier les connexions content du snap | `snap connections scrcpy` |
 | Enregistrer la session en vidéo | `scrcpy --record fichier.mp4` |
 | Passer en sans-fil après un premier branchement | `scrcpy --tcpip` |
 | Éteindre l'écran du téléphone pendant le contrôle | `scrcpy --turn-screen-off` |
+| Désactiver la notice snap au démarrage | `export SNAP_LAUNCHER_NOTICE_ENABLED=false` |
