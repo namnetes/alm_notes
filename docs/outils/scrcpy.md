@@ -164,6 +164,73 @@ téléphone en catégories, sans les manipuler au doigt.
 | `Ctrl+R` | Fait pivoter l'affichage |
 | `Ctrl+F` | Basculer en plein écran |
 
+### Mode OTG — clavier/souris du PC en périphérique USB direct
+
+Le **mode OTG** (*On-The-Go*) fait passer le clavier et la souris du PC
+pour de **vrais périphériques USB branchés sur le téléphone**, au niveau le
+plus bas possible — sans passer par ADB ni par l'affichage mirroré. Utile
+en particulier quand l'écran tactile du téléphone est cassé ou
+inaccessible : on peut toujours déverrouiller l'appareil et taper au
+clavier physique du PC.
+
+Activation unique de l'interface snap nécessaire :
+
+```bash
+sudo snap connect scrcpy:raw-usb
+```
+
+!!! example "Exercice : taper du texte sur le téléphone sans le toucher"
+    1. Sur le téléphone, ouvrir une application avec un champ de texte
+       (par exemple **Notes** ou l'application **Messages**) et taper une
+       fois dessus pour faire apparaître le clavier virtuel.
+    2. Sur le PC, lancer :
+
+        ```bash
+        scrcpy --otg
+        ```
+
+    3. Aucune fenêtre de mirroring ne s'ouvre — c'est normal, le mode OTG
+       ne transmet que le clavier et la souris, pas la vidéo.
+    4. Taper une phrase au clavier du PC : le texte apparaît sur l'écran
+       du téléphone, en le regardant directement, comme si un clavier
+       physique venait d'être branché dessus.
+    5. `Ctrl+C` dans le terminal pour arrêter le mode OTG.
+
+### Mode manette — jouer avec un contrôleur physique
+
+Le **mode manette** transmet une manette de jeu branchée sur le PC vers le
+téléphone, comme si elle était directement connectée dessus — pratique
+pour les jeux Android qui supportent les manettes, ou les émulateurs.
+
+Activation unique de l'interface snap nécessaire :
+
+```bash
+sudo snap connect scrcpy:joystick
+```
+
+!!! example "Exercice : vérifier qu'une manette est bien transmise"
+    1. Brancher une manette de jeu (filaire ou son dongle Bluetooth) sur le
+       **PC**.
+    2. Lancer scrcpy avec le support manette activé :
+
+        ```bash
+        scrcpy --gamepad=uhid
+        ```
+
+    3. La fenêtre de mirroring s'ouvre normalement (contrairement au mode
+       OTG, l'affichage reste actif ici).
+    4. Ouvrir un jeu ou une application qui détecte les manettes (beaucoup
+       de jeux d'action/course affichent une icône ou une notification
+       « Manette connectée »).
+    5. Appuyer sur les boutons de la manette **côté PC** : l'action doit se
+       refléter dans le jeu affiché dans la fenêtre scrcpy, comme si la
+       manette était branchée directement sur le téléphone.
+
+    Même sans jeu compatible sous la main, le simple fait qu'Android
+    affiche une manette comme connectée (notification système, ou dans
+    **Paramètres → Appareils connectés**) suffit à confirmer que le mode
+    fonctionne.
+
 ---
 
 ## Dépannage
