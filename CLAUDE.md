@@ -54,7 +54,11 @@ Chaque section utilise `navigation.indexes` : le `index.md` du répertoire est l
 - **`drafts/*.md`** — brouillons de pages pas encore placés dans `docs/` ni enregistrés dans `nav:`
 - **`drafts/img/`** — images en attente de déplacement vers `docs/assets/images/`
 
-Brouillon actuellement en attente : `drafts/cics_event_processing.md` (à intégrer dans `lcl/`).
+Brouillons actuellement en attente :
+- `drafts/cics_event_processing.md` (à intégrer dans `lcl/`).
+- `drafts/smartphone-linux-pistes-a-explorer.md` — point ouvert, liste
+  d'outils smartphone↔Linux à tester avant rédaction (pas une page finie à
+  intégrer telle quelle).
 
 Workflow d'intégration d'un brouillon :
 1. Déplacer le `.md` dans le bon sous-répertoire de `docs/`
