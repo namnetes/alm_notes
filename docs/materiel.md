@@ -65,6 +65,27 @@ Ma configuration personnelle sous Linux.
     SSD et les ventilateurs sont facilement accessibles — entretien et
     remplacement aisés.
 
+!!! note "Dimensions confirmées — utile pour choisir une coque"
+    Recoupement entre la fiche produit TUXEDO et un test indépendant
+    ([Notebookcheck](https://www.notebookcheck.net/Tuxedo-Infinity-Book-Pro-14-Gen10-Review-Linux-ultrabook-with-AMD-Zen-5-128-GB-RAM.1095463.0.html)) :
+
+    | Mesure | Valeur |
+    |---|---|
+    | Largeur | 311 mm |
+    | Profondeur | 220 mm |
+    | Épaisseur | 17 mm (uniforme sur toute la profondeur, pas de biseau) |
+    | Poids annoncé | 1,45 kg (batterie incluse) |
+    | Poids mesuré (Notebookcheck) | 1,493 kg |
+
+    Ni TUXEDO ni les tests indépendants ne publient de mesure plus précise
+    que le millimètre entier, ni le rayon des coins arrondis, ni
+    l'épaisseur exacte du cadre d'écran. Pour une coque à tolérancement
+    serré (dessus + dessous), mesurer physiquement au pied à coulisse plutôt
+    que de se fier uniquement à ces chiffres constructeur. Cotes utiles pour
+    les découpes : pavé tactile 123 × 77,5 mm (voir
+    [Clavier et pavé tactile](#clavier-et-pave-tactile)), écran (zone
+    active) 302 × 188 mm, ouverture jusqu'à ~180°.
+
 #### Clavier et pavé tactile
 
 - Clavier rubberdome (membrane), silencieux
