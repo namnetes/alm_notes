@@ -174,6 +174,7 @@ nav:
               - L'objet app, callbacks et sous-commandes: developpement/python/cli/typer-app.md
               - Le pattern décorateur + registre: developpement/python/cli/decorateurs-registry.md
           - pass-cli — Automatisation Python: developpement/python/pass-cli-subprocess.md
+          - proton-drive-cli — CLI, bash, Python: developpement/python/proton-drive-cli-subprocess.md
   - Électronique:
       - electronique/index.md
       - PlatformIO:

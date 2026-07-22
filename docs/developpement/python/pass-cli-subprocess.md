@@ -329,3 +329,4 @@ if __name__ == "__main__":
 
 - [Sécurité — Proton, pass-cli](../../securite/proton/ecosysteme.md#pass-cli-cli)
 - [Post-installation — module pass-cli](../../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-19)
+- [proton-drive-cli — CLI, bash, Python](proton-drive-cli-subprocess.md) — mêmes patterns, autre outil Proton
