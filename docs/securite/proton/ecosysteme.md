@@ -201,16 +201,32 @@ Stockage cloud chiffré de bout en bout. Les fichiers sont chiffrés localement 
 **Liens :**
 
 - [Accéder à Proton Drive (web)](https://drive.proton.me)
-- [Télécharger l'application Linux](https://proton.me/drive/download)
+- [Téléchargements Proton Drive (CLI, apps mobiles/desktop autres OS)](https://proton.me/drive/download)
 - [Documentation](https://proton.me/support/drive)
 
 ### Synchronisation sur Linux
 
-L'application Linux permet de synchroniser un répertoire local avec Proton Drive (similaire à Dropbox ou Google Drive Sync).
+!!! warning "Pas de client graphique officiel sur Linux"
+    Contrairement à Windows et macOS, Proton Drive n'a **pas** d'application
+    desktop officielle avec synchronisation automatique de dossier sur
+    Linux à ce jour. Un client officiel serait en développement, sans date
+    de sortie annoncée (vérifié juillet 2026). L'app web reste l'option la
+    plus simple pour un usage occasionnel dans le navigateur.
 
-```bash
-sudo apt install ./proton-drive_*.deb
-```
+Deux options pour un usage en ligne de commande sur Linux :
+
+- **Proton Drive CLI (officielle)** — binaire précompilé, à télécharger
+  depuis [proton.me/drive/download](https://proton.me/drive/download),
+  pour scripter upload/download sans interface graphique.
+- **Rclone** — un backend Proton Drive (encore en beta côté rclone)
+  permet de monter ou synchroniser Proton Drive en préservant le
+  chiffrement côté client. Voir
+  [rclone.org/protondrive](https://rclone.org/protondrive/).
+
+!!! note "Client non officiel tiers"
+    Il existe aussi un client desktop non officiel,
+    [`protondrive-linux`](https://github.com/donniedice/protondrive-linux)
+    (Tauri/WebKitGTK) — non maintenu par Proton, à évaluer au cas par cas.
 
 ---
 
