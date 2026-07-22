@@ -215,9 +215,33 @@ Stockage cloud chiffré de bout en bout. Les fichiers sont chiffrés localement 
 
 Deux options pour un usage en ligne de commande sur Linux :
 
-- **Proton Drive CLI (officielle)** — binaire précompilé, à télécharger
-  depuis [proton.me/drive/download](https://proton.me/drive/download),
-  pour scripter upload/download sans interface graphique.
+### proton-drive-cli (CLI)
+
+CLI officielle Proton Drive, pour scripter upload/download sans interface
+graphique. Pas de paquet APT, pas de script d'installation officiel
+(contrairement à pass-cli/rclone) — Proton distribue un binaire brut par
+plateforme. Installée et maintenue à jour automatiquement par le module
+`postinstall`, voir
+[Post-installation — groupe cli](../../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-19).
+
+Le manifeste de version (`proton.me/download/drive/cli/version.json`)
+bundle 8 binaires (macOS/Linux/Windows, x64/arm64, glibc/musl) dans la
+même release `Stable`, via un champ `Platform` — le module sélectionne
+explicitement `linux/x64`, jamais par position dans le manifeste.
+
+```bash
+proton-drive auth login    # authentification, étape manuelle non gérée
+                            # par le module (identique à pass-cli login)
+proton-drive version       # vérifier la version installée
+```
+
+!!! note "Pas d'auto-update natif, contrairement à pass-cli"
+    `pass-cli` propose sa propre commande `pass-cli update --yes` et
+    affiche une alerte spontanée en cas de nouvelle version. `proton-drive`
+    n'a ni l'une ni l'autre : seule une réinstallation du binaire (module
+    `postinstall`, ou `check_updates.sh`) détecte et applique une mise à
+    jour.
+
 - **Rclone** — un backend Proton Drive (encore en beta côté rclone)
   permet de monter ou synchroniser Proton Drive en préservant le
   chiffrement côté client. Voir
@@ -259,7 +283,7 @@ Proton Pass est disponible en extension pour :
 CLI officielle Proton Pass, pour scripter la gestion des mots de passe
 depuis le terminal. Pas de paquet APT — installée et maintenue à jour
 automatiquement par le module `postinstall`, voir
-[Post-installation — groupe cli](../../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-18).
+[Post-installation — groupe cli](../../systeme/ubuntu/alm_tools/postinstall/post-installation.md#groupe-cli-etapes-9-a-19).
 
 Pour un usage quotidien plus ergonomique (tableaux Rich, recherche
 cross-vaults, mode interactif), voir

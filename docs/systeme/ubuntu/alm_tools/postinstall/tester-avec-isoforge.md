@@ -124,7 +124,7 @@ sudo make all 2>&1 | tee /tmp/postinstall-test.log
 ```
 
 !!! warning "CLI Claude Code : second prérequis manuel légitime"
-    L'étape 18 du pipeline (`claude-terminal`) **vérifie** la présence de
+    L'étape 19 du pipeline (`claude-terminal`) **vérifie** la présence de
     `claude`, elle ne l'installe jamais — voir l'encadré en tête de
     [Post-installation](post-installation.md). Sur une VM authentiquement
     neuve, `sudo make all` s'arrêtera net à cette étape avec :

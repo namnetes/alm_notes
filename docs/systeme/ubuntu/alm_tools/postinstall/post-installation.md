@@ -1,23 +1,24 @@
 # Post-installation
 
 Cette page décrit, dans l'ordre exact où `sudo make all` les exécute, les
-42 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
+43 étapes qui transforment une Ubuntu 24.04 LTS fraîche en poste
 entièrement configuré. Objectif : pouvoir suivre — ou relancer — ce
 processus « les yeux fermés », sans jamais être surpris par une dépendance
 manquante.
 
 !!! danger "À faire AVANT de lancer `sudo make all` : installer la CLI Claude Code"
-    Le dernier module du groupe `cli` (étape 10, `claude-terminal`) **exige**
+    Le dernier module du groupe `cli` (étape 19, `claude-terminal`) **exige**
     que la commande `claude` soit déjà présente — il ne l'installe pas
     lui-même, il ne fait que vérifier l'environnement. S'il ne la trouve
     pas, il retourne une erreur fatale via `handle_script_error`.
 
     Comme chaque cible du Makefile est un **prérequis** de son groupe
     (`cli: check-root uv xan eza starship fzf fnm node rclone pass-cli
-    claude-terminal`), un échec à ce stade arrête `make` immédiatement —
-    **les groupes `apps`, `desktop` et `devtools` ne s'exécutent jamais**,
-    même via `sudo make all`. Ce n'est pas une étape optionnelle qui échoue
-    proprement en warning : c'est un arrêt complet du pipeline.
+    proton-drive-cli claude-terminal`), un échec à ce stade arrête `make`
+    immédiatement — **les groupes `apps`, `desktop` et `devtools` ne
+    s'exécutent jamais**, même via `sudo make all`. Ce n'est pas une étape
+    optionnelle qui échoue proprement en warning : c'est un arrêt complet
+    du pipeline.
 
     **Installer avant toute chose :**
 
@@ -28,22 +29,22 @@ manquante.
 
     Si vous ne voulez pas de Claude Code du tout, sautez la cible en lançant
     les cibles individuellement plutôt que le groupe :
-    `sudo make uv xan eza starship fzf fnm node rclone pass-cli`, puis directement
-    `sudo make apps desktop devtools`.
+    `sudo make uv xan eza starship fzf fnm node rclone pass-cli
+    proton-drive-cli`, puis directement `sudo make apps desktop devtools`.
 
 !!! note "Autres prérequis avant de commencer"
     - `alm_tools` cloné dans `~/alm_tools` et lancé **depuis**
       `~/alm_tools/postinstall` (chemins relatifs dans le Makefile).
     - `alm_dots` déjà déployé via `stow .` — pas strictement bloquant pour
-      le postinstall lui-même, mais `claude-terminal` (étape 10) et
-      `nautilus-terminal` (étape 32) ne trouveront pas certains fichiers
+      le postinstall lui-même, mais `claude-terminal` (étape 19) et
+      `nautilus-terminal` (étape 33) ne trouveront pas certains fichiers
       sinon (`claude-switch`, le kitten `claude_ask.sh`) et se contentent
       d'un avertissement. Voir
       [Déploiement après installation fraîche](../../deploiement-post-installation.md)
       pour l'ordre complet recommandé (stow avant postinstall).
     - **Lancer `sudo make all` depuis un terminal ouvert dans une session
       GNOME graphique déjà active** (le cas normal après une install
-      Ubuntu Desktop). Voir l'avertissement D-Bus de l'étape 30
+      Ubuntu Desktop). Voir l'avertissement D-Bus de l'étape 31
       (`gnome-settings`) ci-dessous — certains réglages en dépendent, et
       un cas limite de ce module peut même faire échouer l'étape si aucune
       session live n'est détectée.
@@ -65,7 +66,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | **Fichier(s) cible** | Existence du ou des fichiers que le module doit produire | `nautilus-templates` (2 fichiers), `nautilus-terminal` (extension à 2 emplacements possibles) |
 | **Sentinelle** | Fichier témoin dédié, utilisé quand il n'existe pas de commande simple pour lire l'état déjà appliqué | `gnome-settings` (`~/.config/alm_tools/gnome_settings_applied`), `fonts` (fichier échantillon + `fc-list` + `fc-match`, triple vérification) |
 | **Toujours rejoué** | Pas de saut anticipé — la commande est idempotente par nature (rejouer ne duplique rien) | `apt-update`, `cleanup`, `plocate`, `session-checks` (recopie les fichiers, sans effet si identiques) |
-| **Version amont** | Compare la version installée à la dernière publiée ; se **réinstalle** si en retard (le seul module « idempotent par mise à jour », pas par saut) | `rclone` |
+| **Version amont** | Compare la version installée à la dernière publiée ; se **réinstalle** si en retard (idempotent par mise à jour, pas par saut) | `rclone`, `proton-drive-cli` |
 
 ---
 
@@ -94,7 +95,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `cli` (étapes 9 à 18)
+## Groupe `cli` (étapes 9 à 19)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
@@ -107,7 +108,8 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | 15 | `node` | Installe et active la LTS Node.js via `fnm` | Toujours rejoué (les commandes `fnm install/default/use` sont elles-mêmes idempotentes) |
 | 16 | `rclone` | Script officiel `rclone.org` vers `/usr/bin/rclone` | **Version amont** — se réinstalle si la version installée diffère de la dernière publiée |
 | 17 | `pass-cli` | Script officiel `proton.me` vers `~/.local/bin/pass-cli` ; si déjà présent, délègue à `pass-cli update --yes` (auto-update natif) | Chemin (`~/.local/bin/pass-cli` exécutable), puis délégation à `pass-cli update --yes` — idempotent en interne (« Already up to date » si à jour) |
-| 18 | `claude-terminal` | Vérifie (ne les installe pas) : CLI `claude`, identifiants OAuth, `claude-switch`, permissions de `api.env`, kitten `claude_ask.sh`, crée `~/.claude/commands/` | Contrôles multiples, voir le détail ci-dessous |
+| 18 | `proton-drive-cli` | Binaire officiel `proton.me/download/drive/cli` vers `~/.local/bin/proton-drive`, vérifié SHA512 contre le manifeste `version.json` (sélection explicite `Platform == linux/x64` — ce manifeste bundle 8 binaires par plateforme dans la même release `Stable`, contrairement aux manifestes Mail/Pass) | **Version amont** — se réinstalle si la version installée diffère de la dernière publiée |
+| 19 | `claude-terminal` | Vérifie (ne les installe pas) : CLI `claude`, identifiants OAuth, `claude-switch`, permissions de `api.env`, kitten `claude_ask.sh`, crée `~/.claude/commands/` | Contrôles multiples, voir le détail ci-dessous |
 
 !!! note "Prérequis explicite : `fnm` avant `install_node.sh`"
     Déclaré dans le Makefile (`node: check-root fnm`). `install_node.sh`
@@ -115,7 +117,7 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
     s'il est absent — utile seulement si vous lancez `sudo make node`
     isolément sans être passé par `sudo make cli` ou `all`.
 
-!!! danger "Étape 18 : trois vérifications, une seule vraiment bloquante"
+!!! danger "Étape 19 : trois vérifications, une seule vraiment bloquante"
     `install_claude_terminal.sh` ne fait qu'auditer l'état, sans jamais
     installer quoi que ce soit lui-même :
 
@@ -131,21 +133,21 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `apps` (étapes 19 à 29)
+## Groupe `apps` (étapes 20 à 30)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
-| 19 | `remove-firefox` (`remove_firefox.sh`) | Purge le paquet APT `firefox`/`firefox-esr`, épingle `Pin-Priority: -1`, supprime le Snap + résidus utilisateur/système | `dpkg -s` par paquet, `snap list`, existence de fichier par résidu |
-| 20 | `brave` | Dépôt APT officiel Brave | `command -v` |
-| 21 | `zed` | Script officiel `zed.dev`, installé dans `~/.local/bin` pour l'utilisateur réel | Chemin (`~/.local/bin/zed` exécutable) |
-| 22 | `kitty` | Installeur upstream `sw.kovidgoyal.net` vers `~/.local/kitty.app`, symlinks dans `~/.local/bin`, `.desktop` locaux qui masquent ceux d'apt | Chemin (`~/.local/kitty.app/bin/kitty` exécutable) |
-| 23 | `bruno` | Dépôt APT officiel, puis pré-remplit `preferences.json` (`downloadUpdates: false`) pour désactiver l'auto-updater Electron interne avant le premier lancement | `command -v` pour le paquet ; existence de `preferences.json` pour ne pas écraser une config utilisateur |
-| 24 | `docker` | Dépôt APT officiel Docker CE, ajoute l'utilisateur réel au groupe `docker` | `command -v docker` pour le paquet ; `groups \| grep -qw docker` pour l'appartenance au groupe |
-| 25 | `vscode` | Dépôt APT officiel Microsoft | `command -v` |
-| 26 | `proton` | VPN via dépôt `protonvpn-stable-release` ; Mail et Pass via `.deb` officiel signé (SHA512), **hors dépôt APT** — jamais distribués via `repo.protonvpn.com` (voir [Architecture](architecture.md#audit-dintegration-complet-2026-07-12-methodologie-et-5-bugs-trouves)) | `dpkg -s` (les 3 paquets, tout-ou-rien) ; vérifications séparées pour le dépôt VPN (paquet + fichier sources) et pour chaque `.deb` (SHA512 fail-closed) |
-| 27 | `steam` | Active i386 + `multiverse` si nécessaire, installe `steam` | `dpkg -s steam` OU `steam:i386` ; vérifications séparées pour l'architecture et le composant |
-| 28 | `yubikey` | PPA `yubico/stable`, installe `yubikey-manager` | `command -v ykman` ; `find` sur les sources APT pour le PPA |
-| 29 | `snap-apps` (`install_snap_apps.sh`) | `kolourpaint`, `onlyoffice-desktopeditors` | `snap list` |
+| 20 | `remove-firefox` (`remove_firefox.sh`) | Purge le paquet APT `firefox`/`firefox-esr`, épingle `Pin-Priority: -1`, supprime le Snap + résidus utilisateur/système | `dpkg -s` par paquet, `snap list`, existence de fichier par résidu |
+| 21 | `brave` | Dépôt APT officiel Brave | `command -v` |
+| 22 | `zed` | Script officiel `zed.dev`, installé dans `~/.local/bin` pour l'utilisateur réel | Chemin (`~/.local/bin/zed` exécutable) |
+| 23 | `kitty` | Installeur upstream `sw.kovidgoyal.net` vers `~/.local/kitty.app`, symlinks dans `~/.local/bin`, `.desktop` locaux qui masquent ceux d'apt | Chemin (`~/.local/kitty.app/bin/kitty` exécutable) |
+| 24 | `bruno` | Dépôt APT officiel, puis pré-remplit `preferences.json` (`downloadUpdates: false`) pour désactiver l'auto-updater Electron interne avant le premier lancement | `command -v` pour le paquet ; existence de `preferences.json` pour ne pas écraser une config utilisateur |
+| 25 | `docker` | Dépôt APT officiel Docker CE, ajoute l'utilisateur réel au groupe `docker` | `command -v docker` pour le paquet ; `groups \| grep -qw docker` pour l'appartenance au groupe |
+| 26 | `vscode` | Dépôt APT officiel Microsoft | `command -v` |
+| 27 | `proton` | VPN via dépôt `protonvpn-stable-release` ; Mail et Pass via `.deb` officiel signé (SHA512), **hors dépôt APT** — jamais distribués via `repo.protonvpn.com` (voir [Architecture](architecture.md#audit-dintegration-complet-2026-07-12-methodologie-et-5-bugs-trouves)) | `dpkg -s` (les 3 paquets, tout-ou-rien) ; vérifications séparées pour le dépôt VPN (paquet + fichier sources) et pour chaque `.deb` (SHA512 fail-closed) |
+| 28 | `steam` | Active i386 + `multiverse` si nécessaire, installe `steam` | `dpkg -s steam` OU `steam:i386` ; vérifications séparées pour l'architecture et le composant |
+| 29 | `yubikey` | PPA `yubico/stable`, installe `yubikey-manager` | `command -v ykman` ; `find` sur les sources APT pour le PPA |
+| 30 | `snap-apps` (`install_snap_apps.sh`) | `kolourpaint`, `onlyoffice-desktopeditors` | `snap list` |
 
 !!! warning "Docker : le groupe n'est actif qu'à la prochaine session"
     `usermod -aG docker` s'applique immédiatement en base, mais le jeton de
@@ -154,63 +156,63 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 
 ---
 
-## Groupe `desktop` (étapes 30 à 35)
+## Groupe `desktop` (étapes 31 à 36)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
-| 30 | `gnome-settings` | Réglages `gsettings` (interface, dock) + profil d'énergie `performance` | **Sentinelle** (`~/.config/alm_tools/gnome_settings_applied`) |
-| 31 | `fonts` | FiraCode Nerd Font, JetBrains Mono, Cascadia Code vers `/usr/local/share/fonts` | **Sentinelle** + `fc-list` + `fc-match` (triple vérification par police) |
-| 32 | `nautilus-terminal` | Installe l'extension `nautilus-open-any-terminal` (pip, `--user --break-system-packages`) pour l'utilisateur réel | Fichier(s) cible (extension présente à l'un des deux emplacements possibles) |
-| 33 | `nautilus-templates` | Crée deux fichiers vides dans `~/Modèles` (texte, ODT) | Fichier(s) cible (les deux fichiers) |
-| 34 | `gsconnect` | `apt install gnome-shell-extension-gsconnect sshfs python3-nautilus` + règles ufw `1716/tcp+udp` | `dpkg -s` par paquet |
-| 35 | `session-checks` | Installe `run-session-checks`, les contrôles statiques (`10-nautilus-terminal`, `20-gsconnect`), le déclencheur GNOME `/etc/xdg/autostart/session-checks.desktop` | Toujours rejoué (recopie de fichiers, sans effet si identiques) |
+| 31 | `gnome-settings` | Réglages `gsettings` (interface, dock) + profil d'énergie `performance` | **Sentinelle** (`~/.config/alm_tools/gnome_settings_applied`) |
+| 32 | `fonts` | FiraCode Nerd Font, JetBrains Mono, Cascadia Code vers `/usr/local/share/fonts` | **Sentinelle** + `fc-list` + `fc-match` (triple vérification par police) |
+| 33 | `nautilus-terminal` | Installe l'extension `nautilus-open-any-terminal` (pip, `--user --break-system-packages`) pour l'utilisateur réel | Fichier(s) cible (extension présente à l'un des deux emplacements possibles) |
+| 34 | `nautilus-templates` | Crée deux fichiers vides dans `~/Modèles` (texte, ODT) | Fichier(s) cible (les deux fichiers) |
+| 35 | `gsconnect` | `apt install gnome-shell-extension-gsconnect sshfs python3-nautilus` + règles ufw `1716/tcp+udp` | `dpkg -s` par paquet |
+| 36 | `session-checks` | Installe `run-session-checks`, les contrôles statiques (`10-nautilus-terminal`, `20-gsconnect`), le déclencheur GNOME `/etc/xdg/autostart/session-checks.desktop` | Toujours rejoué (recopie de fichiers, sans effet si identiques) |
 
-!!! warning "Étapes 30, 32 et 34 : nécessitent une session D-Bus active — différées via session-checks"
+!!! warning "Étapes 31, 33 et 35 : nécessitent une session D-Bus active — différées via session-checks"
     `gsettings`, l'activation GSConnect et la configuration Nautilus→kitty
     ont besoin d'un bus D-Bus **utilisateur** live. Pendant le
     provisionnement (root, éventuellement sans session graphique
     utilisateur ouverte), ce n'est pas garanti. Chaque module gère ça
     différemment :
 
-    - **Étape 30 (`gnome-settings`)** — teste directement
+    - **Étape 31 (`gnome-settings`)** — teste directement
       `/run/user/<uid>/bus` : si le socket existe (cas normal, terminal
       ouvert dans une session GNOME déjà active), les réglages
       s'appliquent **immédiatement**, sans rien différer. Sinon, le module
       **génère lui-même** un contrôle `20-gnome-settings` dans
       `/usr/local/lib/session-checks/`, qui s'exécutera au prochain login
       (sentinelle incluse, un seul passage).
-    - **Étape 32 (`nautilus-terminal`)** — installe toujours l'extension
+    - **Étape 33 (`nautilus-terminal`)** — installe toujours l'extension
       Python pendant le provisionnement, mais la commande `gsettings set
       ... terminal kitty` est **systématiquement** différée au contrôle
-      statique `10-nautilus-terminal` (étape 35), qui demande confirmation
+      statique `10-nautilus-terminal` (étape 36), qui demande confirmation
       via `zenity` avant d'agir — pas silencieux comme les deux autres.
-    - **Étape 34 (`gsconnect`)** — installe les paquets et ouvre le port
+    - **Étape 35 (`gsconnect`)** — installe les paquets et ouvre le port
       ufw pendant le provisionnement, mais `gnome-extensions enable` et la
       vérification du port `1716` sont **systématiquement** différés au
-      contrôle statique `20-gsconnect` (étape 35), silencieux (pas de
+      contrôle statique `20-gsconnect` (étape 36), silencieux (pas de
       `zenity` : la décision d'installer a déjà été prise par
       l'administrateur via `sudo make gsconnect`).
 
 !!! bug "Bug connu, non corrigé : ordre inversé au sein du groupe `desktop`"
-    `gnome-settings` (étape 30) s'exécute avant `session-checks`
-    (étape 35), qui crée le répertoire dont le premier a parfois besoin.
+    `gnome-settings` (étape 31) s'exécute avant `session-checks`
+    (étape 36), qui crée le répertoire dont le premier a parfois besoin.
     Détail du symptôme, des scénarios de déclenchement réels et du
     correctif identifié :
     [Architecture — Bugs connus, non corrigés](architecture.md#bugs-connus-non-corriges).
 
 ---
 
-## Groupe `devtools` (étapes 36 à 42)
+## Groupe `devtools` (étapes 37 à 43)
 
 | # | Cible | Action | Idempotence |
 |---|-------|--------|-------------|
-| 36 | `devinit` | `uv tool install --force ~/alm_tools/cli/devinit` | Chemin (`~/.local/bin/devinit` exécutable) |
-| 37 | `pioinit` | `uv tool install --force ~/alm_tools/cli/pioinit` | Chemin (`~/.local/bin/pioinit` exécutable) |
-| 38 | `mkdocsinit` | `uv tool install --force ~/alm_tools/cli/mkdocsinit` | Chemin (`~/.local/bin/mkdocsinit` exécutable) |
-| 39 | `vmforge` | Installe le shim `~/.local/bin/vmforge`, applique la règle AppArmor libvirt-qemu | Chemin (shim) ; l'application AppArmor est toujours rejouée (pas de saut) |
-| 40 | `open-sites` | `uv tool install --force ~/alm_tools/cli/open-sites`, puis génère et source la complétion bash (`~/.bash_completions/open-sites.sh`) | Chemin (`~/.local/bin/open-sites` exécutable) ; complétion regénérée à chaque run, ligne `.bashrc` ajoutée une seule fois |
-| 41 | `pass-tool` | `uv tool install --force ~/alm_tools/cli/pass-tool` | Chemin (`~/.local/bin/pass-tool` exécutable) |
-| 42 | `check-updates` | Crée le symlink `~/.local/bin/check_updates.sh` → `~/alm_tools/postinstall/check_updates.sh` | Chemin (symlink déjà présent et pointant vers la bonne source) |
+| 37 | `devinit` | `uv tool install --force ~/alm_tools/cli/devinit` | Chemin (`~/.local/bin/devinit` exécutable) |
+| 38 | `pioinit` | `uv tool install --force ~/alm_tools/cli/pioinit` | Chemin (`~/.local/bin/pioinit` exécutable) |
+| 39 | `mkdocsinit` | `uv tool install --force ~/alm_tools/cli/mkdocsinit` | Chemin (`~/.local/bin/mkdocsinit` exécutable) |
+| 40 | `vmforge` | Installe le shim `~/.local/bin/vmforge`, applique la règle AppArmor libvirt-qemu | Chemin (shim) ; l'application AppArmor est toujours rejouée (pas de saut) |
+| 41 | `open-sites` | `uv tool install --force ~/alm_tools/cli/open-sites`, puis génère et source la complétion bash (`~/.bash_completions/open-sites.sh`) | Chemin (`~/.local/bin/open-sites` exécutable) ; complétion regénérée à chaque run, ligne `.bashrc` ajoutée une seule fois |
+| 42 | `pass-tool` | `uv tool install --force ~/alm_tools/cli/pass-tool` | Chemin (`~/.local/bin/pass-tool` exécutable) |
+| 43 | `check-updates` | Crée le symlink `~/.local/bin/check_updates.sh` → `~/alm_tools/postinstall/check_updates.sh` | Chemin (symlink déjà présent et pointant vers la bonne source) |
 
 !!! note "Prérequis explicite : `uv` avant les quatre scaffolders/outils"
     Déclaré dans le Makefile (`devinit: check-root uv`, idem `pioinit`,
@@ -246,24 +248,24 @@ mot-clé dans les tableaux ci-dessous plutôt que ré-expliqués à chaque
 | Cible | Dépend de | Déclaré dans le Makefile ? |
 |-------|-----------|------------------------------|
 | `node` (15) | `fnm` (14) | ✅ Oui |
-| `devinit` (36) | `uv` (9) | ✅ Oui |
-| `pioinit` (37) | `uv` (9) | ✅ Oui |
-| `mkdocsinit` (38) | `uv` (9) | ✅ Oui |
+| `devinit` (37) | `uv` (9) | ✅ Oui |
+| `pioinit` (38) | `uv` (9) | ✅ Oui |
+| `mkdocsinit` (39) | `uv` (9) | ✅ Oui |
 | `uv` (9) | `python3-full`/`python3-venv` de `pkg-install` (5) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
-| `vmforge` (39) | paquets KVM de `pkg-install` (5) | ⚠️ Implicite, non bloquant (avertissement seulement) |
-| `open-sites` (40) | `uv` (9) | ✅ Oui |
-| `open-sites` (40) | `fzf` (13) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
-| `claude-terminal` (18) | CLI `claude` installée manuellement | ❌ Non scriptée du tout — voir l'encadré en tête de page |
+| `vmforge` (40) | paquets KVM de `pkg-install` (5) | ⚠️ Implicite, non bloquant (avertissement seulement) |
+| `open-sites` (41) | `uv` (9) | ✅ Oui |
+| `open-sites` (41) | `fzf` (13) | ⚠️ Implicite (ordre des groupes dans `all` uniquement) |
+| `claude-terminal` (19) | CLI `claude` installée manuellement | ❌ Non scriptée du tout — voir l'encadré en tête de page |
 
 ---
 
 ## Vérification des mises à jour upstream
 
 `check_updates.sh` (à la racine de `postinstall/`) compare la version
-installée de `fzf`, `xan`, `starship`, `fnm`, `uv`, `rclone`, `kitty` et
-`pass-cli` — plus la LTS Node.js active via `fnm` — à la dernière version
-publiée en amont. `zed` est volontairement exclu : il gère son propre
-auto-update.
+installée de `fzf`, `xan`, `starship`, `fnm`, `uv`, `rclone`, `kitty`,
+`pass-cli` et `proton-drive-cli` — plus la LTS Node.js active via `fnm` —
+à la dernière version publiée en amont. `zed` est volontairement exclu :
+il gère son propre auto-update.
 
 `pass-cli` publie sa dernière version sur un manifeste JSON dédié
 (`https://proton.me/download/pass-cli/versions.json`, le même que celui
@@ -272,6 +274,14 @@ binaire propriétaire proton.me, pas de dépôt public. `pass-cli` affiche
 déjà spontanément une alerte de MAJ à chaque lancement (`New update
 available: vX -> vY`) ; `check_updates.sh` la rend seulement visible sans
 avoir à invoquer la commande.
+
+`proton-drive-cli` publie ses versions sur le même *type* de manifeste que
+les `.deb` Mail/Pass (`https://proton.me/download/drive/cli/version.json`,
+`Releases[].CategoryName`/`Version`) — sélection explicite par
+`CategoryName == "Stable"` pour ne pas dépendre de l'ordre des entrées,
+même précaution que `install_proton.sh`. Contrairement à `pass-cli`, ce
+binaire n'a pas de commande de self-update ni d'alerte spontanée : c'est
+`check_updates.sh` qui porte, seul, toute la détection.
 
 ```bash
 ~/alm_tools/postinstall/check_updates.sh --refresh   # exécute les checks, écrit le cache
@@ -286,7 +296,7 @@ ralentissement au démarrage d'un terminal. Une fois par jour (fichier
 témoin `~/.cache/alm-tools-update-check`), il relance lui-même `--refresh`
 en tâche de fond pour que le *shell suivant* voie un résultat frais.
 
-Depuis l'étape 42 (`check-updates`, groupe `devtools`), le script est aussi
+Depuis l'étape 43 (`check-updates`, groupe `devtools`), le script est aussi
 disponible directement sur le `$PATH` via un symlink
 `~/.local/bin/check_updates.sh` — plus besoin du chemin complet pour le
 lancer à la main :

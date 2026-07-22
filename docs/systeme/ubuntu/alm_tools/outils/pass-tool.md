@@ -15,7 +15,7 @@ cross-vaults), sans jamais réimplémenter ce que `pass-cli` fait déjà.
 authentifié (`pass-cli login`) — requis par `vault list` et `entry list`,
 pas par `gen` (génération 100 % locale, jamais d'appel à `pass-cli`).
 Installation automatique via le module postinstall, voir
-[Post-installation — groupe cli](../postinstall/post-installation.md#groupe-cli-etapes-9-a-18).
+[Post-installation — groupe cli](../postinstall/post-installation.md#groupe-cli-etapes-9-a-19).
 
 !!! note "Mise à jour de `pass-cli`"
     `pass-cli` n'est pas un paquet APT — il gère son propre self-update
