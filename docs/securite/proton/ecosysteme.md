@@ -15,6 +15,7 @@ Tous les services partagent un compte unique sur [proton.me](https://proton.me) 
 | [Proton Calendar](#proton-calendar) | Agenda chiffré | Web, Android, iOS |
 | [Proton Drive](#proton-drive) | Stockage cloud chiffré | Web, Linux, Windows, macOS, Android, iOS |
 | [Proton Pass](#proton-pass) | Gestionnaire de mots de passe | Linux, Windows, macOS, Android, iOS, extensions navigateur |
+| [Proton Authenticator](#proton-authenticator) | Authentification à deux facteurs (2FA/TOTP) | Linux, Windows, macOS, Android, iOS |
 | [Proton Docs](#proton-docs) | Traitement de texte collaboratif chiffré | Web |
 | [Proton Wallet](#proton-wallet) | Portefeuille Bitcoin | Web, Android, iOS |
 
@@ -401,6 +402,38 @@ pass-cli password score "MonMotDePasse123!"                    # Évaluer la rob
     - Partage sécurisé avec d'autres utilisateurs
     - Moniteur de fuites de données (surveillance des adresses e-mail sur les bases de données compromises)
     - Alias d'e-mail illimités (via SimpleLogin, racheté par Proton)
+
+---
+
+## Proton Authenticator
+
+Application dédiée aux codes 2FA/TOTP (indépendante de Proton Pass, qui
+peut aussi stocker des codes 2FA). Lancée en 2025, disponible sur Linux,
+Windows, macOS, Android et iOS.
+
+**Liens :**
+
+- [Télécharger Proton Authenticator (Linux)](https://proton.me/authenticator/download)
+- [Guide d'installation Linux](https://proton.me/support/set-up-proton-authenticator-linux)
+- [Sauvegarde et restauration](runbooks-recuperation.md#24-sauvegarder-proton-authenticator)
+
+### Installation sur Linux
+
+```bash
+sudo apt install ./ProtonAuthenticator_*.deb
+```
+
+Paquet APT installé : `proton-authenticator`. Pas de dépôt APT dédié
+(comme Mail et Pass) — installée et maintenue à jour automatiquement par
+le module `postinstall`, voir
+[Post-installation — groupe apps](../../systeme/ubuntu/alm_tools/postinstall/post-installation.md).
+
+!!! note "Pas de suivi de version automatique"
+    Comme Mail et Pass, ce module installe la version disponible au
+    moment de l'exécution mais ne vérifie pas les mises à jour ultérieures
+    (contrairement à `proton-drive-cli`, qui compare la version installée
+    au manifeste amont). Une réinstallation manuelle du module est
+    nécessaire pour mettre à jour l'app tant que ce suivi n'existe pas.
 
 ---
 
