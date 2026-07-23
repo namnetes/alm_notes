@@ -30,6 +30,131 @@ binaire fixe ont déjà des pages dédiées avec le détail bit à bit et le cod
 Python de conversion ; cette page se concentre sur la vue d'ensemble et la
 comparaison entre familles.
 
+## Virgule décimale : implicite (`V`) ou explicite (`.`)
+
+Avant de détailler chaque format, un point transversal mérite d'être traité à
+part : en COBOL, un champ décimal peut se déclarer de deux façons très
+différentes selon qu'il sert au **calcul** ou à l'**affichage**. C'est un
+piège fréquent pour qui découvre COBOL en venant de Python, où un `float` ou
+un `Decimal` porte toujours sa virgule avec lui.
+
+### La virgule implicite (`V`) — pour le calcul
+
+Le symbole `V` dans une clause `PICTURE` indique la position de la virgule
+décimale **sans lui réserver le moindre octet**. C'est une information
+purement compilée : ni le compilateur ni le programme n'écrivent jamais de
+caractère « point » ou « virgule » en mémoire pour un champ `V`. C'est le
+format utilisé pour tout champ destiné au calcul, quel que soit son `USAGE`
+(`DISPLAY`, `COMP-3`, `COMP`/`BINARY`).
+
+```cobol
+01 MONTANT-CALCUL       PIC S9(5)V99   COMP-3.
+```
+
+Cette déclaration signifie « 5 chiffres avant la virgule, 2 après, signé,
+empaqueté » — 7 chiffres au total. Pour la valeur `123.45` :
+
+- La valeur numérique manipulée par le programme est bien `123.45`.
+- Les octets réellement stockés sont les 7 chiffres `0012345` empaquetés (+ le
+  nibble de signe) — soit 4 octets au format `COMP-3` (voir
+  [Format PACKED](../python/exemples-pratiques.md#format-packed-decimal-empaquete-comp-3)
+  pour le détail bit à bit). **Aucun octet n'encode la position de la
+  virgule** : c'est la `PICTURE` du programme qui « sait » où elle se trouve.
+
+Le même principe s'applique à un champ `DISPLAY` :
+
+```cobol
+01 QUANTITE             PIC 9(3)V9(2) DISPLAY.
+```
+
+Pour la valeur `12.34`, les 5 octets EBCDIC stockés sont ceux des chiffres
+`01234` — encore une fois, aucun octet pour la virgule.
+
+!!! example "Alignement automatique lors d'un MOVE"
+    COBOL aligne automatiquement les virgules implicites lors d'un `MOVE` ou
+    d'un calcul entre deux champs dont la position du `V` diffère. Déplacer
+    `QUANTITE` (`PIC 9(3)V9(2)`, valeur `012.34`) vers un champ `PIC
+    9(5)V9(4)` produit `00012.3400` : la partie entière est cadrée à droite et
+    complétée de zéros à gauche, la partie décimale est cadrée à gauche et
+    complétée de zéros à droite — la virgule elle-même ne « bouge » jamais
+    physiquement puisqu'elle n'a jamais été stockée.
+
+Une seule clause `V` est autorisée par `PICTURE` (il ne peut évidemment pas y
+avoir deux virgules). Elle peut aussi se placer en tête pour une valeur
+purement fractionnaire, ex. `PIC V9(4)` pour une valeur entre `0` et `0.9999`.
+
+### La virgule explicite (`.`) — uniquement pour l'affichage
+
+Une clause `PICTURE` peut aussi contenir un **point réellement stocké**, mais
+uniquement dans un contexte précis : un champ dit **« numeric-edited »**
+(numérique édité), destiné exclusivement à l'affichage ou à l'impression de
+rapports — jamais au calcul.
+
+```cobol
+01 MONTANT-CALCUL       PIC S9(5)V99   COMP-3.
+01 MONTANT-AFFICHE      PIC ZZ,ZZ9.99.
+
+MOVE MONTANT-CALCUL TO MONTANT-AFFICHE.
+```
+
+Si `MONTANT-CALCUL` vaut `12345.67`, l'instruction `MOVE` déclenche l'édition
+et produit dans `MONTANT-AFFICHE` la chaîne de caractères ` 12,345.67` — 10
+octets, où **chaque caractère est réellement écrit en mémoire** : les
+chiffres, mais aussi la virgule de séparation des milliers et le point
+décimal. Le `Z` en tête supprime le zéro non significatif en le remplaçant
+par un espace.
+
+!!! danger "Un champ numeric-edited n'est jamais un opérande de calcul"
+    `MONTANT-AFFICHE` ne peut apparaître ni dans un `COMPUTE`, ni dans un
+    `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` en tant qu'opérande source : la
+    présence de symboles d'édition (`.`, `,`, `Z`...) classe le champ comme
+    numeric-edited, et seul un `MOVE` **depuis** un champ numérique (`V`) vers
+    ce champ est autorisé. Le flux est toujours à sens unique : calculer sur
+    un champ `V`, puis `MOVE` le résultat vers un champ édité pour
+    l'affichage — jamais l'inverse.
+
+Les symboles d'édition les plus courants :
+
+| Symbole | Effet |
+|---|---|
+| `Z` | Supprime un zéro non significatif (remplacé par un espace) |
+| `9` | Chiffre toujours affiché, y compris s'il vaut zéro |
+| `.` | Point décimal réellement inséré (1 octet) |
+| `,` | Virgule de séparation de milliers réellement insérée (1 octet) |
+| `$` | Symbole monétaire |
+| `+` / `-` | Signe explicite (toujours affiché / seulement si négatif) |
+| `CR` / `DB` | Mention crédit/débit, affichée uniquement si négatif, sinon remplacée par des espaces |
+| `*` | Protection contre falsification : remplace les zéros non significatifs par `*` (chèques) |
+| `B` | Insère un espace (blanc) |
+| `0` | Insère un zéro littéral |
+| `/` | Insère une barre oblique (ex. dates `99/99/9999`) |
+
+### Tableau récapitulatif
+
+| | Virgule implicite (`V`) | Virgule explicite (`.`, numeric-edited) |
+|---|---|---|
+| Octets consommés par la virgule | 0 | 1 |
+| Utilisable en calcul (`COMPUTE`, `ADD`...) | Oui | Non |
+| `USAGE` concernés | `DISPLAY`, `COMP-3`, `COMP`/`BINARY` | `DISPLAY` uniquement |
+| Rôle | Représentation interne pour le calcul | Présentation finale (rapport, écran) |
+| Exemple | `PIC S9(5)V99 COMP-3` | `PIC ZZ,ZZ9.99` |
+
+!!! info "Lien avec le code Python"
+    Le paramètre `scale` des fonctions `unpack_comp3`/`pack_comp3` de la page
+    [Exemples pratiques](../python/exemples-pratiques.md#format-packed-decimal-empaquete-comp-3)
+    représente exactement le nombre de chiffres après le `V` — c'est la
+    traduction directe de la virgule implicite COBOL en Python, puisqu'aucun
+    octet ne la matérialise dans les données brutes à décoder.
+
+??? note "Cas rare — le symbole `P` (échelle implicite hors du champ)"
+    Un symbole encore plus rare, `P`, permet de représenter des zéros
+    implicites **en dehors** des chiffres réellement stockés — utile pour de
+    très grandes ou très petites valeurs sans gaspiller de stockage sur des
+    zéros qu'on sait déjà être là. Par exemple, `PIC 9(3)PPP` représente une
+    valeur dont les 3 derniers zéros (avant la virgule) ne sont pas stockés :
+    les 3 chiffres stockés `123` représentent `123000`. Ce cas est
+    suffisamment rare en pratique pour ne pas être approfondi ici.
+
 ## Décimal zoné (`DISPLAY`)
 
 C'est le format par défaut : chaque chiffre occupe un octet entier, encodé en
