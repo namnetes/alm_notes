@@ -228,6 +228,10 @@ nav:
           - Dépannage: outils/mkdocs/depannage.md
   - Mainframe:
       - lcl/index.md
+      - Fondamentaux:
+          - lcl/fondamentaux/index.md
+          - Types numériques: lcl/fondamentaux/types-numeriques.md
+          - Boutisme (endianness): lcl/fondamentaux/endianness.md
       - Kafka:
           - lcl/kafka/index.md
           - PoC Kafka: lcl/kafka/architecture-zos-kafka.md

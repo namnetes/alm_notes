@@ -6,6 +6,12 @@ sont des points de départ à adapter, pas du code prêt pour la production : la
 gestion des identifiants, des erreurs réseau et des accès concurrents dépendra de
 votre environnement.
 
+Pour les concepts sous-jacents aux exemples binaires/décimaux ci-dessous — les
+autres types numériques COBOL, le détail de l'endianness, les recommandations
+IBM — voir [Fondamentaux mainframe](../fondamentaux/index.md). Cette page se
+concentre volontairement sur le code Python et le minimum de contexte
+nécessaire pour le comprendre.
+
 !!! info "Prérequis"
     Ces exemples supposent une familiarité avec les jeux de données z/OS (fichiers
     séquentiels ou partitionnés) et avec JCL. Voir
@@ -154,46 +160,13 @@ Au-delà du texte, les champs binaires COBOL (`COMP`, `COMP-4`/`BINARY`) posent 
 second piège : l'ordre dans lequel les octets d'un nombre sont rangés en mémoire
 diffère entre le mainframe et un poste x86/x64.
 
-!!! note "Parenthèse vérifiée — COMP, COMP-4, COMP-5 et BINARY : lequel choisir ?"
-    Ces quatre clauses `USAGE` sont souvent confondues. En Enterprise COBOL
-    for z/OS 6.x :
-
-    - **`COMP`** et **`COMP-4`** sont strictement synonymes : un entier binaire
-      en complément à deux, occupant un *halfword* (2 octets, 1 à 4 chiffres
-      déclarés), un *fullword* (4 octets, 5 à 9 chiffres) ou un *doubleword*
-      (8 octets, 10 à 18 chiffres) selon le nombre de chiffres de la clause
-      `PICTURE`.
-    - **`BINARY`** utilise le même stockage physique que `COMP`/`COMP-4`, mais
-      son comportement à l'exécution dépend de l'option de compilation
-      `TRUNC` : avec `TRUNC(STD)`, toute valeur qui dépasse le nombre de
-      chiffres déclarés dans la `PICTURE` est tronquée à ce nombre de
-      chiffres (comportement portable, mais qui coûte des instructions
-      machine supplémentaires à chaque affectation) ; avec `TRUNC(OPT)`, le
-      compilateur suppose que les données respectent toujours la `PICTURE`
-      (le plus rapide, mais risqué si l'hypothèse est fausse) ; avec
-      `TRUNC(BIN)`, tous les champs binaires du programme se comportent comme
-      des `COMP-5` (troncature sur la taille binaire réelle, pas sur la
-      `PICTURE`).
-    - **`COMP-5`** est la clause « binaire natif » : la valeur exploite toute
-      la capacité du champ binaire (2/4/8 octets), sans jamais être tronquée
-      au nombre de chiffres de la `PICTURE` — quelle que soit l'option
-      `TRUNC` du programme. C'est le choix recommandé pour les champs
-      échangés avec du code non-COBOL (C, PL/I, IMS, Db2...) qui peut y
-      écrire des valeurs binaires en dehors des bornes décimales déclarées.
-
-    [D'après la documentation IBM sur l'option TRUNC](https://www.ibm.com/docs/en/cobol-zos/6.4.0?topic=options-trunc) :
-    plutôt que d'activer `TRUNC(BIN)` pour tout le programme (ce qui pénalise
-    aussi les champs qui n'en ont pas besoin), la pratique recommandée est de
-    déclarer `COMP-5` uniquement sur les champs concernés, et de garder
-    `TRUNC(OPT)` pour le reste — c'est l'option la plus performante en
-    général, à condition de valider que les données respectent bien la
-    `PICTURE`.
-
-    **Ce qui ne change pas : l'endianness.** `COMP`, `COMP-4`, `COMP-5` et
-    `BINARY` partagent tous le même stockage physique big-endian sur z/OS. La
-    conversion Python montrée plus bas s'applique donc identiquement aux
-    quatre, indépendamment de l'option `TRUNC` — celle-ci ne change que les
-    règles de troncature côté COBOL, jamais l'ordre des octets en mémoire.
+!!! info "COMP, COMP-4, COMP-5, BINARY : quatre clauses, un seul stockage"
+    Ces clauses `USAGE` sont souvent confondues, mais elles partagent toutes
+    le même stockage physique big-endian — seule la gestion de la troncature
+    (option de compilation `TRUNC`) diffère entre elles. Voir
+    [Types numériques — COMP, COMP-4, COMP-5, BINARY](../fondamentaux/types-numeriques.md#comp-comp-4-comp-5-binary-lequel-choisir)
+    pour le détail et les recommandations IBM. La conversion Python ci-dessous
+    s'applique identiquement aux quatre clauses.
 
 ### Big-endian vs little-endian, octet par octet
 
@@ -221,19 +194,14 @@ les 4 octets existent bien, ils sont juste réinterprétés dans le mauvais sens
 et la valeur obtenue est un nombre différent (potentiellement énorme ou
 négatif) plutôt qu'un plantage.
 
-!!! note "Parenthèse vérifiée — l'inversion s'applique à toute longueur"
+!!! info "Ça s'applique à toute longueur de champ"
     L'exemple ci-dessus porte sur 4 octets, mais l'inversion byte-par-byte
-    n'est pas une particularité des champs 4 octets : elle s'applique **à
-    n'importe quelle longueur**. Le *z/Architecture* définit ses unités de
-    stockage en big-endian de façon uniforme : le *halfword* (16 bits, 2
-    octets), le *fullword* (32 bits, 4 octets), le *doubleword* (64 bits, 8
-    octets), et même le *quadword* (128 bits, 16 octets) suivent tous la même
-    règle — l'octet de poids fort en premier. Convertir vers/depuis le
-    little-endian x86/x64 revient donc toujours à la même opération, quelle
-    que soit la taille du champ : inverser la totalité de la séquence
-    d'octets. C'est exactement ce que font `int.from_bytes()`/`to_bytes()` et
-    `struct` avec un format `>` : ils s'adaptent nativement à 2, 4, 8 octets
-    ou plus, sans logique différente selon la longueur.
+    s'applique **à n'importe quelle longueur** (2, 4, 8, 16 octets...) — voir
+    [Boutisme (endianness)](../fondamentaux/endianness.md#zarchitecture-big-endian-de-bout-en-bout)
+    pour le détail par unité de stockage z/Architecture (halfword, fullword,
+    doubleword, quadword). C'est pour cela que `int.from_bytes()`/`to_bytes()`
+    et `struct` avec `>` s'adaptent nativement à n'importe quelle taille, sans
+    logique différente selon la longueur.
 
 !!! danger "Piège fréquent"
     `struct` et `int.from_bytes()` utilisent par défaut l'ordre **natif** de la
@@ -341,7 +309,10 @@ mainframe** — il n'a pas d'équivalent dans les types numériques standards de
 Python, C ou Java. Il stocke deux chiffres décimaux par octet (un par
 *nibble*, c'est-à-dire un demi-octet de 4 bits), plus un nibble final réservé
 au signe. C'est un format compact et rapide à traiter pour COBOL, mais il faut
-le désempaqueter explicitement pour l'utiliser en Python.
+le désempaqueter explicitement pour l'utiliser en Python. Voir
+[Types numériques sur mainframe](../fondamentaux/types-numeriques.md) pour la
+comparaison avec les autres formats (`DISPLAY`, binaire, flottant) et les cas
+d'usage recommandés.
 
 ### Structure bit à bit
 

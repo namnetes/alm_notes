@@ -135,7 +135,11 @@ doivent réfléchir avec soin à :
 - L'encodage de caractères, en particulier les frontières entre EBCDIC, ASCII et
   UTF-8 (voir [Exemples pratiques](exemples-pratiques.md#encodage-ebcdic-ascii)).
 - Les données binaires et les différences de boutisme (*endianness*) entre
-  plateformes (voir [Exemples pratiques](exemples-pratiques.md#boutisme-endianness-des-champs-binaires)).
+  plateformes (voir [Boutisme (endianness)](../fondamentaux/endianness.md) pour
+  l'explication complète, et [Exemples pratiques](exemples-pratiques.md#boutisme-endianness-des-champs-binaires)
+  pour le code Python).
+- Le bon type numérique COBOL à respecter en lecture/écriture (décimal zoné,
+  empaqueté, binaire, flottant — voir [Types numériques sur mainframe](../fondamentaux/types-numeriques.md)).
 - La compatibilité des paquets sur z/OS.
 - Le risque de chaîne d'approvisionnement (*supply chain*) lié aux dépendances
   open source.
@@ -233,3 +237,13 @@ la page [Exemples pratiques](exemples-pratiques.md).
     Les numéros de version ci-dessus évoluent vite (PTF mensuelles côté IBM Z).
     Avant toute mise en œuvre, revérifier la version courante sur les pages
     officielles liées plutôt que de se fier à cette page.
+
+## Voir aussi
+
+- [Exemples pratiques](exemples-pratiques.md) — le code Python correspondant
+  à chaque outil listé ci-dessus.
+- [Types numériques sur mainframe](../fondamentaux/types-numeriques.md) — les
+  formats numériques COBOL (décimal zoné, empaqueté, binaire, flottant) et
+  leurs cas d'usage recommandés.
+- [Boutisme (endianness)](../fondamentaux/endianness.md) — l'ordre des octets
+  sur z/Architecture, indépendamment de COBOL.
