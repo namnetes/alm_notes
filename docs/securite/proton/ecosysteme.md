@@ -468,6 +468,63 @@ Permet également d'envoyer des bitcoins à une adresse e-mail Proton Mail (Bitc
 
 ---
 
+## Regrouper les apps sur le Dock (Linux, GNOME)
+
+Ubuntu Dock (basé sur dash-to-dock) ne propose pas de dossiers/groupes
+d'icônes, contrairement au Dock macOS ou au menu Démarrer Windows — les
+quatre apps Proton (Mail, Pass, Authenticator, VPN) occupent donc chacune
+une icône séparée, sans moyen natif de les regrouper.
+
+`proton-launcher` est une petite fenêtre GTK4/libadwaita maison qui liste
+les apps Proton installées et lance celle cliquée via
+`Gio.DesktopAppInfo` — un substitut manuel au dossier de dock qui manque
+à GNOME.
+
+**Liens :**
+
+- Code source : `~/alm_dots/.functions/bin/proton-launcher`
+- Raccourci d'app : `~/alm_dots/.local/share/applications/proton-launcher.desktop`
+
+!!! info "Ce n'est pas un produit Proton"
+    `proton-launcher` est un outil maison, versionné dans `alm_dots` (pas
+    dans `alm_tools`) et déployé via `stow .` — au même titre que les
+    autres scripts de `.functions/bin/`. Il n'a aucun lien avec Proton au
+    sens éditeur du logiciel.
+
+### Dépendances système
+
+`proton-launcher` tourne sur le **Python système** (pas via `uv run`) :
+les bindings PyGObject dépendent des typelibs
+gobject-introspection du système, pas installables en environnement
+virtuel isolé.
+
+| Paquet | Rôle |
+|--------|------|
+| `python3-gi` | Bindings Python pour GObject Introspection |
+| `gir1.2-gtk-4.0` | Introspection GTK 4 |
+| `gir1.2-adw-1` | Introspection libadwaita |
+
+Les trois sont couverts par `packages_to_install.list` du module
+`postinstall` (groupe `system`) — un fresh install provisionné via
+`sudo make all` a donc ces dépendances avant même le premier `stow .`
+d'`alm_dots`.
+
+### Intégration desktop
+
+- Épinglé au Dock via clic droit dans la grille d'applications → *Ajouter
+  aux favoris* (sous le nom « Proton (tous les comptes) »).
+- Raccourci clavier GNOME : **Shift+Super+P**, configuré via
+  `gsettings` (`org.gnome.settings-daemon.plugins.media-keys
+  custom-keybindings`, entrée `custom2`).
+
+!!! note "Pourquoi pas une icône dans la barre supérieure ?"
+    Écarté volontairement — une extension GNOME Shell (fragile d'une
+    version de GNOME à l'autre) ou un processus persistant en arrière-plan
+    ajoutent une complexité disproportionnée par rapport au gain, face à
+    une simple icône de dock + raccourci clavier.
+
+---
+
 ## Sécurité du compte
 
 ### Proton Sentinel
