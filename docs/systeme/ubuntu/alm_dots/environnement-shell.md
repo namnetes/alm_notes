@@ -163,6 +163,7 @@ Toutes les fonctions sont accessibles depuis n'importe quel répertoire. La comm
 | `openz` | `openz` | Ouvre (ou rejoint) les onglets docs + Claude du workspace `openz_uss-mirror` dans la fenêtre Kitty courante |
 | `openz-stop` | `openz-stop` | Ferme les onglets docs + Claude du workspace `openz_uss-mirror` (instance courante **et** fenêtre dédiée ouverte par `openz-new`) |
 | `openz-new` | `openz-new` | Ouvre une nouvelle fenêtre Kitty dédiée, via le fichier de session `~/.config/kitty/openz_uss-mirror.session` |
+| `myauth` | `myauth` | Liste les champs personnalisés `2FA` et `PASSKEY` de tous les vaults Proton Pass (coffre, entrée, champ, valeur) via `pass-cli` |
 
 Les fonctions `ai`, `explain` et `fix` (assistant Claude dans le terminal)
 sont documentées dans [Claude Code > Assistant
