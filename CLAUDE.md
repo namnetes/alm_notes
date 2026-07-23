@@ -39,7 +39,7 @@ uv run ruff check new-page.py --fix   # linter new-page.py (ruff.toml à la raci
 | `systeme/alpine/` | Alpine | Alpine Linux, VMs, Docker |
 | `electronique/` | Électronique | PlatformIO, pioinit |
 | `developpement/python/` | Développement | uv, FastAPI, concurrence, design patterns |
-| `lcl/` | LCL | Mainframe / z/OS (Kafka, CICS, zDevOps plugin) |
+| `lcl/` | Mainframe | Mainframe / z/OS (Kafka, CICS) |
 | `securite/` | Sécurité | TLS, AppArmor, OpenSSL, Proton |
 | `outils/` | Outils | CLI modernes (eza…), Kitty, yt-dlp, Claude Code, MkDocs |
 

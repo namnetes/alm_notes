@@ -1,4 +1,4 @@
-# Architecture z/OS → Kafka : Transfert de Données depuis IBM z/OS vers Apache Kafka
+# Bilan du PoC Kafka
 
 > Expression de besoin v1.0 — Transfert de données depuis IBM z/OS vers Apache Kafka.
 
@@ -69,7 +69,7 @@ z/OS est l'équivalent de Linux ou Windows, mais pour les Mainframes IBM. Associ
 
 ### 2.2 COBOL 6.5 : le langage qui lit les données
 
-COBOL est un langage de programmation massivement utilisé sur tous les Mainframe IBM et celui de LCL ne fait pas exception avec plus de 85% de son parc en COBOL.
+COBOL est un langage de programmation massivement utilisé sur tous les Mainframe IBM et celui décrit ici ne fait pas exception avec plus de 85% de son parc en COBOL.
 
 La dernière version 6.5 apporte des améliorations de performance et des capacités de connectivité modernes.
 
@@ -529,6 +529,3 @@ Pour 21 Go de données, quelques règles pratiques :
 Ce document est issu d'une expression de besoin formalisée en PDF :
 [Télécharger architecture-zos-kafka.pdf](architecture-zos-kafka.pdf)
 
----
-
-_Document maintenu par l'équipe LCL — Version 1.0 — Avril 2026._

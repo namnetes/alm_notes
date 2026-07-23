@@ -30,9 +30,9 @@ fiche.
 
     Kitty, yt-dlp, Claude Code et MkDocs.
 
--   :material-bank: **[LCL](lcl/index.md)**
+-   :material-bank: **[Mainframe](lcl/index.md)**
 
-    Mainframe z/OS : Kafka, CICS et le plugin zDevOps pour IDz.
+    Mainframe z/OS : Kafka, CICS.
 
 -   :material-laptop: **[Matériel](materiel.md)**
 
