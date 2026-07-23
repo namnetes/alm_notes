@@ -231,6 +231,10 @@ nav:
       - Kafka:
           - lcl/kafka/index.md
           - PoC Kafka: lcl/kafka/architecture-zos-kafka.md
+      - Python sur mainframe:
+          - lcl/python/index.md
+          - Pourquoi Python sur mainframe ?: lcl/python/pourquoi-python-mainframe.md
+          - Exemples pratiques: lcl/python/exemples-pratiques.md
   - Sécurité:
       - securite/index.md
       - Certificats: securite/certificats.md
