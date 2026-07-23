@@ -83,6 +83,85 @@ Une seule clause `V` est autorisée par `PICTURE` (il ne peut évidemment pas y
 avoir deux virgules). Elle peut aussi se placer en tête pour une valeur
 purement fractionnaire, ex. `PIC V9(4)` pour une valeur entre `0` et `0.9999`.
 
+### Trois exemples chiffrés : 2, 3 et 5 décimales
+
+Le tableau suivant montre, pour un même principe, le contenu mémoire réel
+(en `COMP-3`) et la valeur affichée après un `MOVE` vers un champ édité —
+avec 2, 3 puis 5 chiffres après la virgule.
+
+| Déclaration COBOL | Valeur | Chiffres stockés | Octets réels (`COMP-3`) | Valeur affichée |
+|---|---|---|---|---|
+| `PIC S9(5)V99 COMP-3` | `123.45` | `0012345` (7) | `00 12 34 5C` | `123.45` |
+| `PIC S9(4)V999 COMP-3` | `1234.567` | `1234567` (7) | `12 34 56 7C` | `1234.567` |
+| `PIC S9(2)V9(5) COMP-3` | `12.34567` | `1234567` (7) | `12 34 56 7C` | `12.34567` |
+
+!!! example "Les deux dernières lignes ont des octets identiques"
+    `PIC S9(4)V999` (3 décimales) et `PIC S9(2)V9(5)` (5 décimales) stockent
+    tous les deux 7 chiffres, donc produisent **exactement les mêmes octets**
+    (`12 34 56 7C`) pour les chiffres `1234567`. Seule la `PICTURE` du
+    programme qui relit ce champ décide où se trouve la virgule — `1234.567`
+    dans un cas, `12.34567` dans l'autre. C'est la démonstration la plus
+    directe qu'une virgule implicite n'est **pas une propriété de la
+    donnée**, mais une propriété du programme qui la lit.
+
+Le même principe en `DISPLAY` (zoné), toujours avec 2 décimales :
+
+| Déclaration COBOL | Valeur | Octets réels (EBCDIC) |
+|---|---|---|
+| `PIC S9(3)V99 DISPLAY` | `123.45` | `F1 F2 F3 F4 C5` |
+
+Les 5 chiffres `1`, `2`, `3`, `4`, `5` occupent chacun un octet complet ;
+`C5` porte à la fois le chiffre `5` et le signe positif (`C`) dans le nibble
+de zone du dernier octet — exactement le même mécanisme que pour `DISPLAY`
+vu plus haut, indépendant de la position du `V`.
+
+### Ce qui se passe concrètement lors d'un `MOVE`
+
+Reprenons l'exemple d'alignement automatique, mais avec le contenu mémoire
+avant/après pour voir ce qui change réellement.
+
+**Élargir : 2 décimales → 5 décimales (complète avec des zéros)**
+
+```cobol
+01 A PIC S9(5)V99   COMP-3 VALUE 123.45.
+01 B PIC S9(5)V9(5) COMP-3.
+
+MOVE A TO B.
+```
+
+| Champ | Valeur | Octets |
+|---|---|---|
+| `A` avant le `MOVE` | `123.45` | `00 12 34 5C` (4 octets) |
+| `B` après le `MOVE` | `123.45000` | `00 01 23 45 00 0C` (6 octets) |
+
+La partie entière (`123`) ne change pas de valeur, seulement de
+représentation binaire (`B` est plus large physiquement) ; la partie
+décimale passe de 2 à 5 chiffres en **complétant avec des zéros à droite**
+(`45` devient `45000`). Aucune information n'est perdue dans ce sens.
+
+**Rétrécir : 5 décimales → 2 décimales (troncature silencieuse)**
+
+```cobol
+01 C PIC S9(5)V9(5) COMP-3 VALUE 123.45678.
+01 D PIC S9(5)V99   COMP-3.
+
+MOVE C TO D.
+```
+
+| Champ | Valeur | Octets |
+|---|---|---|
+| `C` avant le `MOVE` | `123.45678` | `00 01 23 45 67 8C` (6 octets) |
+| `D` après le `MOVE` | `123.45` | `00 12 34 5C` (4 octets) |
+
+Cette fois, les 3 derniers chiffres décimaux (`678`) sont **perdus** : `D`
+ne peut physiquement contenir que 2 décimales, donc COBOL tronque
+silencieusement l'excédent — aucune erreur, aucun avertissement, sauf si le
+programme ajoute explicitement une clause `ON SIZE ERROR` (sur un `COMPUTE`)
+ou vérifie le résultat autrement. C'est un point de vigilance réel en
+production : un rétrécissement de `PICTURE` lors d'une évolution de
+programme peut tronquer des données existantes sans qu'aucun symptôme
+n'apparaisse avant un contrôle métier en aval.
+
 ### La virgule explicite (`.`) — uniquement pour l'affichage
 
 Une clause `PICTURE` peut aussi contenir un **point réellement stocké**, mais
